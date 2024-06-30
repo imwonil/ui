@@ -43,13 +43,17 @@
   font-weight: 700;
   border-radius: 99px; 
   cursor: pointer;
-  transition: color 1s ease-in;
+  transition: 0.5s;
   font-family: "Inter", sans-serif;
+  background-color: #eee;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .actived {
-  background-color : #eee;
-  border: 2px solid  #fff;
+  background-color : #5fbae9;
+  border: 2px solid  #ddd;
+  color: #eee;
 }
 
 
@@ -134,7 +138,7 @@ h2.active {
 
 
 
-input[type=button], input[type=submit], input[type=reset]  {
+input[type=button], input[type=button], input[type=reset]  {
   background-color: #56baed;
   border: none;
   color: white;
@@ -330,6 +334,7 @@ input[type=text]:placeholder {
   background-color: rgba(76, 76, 76, 0.7);  
   border-radius: 0.5rem;
   padding: 0.4rem;
+  z-index: 3;
 }
 
 button {
