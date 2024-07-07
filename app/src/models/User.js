@@ -9,30 +9,23 @@ this.body = body
 }
 async login(){
   const client = this.body
+        
   
-  
-  const {id, psword} = await UserStorage.getUserInfo(client.id)
-
-  if(id){
+  const {phon, psword} = await UserStorage.getUserInfo(client.phone)
+    console.log(psword,phon)
+  if(phon){
     
     
-      if(client.id === id &&   client.psword === psword ){
+      if(client.phone === phon &&   client.psword === psword ){
         await UserStorage.As(client)
-        // return fs.
-        // readFile("./src/database/userGoodsKinds.json")
-        // .then((data) => {
-        //   const userGoodsKinds = JSON.parse(data)
-        //   var kend = userGoodsKinds .filter(function (addSave) { return addSave.id === id });
-         
-        //   return kend
-        // }).catch((err) => console.error(err))  
+   
       
-    return {success: true} 
+     return {success: true} 
       
   }
-  return {success: false , msg : "비밀번호가 틀립"}
+  return {success: false , msg : "비밀번호가 다릅니다."}
   }
-  return {success: false , msg : "아이디가 다릅니다.."}
+  return {success: false , msg : "전화번호가 다릅니다.."}
   }
 
 async register(){

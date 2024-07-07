@@ -36,20 +36,21 @@ const output = {
  
 
 
-   
-//    Https:(req, res) => {
-//       res.render("home/Https")
-//   }
 
 };
 
 
 const process = {
  
-   Login: async (req, res) => {
+   login: async (req, res) => {
 
+      const users = new User(req.body)
+
+      const response = await users.login()
+      return res.json(response)
    },
    register: async (req, res) => {
+   
       const users = new User(req.body)
       const response = await users.register()
       
@@ -58,6 +59,14 @@ const process = {
    },
 
    
+   certification: async (req, res) => {
+      
+     
+      const users = new User(req.body)
+      const respons = await users.certiFication()
+      return res.json(respons)
+
+   },
 
  
 

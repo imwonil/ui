@@ -1,15 +1,15 @@
-//  const mysql = require('mysql')
+ const mysql = require('mysql')
 
-// const db = mysql.createConnection({
+const db = mysql.createConnection({
     
-//         "host":"emc33wonil.cafe24app.com" ,
-//         "user":"emc22wonil2" ,
-//         "password":"qkqh042716",
-//         "port": "3306",
-//        "database": "emc22wonil2"
+        "host":"kios.cue1zvg9anrt.ap-northeast-2.rds.amazonaws.com",
+        "user":"admin" ,
+        "password":"emc2wonil",
+        "port": "3306",
+       "database": "NICE"
 
 
-// })
+})
 
-// db.connect();
-// module.exports = db;
+db.connect();
+module.exports = db;

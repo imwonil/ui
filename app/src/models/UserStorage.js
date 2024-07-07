@@ -35,19 +35,20 @@ static #adminSet = {  kindSet :[], wonset:[]  }
 
 
   static getUser(...fildes) {
-    db.query("SELECT * FROM NICE " , (err, data) => {
-       console.log(data)
+    db.query("SELECT * FROM kiki " , (err, data) => {
+     
     })
-    // return fs.
-    // readFile("./src/database/users.json")
-    // .then((data) => {
-    //   const users = JSON.parse(data)
-    //   const newUsers = fildes.reduce((newUsers, filde ) =>{
-    //     newUsers[filde] = users[filde]
-    //     return newUsers;
-    //      },{}) 
-    //      return newUsers;
-    // }) 
+    return fs.
+    readFile("./src/database/users.json")
+    .then((data) => {
+      const users = JSON.parse(data)
+      const newUsers = fildes.reduce((newUsers, filde ) =>{
+        newUsers[filde] = users[filde]
+        return newUsers;
+         },{}) 
+         console.log(newUsers,"userStorage.js 49 line")
+         return newUsers;
+    }) 
     
     }
 
@@ -59,91 +60,28 @@ static #adminSet = {  kindSet :[], wonset:[]  }
     }).catch((err) => console.error(err))
   } 
 
-  static getUserInfo(id) {
+  static getUserInfo(phon) {
+     
+    return fs.
+    readFile("./src/database/users.json")
+    
+    .then((data) => {
+  
+      const users = JSON.parse(data)
       
-  // return fs.
-  // readFile("./src/database/users.json")
-  
-  // .then((data) => {
-
-  //   const users = JSON.parse(data)
+      const idx = users.phon.indexOf(phon)
+      const keys = Object.keys(users)
+      const newUsers = keys.reduce((newUsers, filde ) =>{
+      newUsers[filde] = users[filde][idx]
+      return newUsers; 
+      },{})
+     console.log(newUsers,"78")
+      return newUsers;
+    }) .catch((err) => console.error(err))
     
-  //   const idx = users.id.indexOf(id)
-  //   const keys = Object.keys(users)
-  //   const newUsers = keys.reduce((newUsers, filde ) =>{
-  //   newUsers[filde] = users[filde][idx]
-  //   return newUsers; 
-  //   },{})
-
-  //   return newUsers;
-  // }) .catch((err) => console.error(err))
+    }
   
-  }
-  
-  static async save(client) {
    
-//   const Users=  this.#uses
-//   const users = await this.getUser("id", "psword" , "name","phon","certification")
-//   const First = await this.first()
- 
-
-//   if(users.id === undefined) { First.id.push(client.id);
-//     First.psword.push(client.psword);
-  
-
-   
-//     fs.writeFile("./src/database/first.json", JSON.stringify(First))
-      
-//     Users.id.push(client.id);
-//     Users.name.push(First.name[0]);
-//     Users.phon.push(First.phon[0]);
-//     Users.psword.push(client.psword);
-    
-    
-//      fs.writeFile("./src/database/users.json", JSON.stringify(Users))
-//      return {success: true} }
- 
-//      if(users.id.indexOf(client.id) === -1 && client.Certification === null){
-    
-//   First.id.push(client.id);
-//   First.psword.push(client.psword);
-
-//   console.log(users, First , "save")
- 
-//   fs.writeFile("./src/database/first.json", JSON.stringify(First))
-    
-//   users.id.push(First.id[0]);
-//   users.name.push(First.name[0]);
-//   users.phon.push(First.phon[0]);
-//   users.psword.push(First.psword[0]);
-  
-  
-//    fs.writeFile("./src/database/users.json", JSON.stringify(users))
-//    return {success: true}
-
-
-//   }else if(users.id.indexOf(client.id) === -1 && client.Certification === "certification"){
-//            console.log(First.name)
-//      const indexof =  users.name.indexOf(First.name[0])
-
-//   users.id[indexof] = client.id
-//   users.psword[indexof] =client.psword
-
- 
-// fs.writeFile("./src/database/users.json", JSON.stringify(users))
-// return {success: true}
-
- 
-
-//   }
-//     else  {
- 
-//      return {success: false}
-  
-//   } 
-   
-  
-  } 
 ////////////////////////////DB 구축 했을때 쓰임 ///////////////////////////////////
 // static getUserInfo(id) {
 //   return new Promise((resolve, reject) => {
@@ -161,41 +99,105 @@ static #adminSet = {  kindSet :[], wonset:[]  }
 // }  
 
 static async save(client) {
+ console.log(client,"US 102 line")
+
  
-   const users = await this.getUserInfo(client.id)
-   console.log(users,"uddeinf")
-  if(users !== undefined){ 
-    users.id.includes(client.id)
-    return {success:false}
-}else if(users === undefined) {
+  const Users=  this.#uses
+  const users = await this.getUser("id", "psword" , "name","phon","certification")
+  const First = await this.first()
  
-  return new Promise((resolve, reject) => {
-    const nowTime =  moment().format('yyyy-MM-DD hh:mm')
-    const query ="INSERT INTO CUSTOMER(id, NAME, psword, phon, createDate, isDeleted) VALUES(?, ?, ?, ?, ?, ?);";
-    db.query(query,[client.id, client.name, client.psword, client.telephon, nowTime, 1], (err, data) =>{
-      if(err){reject(err)}
-      console.log("bb")
-      resolve({success: true});
+
+  if(users.id === undefined) { First.id.push(client.id);
+    First.psword.push(client.psword);
+  
+
+   
+    fs.writeFile("./src/database/first.json", JSON.stringify(First))
       
-    }) 
-  })   
-}
+    Users.id.push(client.id);
+    Users.name.push(First.name[0]);
+    Users.phon.push(First.phon[0]);
+    Users.psword.push(client.psword);
+    
+    
+     fs.writeFile("./src/database/users.json", JSON.stringify(Users))
+     return {success: true} }
+ 
+     if(users.id.indexOf(client.id) === -1 && client.Certification === null){
+    
+  First.id.push(client.id);
+  First.psword.push(client.psword);
+
+  console.log(users, First , "save")
+ 
+  fs.writeFile("./src/database/first.json", JSON.stringify(First))
+    
+  users.id.push(First.id[0]);
+  users.name.push(First.name[0]);
+  users.phon.push(First.phon[0]);
+  users.psword.push(First.psword[0]);
+  
+  
+   fs.writeFile("./src/database/users.json", JSON.stringify(users))
+   return {success: true}
+
+
+  }else if(users.id.indexOf(client.id) === -1 && client.Certification === "certification"){
+           console.log(First.name)
+     const indexof =  users.name.indexOf(First.name[0])
+
+  users.id[indexof] = client.id
+  users.psword[indexof] =client.psword
+
+ 
+fs.writeFile("./src/database/users.json", JSON.stringify(users))
+return {success: true}
+
+ 
+
+  }
+    else  {
+ 
+     return {success: false}
+  
+  } 
+   
+ 
+//    const users = await this.getUserInfo(client.id)
+//    console.log(users,"uddeinf")
+//   if(users !== undefined){ 
+//     users.id.includes(client.id)
+//     return {success:false}
+// }else if(users === undefined) {
+ 
+//   return new Promise((resolve, reject) => {
+//     const nowTime =  moment().format('yyyy-MM-DD hh:mm')
+//     const query ="INSERT INTO CUSTOMER(id, NAME, psword, phon, createDate, isDeleted) VALUES(?, ?, ?, ?, ?, ?);";
+//     db.query(query,[client.id, client.name, client.psword, client.telephon, nowTime, 1], (err, data) =>{
+//       if(err){reject(err)}
+//       console.log("bb")
+//       resolve({success: true});
+      
+//     }) 
+//   })   
+// }
  } 
 static  async Certification(client) {
+  
   const Users=  this.#uses
   const users = await this.getUser("phon","name","certification")
   console.log(users,"phon")
 
 if(users.phon === undefined) {
   const Users=  this.#uses
-  Users.phon.push(client.phon)
+  Users.phon.push(client.phone)
   Users.name.push(client.name)
   Users.certification.push(client.certification)
   
   fs.writeFile("./src/database/first.json", JSON.stringify(Users))
-  console.log(client.phon,"jjj")
+  console.log(client.phon,"135")
   messageService.send({
-    "to": client.phon,
+    "to": client.phone,
     "from": "01029718573",
     "kakaoOptions": {
       "pfId": "KA01PF240201053925212fFkWt1ESnqq",
@@ -351,13 +353,13 @@ static adminNe() {
 
 
 static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초기화 해줌
-     console.log(cl,"351")
-  const users = await this.getUserInfo(cl.id)
-    console.log(users)
+     
+  const users = await this.getUserInfo(cl.phone)
+   
   const uiuiu = await this.adminNe()
   const us = this.#uses
   const ad = await this.call() 
-  
+   
  
    // 회원 가입 할떄 작성한 정보
   const a =this.#set
@@ -377,7 +379,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
 
   const userGoodsKinds = await this.objectsave() //userGoodsKinds.json 파일이 존재 하는곳
 
-  var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.id === cl.id });
+  var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
   
    
  
@@ -387,7 +389,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
      
      
         if(resolve) {
-             console.log("1")
+            
           const phonSub = users.phon.substring(7,11)
           const pswsub = users.psword.substring(0,2) 
           const comb = phonSub + pswsub //문열기 비번 조합 comb
@@ -412,7 +414,13 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
                 }
     
     
-      });}
+      });
+    
+    
+    }
+
+
+
        
      
   
@@ -424,8 +432,8 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
       
         if(resolve) {
           console.log("2")
-          var kend = userGoodsKinds.filter(function (addSave) { return addSave.id === cl.id });
-          console.log(kend[0].name)
+          var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
+           console.log(kend[0])
           fs.writeFile('./src/adminSetKinds/adminNext.json', JSON.stringify(kend), (err) => {
             fs.readFile('./src/adminSetKinds/adminNext.json', "[]", 'utf8', (err, data) => {
             
@@ -443,10 +451,15 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
         });}
 
   if(newUserGoodsKinds[0] === undefined  ) {
-    var kend = userGoodsKinds.filter(function (addSave) { return addSave.id === cl.id });
+    var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
     delivery(userGoodsKinds).then(() =>{return  next_3(kend)})   //초기화 해주는 함수
    
  
+    
+
+
+    
+  return
   }else { 
     
     
@@ -813,7 +826,7 @@ static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
     
            modiFY.forEach((item, index) =>{
           if(item.id === "ADMIN") {
-            console.log(item.id,"793")
+      
 
             kend[0].logoutEnd[client.index] = nowTime
             kend[0].UseTime[client.index] = Usetime
@@ -1185,7 +1198,7 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
    console.log("kkkkkkkkkkkkkkkkk")
     const userGoodsKinds = await this.objectsave() //userGoodsKinds.json 파일이 존재 하는곳
     const nowTime =  moment().format('yyyy-MM-DD hh:mm')
-    var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.id === client.id });
+    var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.phone === client.phone });
    const dayTime = Number(client.forcDay)*1440 + Number(client.forcTime)
 
    if(newUserGoodsKinds[0] === undefined && client.id === "ADMIN") {
