@@ -35,14 +35,17 @@ router.get('/certifications', (req,res) =>{
 
 
 
-
-router.get("/newLogin", ctrl.output.newLogin)
+router.get("/", ctrl.output.index)
+router.get("/register", ctrl.output.register)
+router.get("/certification", ctrl.output.certification)
+router.get("/newlogin", ctrl.output.newlogin)
 router.get("/register", ctrl.output.register)
 router.get("/certification", ctrl.output.certification)
 
 ////////////poset/////////////////
-router.post("/login", ctrl.process.login)
+router.post("/newlogin", ctrl.process.newlogin)
 router.post("/register", ctrl.process.register)
 router.post("/certification", ctrl.process.certification)
+router.post("/",ctrl.process.index)
  module.exports = router      
   

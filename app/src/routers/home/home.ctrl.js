@@ -21,9 +21,12 @@ const output = {
 
 
 
+   index :(req, res) => {
+      res.render("home/index")
+   },
 
-   newLogin: (req, res) => {
-      res.render("home/newLogin")
+   newlogin: (req, res) => {
+      res.render("home/newlogin")
    },
    register: (req, res) => {
       res.render("home/register")
@@ -41,12 +44,21 @@ const output = {
 
 
 const process = {
- 
-   login: async (req, res) => {
+   index: async (req, res) => {
+      
+      const benchs = new Benchs(req.body)
+      const response = await benchs.Add() //Bench 9 UserStrage 267
+     
+      return res.json(response)
+
+   },
+   
+   newlogin: async (req, res) => {
 
       const users = new User(req.body)
 
       const response = await users.login()
+      console.log(response)
       return res.json(response)
    },
    register: async (req, res) => {

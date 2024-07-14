@@ -35,9 +35,8 @@ static #adminSet = {  kindSet :[], wonset:[]  }
 
 
   static getUser(...fildes) {
-    db.query("SELECT * FROM kiki " , (err, data) => {
-     
-    })
+  
+ 
     return fs.
     readFile("./src/database/users.json")
     .then((data) => {
@@ -46,7 +45,7 @@ static #adminSet = {  kindSet :[], wonset:[]  }
         newUsers[filde] = users[filde]
         return newUsers;
          },{}) 
-         console.log(newUsers,"userStorage.js 49 line")
+         
          return newUsers;
     }) 
     
@@ -99,15 +98,15 @@ static #adminSet = {  kindSet :[], wonset:[]  }
 // }  
 
 static async save(client) {
- console.log(client,"US 102 line")
 
- 
+
   const Users=  this.#uses
   const users = await this.getUser("id", "psword" , "name","phon","certification")
   const First = await this.first()
  
-
-  if(users.id === undefined) { First.id.push(client.id);
+  console.log(users.id.indexOf(client.id))
+  if(users.id === undefined)  { First.id.push(client.id);//회원 가입시 
+    console.log("110")
     First.psword.push(client.psword);
   
 
@@ -123,8 +122,8 @@ static async save(client) {
      fs.writeFile("./src/database/users.json", JSON.stringify(Users))
      return {success: true} }
  
-     if(users.id.indexOf(client.id) === -1 && client.Certification === null){
-    
+     if(users.id.indexOf(client.id) === -1 && client.Certification !== null){ //아이디 비번분실시 이용
+      console.log("127")
   First.id.push(client.id);
   First.psword.push(client.psword);
 
@@ -142,7 +141,7 @@ static async save(client) {
    return {success: true}
 
 
-  }else if(users.id.indexOf(client.id) === -1 && client.Certification === "certification"){
+  }else if(users.id.indexOf(client.id) === -1 && client.Certification === "Certification"){
            console.log(First.name)
      const indexof =  users.name.indexOf(First.name[0])
 
@@ -157,7 +156,7 @@ return {success: true}
 
   }
     else  {
- 
+      console.log("160")
      return {success: false}
   
   } 
@@ -183,6 +182,7 @@ return {success: true}
 // }
  } 
 static  async Certification(client) {
+  console.log(client)
   
   const Users=  this.#uses
   const users = await this.getUser("phon","name","certification")
@@ -195,7 +195,7 @@ if(users.phon === undefined) {
   Users.certification.push(client.certification)
   
   fs.writeFile("./src/database/first.json", JSON.stringify(Users))
-  console.log(client.phon,"135")
+
   messageService.send({
     "to": client.phone,
     "from": "01029718573",
@@ -220,10 +220,10 @@ if(users.phon === undefined) {
     } 
   });
  return {success:true}
-}else if (users.phon !== undefined && !users.phon.includes(client.phon)) {
-  
+}else if (users.phon !== undefined && !users.phon.includes(client.phone)) {
+  console.log(client,"135")
   messageService.send({
-    "to": client.phon,
+    "to": client.phone,
     "from": "01029718573",
     "kakaoOptions": {
       "pfId": "KA01PF240201053925212fFkWt1ESnqq",
@@ -248,7 +248,7 @@ if(users.phon === undefined) {
   });
   
 
-  Users.phon.push(client.phon)
+  Users.phon.push(client.phone)
   Users.name.push(client.name)
   Users.certification.push(client.certification)
   
@@ -256,7 +256,7 @@ if(users.phon === undefined) {
   fs.writeFile("./src/database/first.json", JSON.stringify(Users))
   return {success: true}
 }
-else if (users.phon.includes(client.phon)) {return {success : false}}                        
+else if (users.phon.includes(client.phone)) {return {success : false}}                        
 
 } 
 static objectsave(...fildes) { //userGoodsKinds data file
@@ -353,6 +353,7 @@ static adminNe() {
 
 
 static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초기화 해줌
+                         //newLogin 에서 login 하면 실행되는 함수
      
   const users = await this.getUserInfo(cl.phone)
    
@@ -396,7 +397,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
                   userGoodsKinds.push({"id": users.id ,"name":users.name, "cdId": comb,
                               "psword":users.psword,  "phon":users.phon, "wonset":[] ,
                               "UseTime":[] , "goodsName":[],  "benchName":[],"expiryName":[],
-                              "loginStart": [], "logoutEnd" : [], "koko":[], "goods":"N", 
+                              "loginStart": [], "logoutEnd" : [], "koko":[], "goods":"N",  
                                } 
                               )
                              
@@ -405,7 +406,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
                              
                               })  
 
-
+                          
 
                               resolve(userGoodsKinds);
         
@@ -431,7 +432,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
          
       
         if(resolve) {
-          console.log("2")
+          console.log("3")
           var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
            console.log(kend[0])
           fs.writeFile('./src/adminSetKinds/adminNext.json', JSON.stringify(kend), (err) => {
@@ -450,11 +451,38 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
       
         });}
 
+        function next_4() {
+          
+          return new Promise((resolve, reject) => {
+           
+        
+          if(resolve) {
+            console.log("4")
+            return new Promise((resolve, reject) => {
+              const phonSub = users.phon.substring(7,11)
+              const pswsub = users.psword.substring(0,2) 
+              const comb = phonSub + pswsub //문열기 비번 조합 comb
+             
+              const query ="INSERT INTO kiki(id, name,cdId, psword, phon, wonset, UseTime, goodsName, benchName,loginstart, logoutEnd, koko) VALUES(?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?);";
+              db.query(query,
+                [users.phon, users.name, comb, users.psword, users.phon,"{}","{}","{}","{}","{}","{}","{}"],(err, data) =>{
+                if(err){reject(err)}
+                
+                resolve();
+                
+              }) 
+            })
+              
+          } else{
+            reject("err");
+                    } 
+        
+          });}
   if(newUserGoodsKinds[0] === undefined  ) {
     var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
     delivery(userGoodsKinds).then(() =>{return  next_3(kend)})   //초기화 해주는 함수
-   
- 
+                             .then(() =>{return next_4()})
+    
     
 
 
@@ -462,13 +490,10 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
   return
   }else { 
     
-    
-
      next_3().then() 
-
-
- 
-     
+     var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
+   
+     return kend[0]
      
         }
     

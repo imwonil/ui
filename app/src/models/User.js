@@ -12,15 +12,15 @@ async login(){
         
   
   const {phon, psword} = await UserStorage.getUserInfo(client.phone)
-    console.log(psword,phon)
+
   if(phon){
     
     
       if(client.phone === phon &&   client.psword === psword ){
-        await UserStorage.As(client)
-   
-      
-     return {success: true} 
+       const Kinde = await UserStorage.As(client)
+    
+       
+     return  "success",Kinde
       
   }
   return {success: false , msg : "비밀번호가 다릅니다."}

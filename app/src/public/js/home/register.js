@@ -16,7 +16,7 @@ const exit = document.querySelector(".exit")
 const VERIFICATION = document.querySelector("#verification"),
        ID = document.querySelector("#id"),
        PHONE = document.querySelector("#phone"),
-       NAME = document.querySelector("#name"),
+      
        PSWORD = document.querySelector("#psword"),
        CONFIRM = document.querySelector("#confirm-psword")
  
@@ -48,17 +48,7 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
         }, 2000);
     return
        }
-       if(!ID.value || !NAME.value) {
-        console.log("아이디를 또는 이름을 입력 해주세요")
-        // document.querySelector("#h2").innerText="아이디를 입력해주세요"
-        // document.querySelector(".modal").classList.remove("hidden")
-        setTimeout(() => {
-          
-         
-          
-        }, 2000);
-        return
-      }
+ 
       if(CONFIRM.value !== PSWORD.value ){
         console.log("비밀번호가 일치하지 않습니다.")
         // document.querySelector("#h2").innerText="비밀번호가 일치하지 않습니다."
@@ -106,12 +96,12 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
       console.log(res)
     if(res.success === true) {
       sessionStorage.removeItem("certification")
-      
+      console.log("1")
         // document.querySelector("#h2").innerText="회원가입을 성공적으로 되였습니다.."
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
          
-         location.href = "/newLogin"
+        location.href = "/newLogin"
         }, 2000);
         return
       }  else if(res.success === false) {
@@ -119,7 +109,7 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
           
-        
+        console.log("kk")
           
         }, 2000); 
       //alert("존재하는 아이디입니다.")

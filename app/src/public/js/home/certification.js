@@ -104,7 +104,7 @@ console.log(PHON.value)
    
      setTimeout(() => {
    
-       document.querySelector(".modal").classList.add("hidden");
+       
      }, 2000);
      return
    }
@@ -120,7 +120,7 @@ console.log(PHON.value)
    }
  
  
-console.log(req)
+console.log(req,"iii")
  
  fetch("/certification", {
  method: "POST",
@@ -141,10 +141,10 @@ console.log(req)
 // 중요한건 닫기 버튼 누르지 않아도 창이 닫게 설계바람..
 // 밑에 있는 setTimeout 권장함 이때  if 문안에있는 return 값은 건디지말 것.
     
-    //   setTimeout(() => {
+      setTimeout(() => {
  
-    //     location =  "/certification"
-    //  }, 2000);
+        location =  "/register"
+     }, 2000);
  
  return 
    }
