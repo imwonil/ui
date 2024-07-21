@@ -19,11 +19,14 @@ const client = mqtt.connect("mqtt://broker.mqtt-dashboard.com", { clientid: "emc
 const output = {
   
 
-
+   adminindex :(req, res) => {
+      res.render("home/adminindex")
+   },
 
    index :(req, res) => {
       res.render("home/index")
    },
+
 
    newlogin: (req, res) => {
       res.render("home/newlogin")
@@ -52,6 +55,15 @@ const process = {
       return res.json(response)
 
    },
+
+   adminindex: async (req, res) => {
+      
+      const benchs = new Benchs(req.body)
+      const response = await benchs.Add() //Bench 9 UserStrage 267
+     
+      return res.json(response)
+
+   },
    
    newlogin: async (req, res) => {
 
@@ -68,7 +80,7 @@ const process = {
       
       return res.json(response)
 
-   },
+   }, 
 
    
    certification: async (req, res) => {
@@ -77,6 +89,17 @@ const process = {
       const users = new User(req.body)
       const respons = await users.certiFication()
       return res.json(respons)
+
+   },
+   adminBench: async (req, res) => {
+      console.log(req.body,'jjjjj')
+      const benchs = new Benchs(req.body)
+      const kinds =await benchs.setKind()
+      console.log(kinds,"kk")
+      const KindsSet = await Usertorage.adminSet()
+      
+       return res.json(kinds)
+
 
    },
 

@@ -13,7 +13,7 @@ class UserStorage {
   
   
 static #uses = {
-      id:[], psword:[] ,name:[], phon:[], certification:[]
+      id:[], psword:[] ,name:[], phon:[], gender:[] , certification:[]
                }
                static #creditCard = {
                 id:[],phon:[],approvalDay:[],approvalNumber:[],fee:[],hangle:[], cancal:[],name:[],goodsName:[]
@@ -30,7 +30,7 @@ static #set ={
 static #y = { t:[]  } 
 static #remove = {wonSet:[]}
 
-static #adminSet = {  kindSet :[], wonset:[]  }  
+static #adminSet = {  kindSet :[], wonset:[] , gender:[] }  
    
 
 
@@ -101,10 +101,9 @@ static async save(client) {
 
 
   const Users=  this.#uses
-  const users = await this.getUser("id", "psword" , "name","phon","certification")
+  const users = await this.getUser("id", "psword" , "name","phon","certification","gender")
   const First = await this.first()
- 
-  console.log(users.id.indexOf(client.id))
+
   if(users.id === undefined)  { First.id.push(client.id);//회원 가입시 
     console.log("110")
     First.psword.push(client.psword);
@@ -116,6 +115,7 @@ static async save(client) {
     Users.id.push(client.id);
     Users.name.push(First.name[0]);
     Users.phon.push(First.phon[0]);
+    Users.gender.push(client.gender);
     Users.psword.push(client.psword);
     
     
@@ -135,7 +135,7 @@ static async save(client) {
   users.name.push(First.name[0]);
   users.phon.push(First.phon[0]);
   users.psword.push(First.psword[0]);
-  
+  users.gender.push(client.gender);
   
    fs.writeFile("./src/database/users.json", JSON.stringify(users))
    return {success: true}
@@ -395,7 +395,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
           const pswsub = users.psword.substring(0,2) 
           const comb = phonSub + pswsub //문열기 비번 조합 comb
                   userGoodsKinds.push({"id": users.id ,"name":users.name, "cdId": comb,
-                              "psword":users.psword,  "phon":users.phon, "wonset":[] ,
+                              "psword":users.psword,  "phon":users.phon, "gender":users.gender,"wonset":[] ,
                               "UseTime":[] , "goodsName":[],  "benchName":[],"expiryName":[],
                               "loginStart": [], "logoutEnd" : [], "koko":[], "goods":"N",  
                                } 
@@ -463,9 +463,9 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
               const pswsub = users.psword.substring(0,2) 
               const comb = phonSub + pswsub //문열기 비번 조합 comb
              
-              const query ="INSERT INTO kiki(id, name,cdId, psword, phon, wonset, UseTime, goodsName, benchName,loginstart, logoutEnd, koko) VALUES(?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?);";
+              const query ="INSERT INTO kiki(id, name,cdId, psword, phon, wonset, UseTime, goodsName, benchName,loginstart, logoutEnd, koko,expiryN,gender) VALUES(?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?,?);";
               db.query(query,
-                [users.phon, users.name, comb, users.psword, users.phon,"{}","{}","{}","{}","{}","{}","{}"],(err, data) =>{
+                [users.phon, users.name, comb, users.psword, users.phon,"{}","{}","{}","{}","{}","{}","{}","{}",users.gender],(err, data) =>{
                 if(err){reject(err)}
                 
                 resolve();
@@ -506,7 +506,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
  
 static async Addsavesk(add) { ///  자리 선정 localhost:3000 클릭시 실행하는 위치 ///// 
 // 자리 선정하는 함수 경로 bench.js "/"}
-
+   console.log(add,"509")
    const  adminNexet = await this.adminNe()
    const modiFY = await this.objectsave()
 
@@ -878,7 +878,7 @@ static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
  
  static async goods (add) {
   //여기서 add 는 고정석, 자유석, 기간제 
-  console.log(add)
+  
   const ab = await this.call()
 
   const modiFY = await this.objectsave() //"./src/database/userGoodsKinds.json".json
@@ -900,60 +900,103 @@ return newuser
   
  return {success : true}
  } 
+
  static async adminSetKindSave(add) { // 좌석 유형 설정 adminbench
- const adminset = add
+ 
+  const adminset = add
  const setAdd = await this.adminSet() //저장할곳
- const objectSet =await this.objectSet() // "./src/database/userGoodsKinds.json".json data 들
+ const objectSet =await this.objectSet() //
+
  const set = this.#adminSet
+//  users.id.indexOf(client.id) === -1 
+console.log(objectSet.wonset.includes(add.wonSet),"912")
 
-  
-  
- if(add.wonset !== undefined) {
-  set.wonset.push(add.wonset)
+console.log((objectSet.wonset),"9124")
+ if(objectSet.wonset === undefined) {
 
-} 
+   
+  set.wonset.push(add.wonSet)
+  set.kindSet.push(add.goodss)
+  set.gender.push(add.genderss)
+  
+
+   fs.writeFile("./src/adminSetKinds/adminSeet.json", JSON.stringify(set) , 'utf8' , (err) => {
+       
+          }) 
+          return {success: "apply"}
+  } else if(objectSet.wonset !== undefined && objectSet.wonset.includes(add.wonSet) === true )  { 
+
+   console.log("1")
+   const indexNume = objectSet.wonset.indexOf(add.wonSet)
+   console.log(indexNume)
+    objectSet.kindSet[indexNume] = add.goodss
+    objectSet.gender[indexNume] = add.genderss
+    
+  
+     fs.writeFile("./src/adminSetKinds/adminSeet.json", JSON.stringify(objectSet) , 'utf8' , (err) => {
+         
+            }) 
+        return {success: "repair"}
+    }else if(objectSet.wonset !== undefined && objectSet.wonset.includes(add.wonSet) === false) { 
+
+   
+      console.log("-1")
+  
+      objectSet.wonset.push(add.wonSet)
+      objectSet.kindSet.push(add.goodss)
+      objectSet.gender.push(add.genderss)
+      
+    
+       fs.writeFile("./src/adminSetKinds/adminSeet.json", JSON.stringify(objectSet) , 'utf8' , (err) => {
+           
+              }) 
+              return {success: "apply"}
+      }
+
+
+
 
 
 
        
-      const cdid = set.wonset[set.wonset.length -1]
-      console.log(cdid)
-      var men = setAdd.filter(function (setAdd) { return setAdd.cdId === add.wonset });
+      // const cdid = set.wonset[set.wonset.length -1]
+      // console.log(cdid)
+      // var men = setAdd.filter(function (setAdd) { return setAdd.cdId === add.wonset });
       
           
-      if(men[0] === undefined && add.kindSet === undefined) {
-      setAdd.push({'cdId': cdid})
-          fs.writeFile("./src/adminSetKinds/adminsetkinds.json", JSON.stringify(setAdd) , 'utf8' , (err) => {
-        if (err) throw err;
-           console.log("err")   
-         })  
-      }
-      if(add.wonset !== undefined) {
-      objectSet.cdIdSeet.push(add.wonset)
-      fs.writeFile("./src/adminSetKinds/adminSeet.json", JSON.stringify(objectSet) , 'utf8' , (err) => {
+      // if(men[0] === undefined && add.kindSet === undefined) {
+      // setAdd.push({'cdId': cdid})
+      //     fs.writeFile("./src/adminSetKinds/adminsetkinds.json", JSON.stringify(setAdd) , 'utf8' , (err) => {
+      //   if (err) throw err;
+      //      console.log("err")   
+      //    })  
+      // }
+      // if(add.wonset !== undefined) {
+      // objectSet.cdIdSeet.push(add.wonset)
+      // fs.writeFile("./src/adminSetKinds/adminSeet.json", JSON.stringify(objectSet) , 'utf8' , (err) => {
        
-           })  }
+      //      })  }
           
           
           
             
-           const objS = objectSet.cdIdSeet[objectSet.cdIdSeet.length - 1]
-           var menz = setAdd.filter(function (setAdd) { return setAdd.cdId === objS });
+      //      const objS = objectSet.cdIdSeet[objectSet.cdIdSeet.length - 1]
+      //      var menz = setAdd.filter(function (setAdd) { return setAdd.cdId === objS });
       
          
-        if (menz[0].cdId === objS && add.wonset === undefined) {
+      //   if (menz[0].cdId === objS && add.wonset === undefined) {
        
-         menz[0].kindSet = add.kindSet
+      //    menz[0].kindSet = add.kindSet
       
        
-        fs.writeFile("./src/adminSetKinds/adminsetkinds.json", JSON.stringify(setAdd) , 'utf8' , (err) => {
+      //   fs.writeFile("./src/adminSetKinds/adminsetkinds.json", JSON.stringify(setAdd) , 'utf8' , (err) => {
        
-         })  
-         objectSet.cdIdSeet.splice(1, objectSet.cdIdSeet.length);
-         fs.writeFile("./src/adminSetKinds/adminSeet.json", JSON.stringify(objectSet) , 'utf8' , (err) => {
+      //    })  
+      //    objectSet.cdIdSeet.splice(1, objectSet.cdIdSeet.length);
+      //    fs.writeFile("./src/adminSetKinds/adminSeet.json", JSON.stringify(objectSet) , 'utf8' , (err) => {
        
-         })  
-        }
+      //    })  
+      //   }
    
       
        

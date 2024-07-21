@@ -41,11 +41,12 @@ async Acc() {
     const goods= await UserStorage.goods(add)
      return goods
  }
-  setKind() {
+ async setKind() {
   const add =this.bench;
 
-  const goods=  UserStorage.adminSetKindSave(add)
-  //  return goods
+  const goods= await UserStorage.adminSetKindSave(add)
+  console.log(goods,48)
+   return goods
 }
 async adminNext() {
   const  c =  this.bench

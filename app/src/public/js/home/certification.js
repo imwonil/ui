@@ -66,11 +66,7 @@ console.log(PHON.value)
    console.log(PHONE[0],"kkkke" )
   if(!NAME.value) {  
   
-//  name.value 가 값이 존재하지 
-// 모달창에 이름을 입력해주세요 띄우게 해줌
-// html  26 line id=naem 롤 설정함....
-// 중요한건 다기 버튼 누르지 않아도 창이 닫게 설계바람..
-// 밑에 있는 setTimeout 권장함 이때  if 문안에있는 return 값은 건디지말 것.
+
    setTimeout(() => {
  
 
@@ -87,8 +83,7 @@ console.log(PHON.value)
 // 중요한건 닫기 버튼 누르지 않아도 창이 닫게 설계바람..
 // 밑에 있는 setTimeout 권장함 이때  if 문안에있는 return 값은 건디지말 것.
    setTimeout(() => {
- 
-     document.querySelector(".modal").classList.add("hidden");
+alert("전화번호 미입력")
    }, 2000);
  
   return

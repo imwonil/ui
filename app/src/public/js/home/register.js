@@ -6,6 +6,7 @@ const findModal = document.querySelector(".find-modal")
 
 const feather = document.querySelector(".feather")
 const exit = document.querySelector(".exit")
+const GENDERS = document.querySelector("#gender")
 
 /**아이디/비번 찾기랑 회원가입 모달 각각 끄는 방법 */
 
@@ -21,16 +22,27 @@ const VERIFICATION = document.querySelector("#verification"),
        CONFIRM = document.querySelector("#confirm-psword")
  
   
+      const btnHover = document.querySelectorAll(".flex-1")
+   
+      btnHover.forEach((tabs)=>{
+        tabs.addEventListener("click", GENDER)
+        function GENDER (){
+          console.log(tabs.innerText)
+         console.log(GENDERS)                           
+          document.getElementById(GENDERS.id).setAttribute("placeholder", `${tabs.innerText}`)
+          
+          }
       
-
-
+      
+        })
+  
 
 const verificaionBUTTON = document.querySelector(".bg-gray-900")
 
    verificaionBUTTON.addEventListener("click", VERIFICAIONBUTTON)
 
    function VERIFICAIONBUTTON() {
-
+  const genderValue =  document.getElementById(GENDERS.id).getAttribute("placeholder")
     fetch('/certifications')
     .then(res => res.json())
     .then(data => {
@@ -71,6 +83,18 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
         }, 2000);
         return
       }
+
+      if(genderValue === "성별") {
+       
+      // document.querySelector("#h2").innerText="비밀번호를 입력해주세요."
+      //   document.querySelector(".modal").classList.remove("hidden")
+        setTimeout(() => {
+          
+         alert("성별를 선택해 주세요")
+          
+        }, 2000);
+        return
+      }
     
     const Certification =sessionStorage.getItem("certification")
     const req = {
@@ -79,6 +103,7 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
     psword : PSWORD.value,
     confirmPsword: CONFIRM.value,
     register:"register"  ,
+    gender: genderValue,
     Certification:"Certification"
     }
     console.log(req)

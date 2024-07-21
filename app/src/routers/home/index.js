@@ -33,10 +33,21 @@ router.get('/certifications', (req,res) =>{
 })
 }).catch((err) => console.error(err));
 
+fs.readFile("./src/adminSetKinds/adminSeet.json")
+        .then((data) => {
+          
+     const b = JSON.parse(data)
+     console.log(b)
+     router.get('/setKind', (req,res) =>{
+      res.sendfile("./src/adminSetKinds/adminSeet.json") 
+     })
+}).catch((err) => console.error(err));
 
 
+
+
+router.get("/adminindex", ctrl.output.adminindex)
 router.get("/", ctrl.output.index)
-router.get("/register", ctrl.output.register)
 router.get("/certification", ctrl.output.certification)
 router.get("/newlogin", ctrl.output.newlogin)
 router.get("/register", ctrl.output.register)
@@ -47,5 +58,7 @@ router.post("/newlogin", ctrl.process.newlogin)
 router.post("/register", ctrl.process.register)
 router.post("/certification", ctrl.process.certification)
 router.post("/",ctrl.process.index)
+router.post("/adminindex", ctrl.process.adminindex)
+router.post("/adminBench", ctrl.process.adminBench)
  module.exports = router      
   
