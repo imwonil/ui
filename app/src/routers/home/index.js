@@ -44,7 +44,17 @@ fs.readFile("./src/adminSetKinds/adminSeet.json")
 }).catch((err) => console.error(err));
 
 
+fs.readFile("./src/adminUser/adminGoodsKiosk.json")
+.then((data) => {
 
+const datas = JSON.parse(data)
+
+
+
+router.get('/adminGoodsKiosk', (req,res) =>{
+res.sendfile("./src/adminUser/adminGoodsKiosk.json") 
+})
+}).catch((err) => console.error(err));
 
 router.get("/adminindex", ctrl.output.adminindex)
 router.get("/", ctrl.output.index)
@@ -52,6 +62,8 @@ router.get("/certification", ctrl.output.certification)
 router.get("/newlogin", ctrl.output.newlogin)
 router.get("/register", ctrl.output.register)
 router.get("/certification", ctrl.output.certification)
+router.get("/adminProductlist", ctrl.output.adminProductlist)
+router.get("/productlist", ctrl.output.productlist)
 
 ////////////poset/////////////////
 router.post("/newlogin", ctrl.process.newlogin)
@@ -60,5 +72,5 @@ router.post("/certification", ctrl.process.certification)
 router.post("/",ctrl.process.index)
 router.post("/adminindex", ctrl.process.adminindex)
 router.post("/adminBench", ctrl.process.adminBench)
+router.post("/adminProductlist", ctrl.process.adminProductlist)
  module.exports = router      
-  

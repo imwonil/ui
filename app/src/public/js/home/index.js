@@ -46,24 +46,66 @@ for(var i=0; FeeSet>i; i++) {
      document.getElementById(feeSeetNumger).onclick = () => {indexFunction(text)};
  }
 
+
+
 fetch('/setKind')
 .then(res => res.json())
-.then(data => { console.log(data.wonset)
+.then(data => { 
 for(var i=0; data.wonset.length>i; i++) {
 
 
-console.log([i])
- const regex = /[^0-9]/g;
-        const result = data.wonset[i].replace(regex, "");
-        const number = parseInt(result);
-
+    const regex = /[^0-9]/g;
+    const result = data.wonset[i].replace(regex, "");
+    const number = parseInt(result);
    
-    const setColor=  document.getElementById(number).style ="background-color: #4cc4d4;"
+   if(data.kindSet[i]=== "고정석") {
+   const setColor=  document.getElementById(number).style ="background-color: #761ced;"
+    document.getElementById(number).setAttribute("setName",data.kindSet[i] )
+    document.getElementById(number).setAttribute("genderNmae",data.gender[i] )
+}
+   else if(data.kindSet[i] === "기간제")  {
+    const setColor=  document.getElementById(number).style="background-color: #4cc4d4;"  
+    document.getElementById(number).setAttribute("setName",data.kindSet[i] )
+    document.getElementById(number).setAttribute("genderNmae",data.gender[i] )
+  }
+    
+   else if(data.kindSet[i] === "자유석") {
+       
+      const setColor=  document.getElementById(number).style ="background-color: #4cc4d4;" 
+      document.getElementById(number).setAttribute("setName",data.kindSet[i] )
+      document.getElementById(number).setAttribute("genderNmae",data.gender[i] )
+    }
+
    
 }
 
   })
-function indexFunction(a) {
+function indexFunction(number) {
+ const goodsName = document.getElementById(number).getAttribute("setName")
 
-     console.log(a)
+const wonset   =  document.getElementById(number).outerText
+const  gender = document.getElementById(number).getAttribute("genderNmae")
+
+const req = {
+  wonset,
+  goodsName,
+  gender
+}
+ if(wonset === null || goodsName === null || goodsName === null) {return alert("좌석타입이 설정되여 있지는 유형 입니다 유영자에게 문의 하세요")}
+console.log(req)
+ fetch("/", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(req),
+
+})
+  .then((res) => res.json())
+  .then((res) => {
+
+
+
+   })
+
 }

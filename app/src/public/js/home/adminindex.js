@@ -4,15 +4,21 @@ fetch('/setKind')
 for(var i=0; data.wonset.length>i; i++) {
 
 
-console.log([i])
+
  const regex = /[^0-9]/g;
         const result = data.wonset[i].replace(regex, "");
         const number = parseInt(result);
 
-   
-    const setColor=  document.getElementById(number).style ="background-color: #4cc4d4;"
-   
-}
+   if(data.kindSet[i]=== "고정석") {
+    const setColor=  document.getElementById(number).style ="background-color: #761ced;"}
+    else if(data.kindSet[i] === "기간제")  {
+        const setColor=  document.getElementById(number).style="background-color: #4cc4d4;" }
+     else if(data.kindSet[i] === "자유석") {
+              console.log("kkkk")
+          const setColor=  document.getElementById(number).style ="background-color: #4cc4d4;" 
+          
+        }
+}   
 
   })
 const SNLength =document.getElementsByClassName("seats-number").length

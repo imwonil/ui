@@ -37,6 +37,12 @@ const output = {
    certification: (req, res) => {
       res.render("home/certification")
    },
+   productlist: (req, res) => {
+      res.render("home/productlist")
+   },
+   adminProductlist: (req, res) => {
+      res.render("home/adminProductlist")
+   },
 
 
  
@@ -55,7 +61,15 @@ const process = {
       return res.json(response)
 
    },
+   productlist: async (req, res) => {
+      
 
+
+   },  adminProductlist: async (req, res) => {
+      
+      
+
+   },
    adminindex: async (req, res) => {
       
       const benchs = new Benchs(req.body)
