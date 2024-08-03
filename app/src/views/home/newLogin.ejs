@@ -61,11 +61,11 @@
               <!-- Modal Content & info라는 클래스를 document.queryselectorAll로 불러와서 인덱스를 정의하는 것임-->
                 <div class="mt-6 space-y-4">
                   <span>
-                    <input type="text" id="" class="outline-none w-full text-center p-1 py-2 bg-gray-100 focus:bg-white rounded-lg my-2 info" placeholder="이름">
-                    <input type="text" id="" class="outline-none w-full text-center p-1 py-2 bg-gray-100 focus:bg-white rounded-lg my-2 info" placeholder="전화번호">
-                     <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 block my-2 w-full">인증번호 전송</button>
-                    <input type="text" id="" class="outline-none w-full text-center p-1 py-2 bg-gray-100 focus:bg-white rounded-lg my-2 info" placeholder="인증번호">
-                    <button class="bg-gray-900 text-gray-100 px-4 py-2 rounded-lg hover:bg-black transition duration-300 block my-2 w-full">
+                    <input type="text" id="searchName" class="outline-none w-full text-center p-1 py-2 bg-gray-100 focus:bg-white rounded-lg my-2 info" placeholder="이름">
+                    <input type="text" id="searchPhone" class="outline-none w-full text-center p-1 py-2 bg-gray-100 focus:bg-white rounded-lg my-2 info" placeholder="전화번호">
+                     <button id = "searchSend"class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 block my-2 w-full">인증번호 전송</button>
+                    <input type="text" id="certification" class="outline-none w-full text-center p-1 py-2 bg-gray-100 focus:bg-white rounded-lg my-2 info" placeholder="인증번호">
+                    <button  id="confirm"class="bg-gray-900 text-gray-100 px-4 py-2 rounded-lg hover:bg-black transition duration-300 block my-2 w-full">
                       인증번호 확인
                       </button>
                   </span>
@@ -98,8 +98,8 @@
             
                      </div>
           
-                     <span class="block text-xs font-semibold leading-[48px] text-blue-800 bg-blue-100 text-center rounded-lg">
-                      이용권 구매  </span>
+                     <span  class="block text-xs font-semibold leading-[48px] text-blue-800 bg-blue-100 text-center rounded-lg">
+                     <a href="/productList"> 이용권 구매  </a>  </span>
                           </span>
           </div>
 
@@ -256,19 +256,19 @@
     <!--로그아웃 페이지 부분 & info라는 클래스를 document.queryselectorAll로 불러와서 인덱스 지정하기 때문에 가상키보드로 타이핑 칠 수 있음 -->
     <span class="text-[14px] page hidden transition-all duration-[3000ms]" id="tab3">
       <div class="my-2">
-        <b class="text-[14px] capitalize">아이디</b>
-        <input class="block w-full border rounded-md bg-gray-100 p-2 text-[14px] outline-none focus:bg-white text-center id info" type="email" placeholder="아이디를 입력해주세요">
+        <b class="text-[14px] capitalize">전화번호</b>
+        <input id="logoutPhone"class="block w-full border rounded-md bg-gray-100 p-2 text-[14px] outline-none focus:bg-white text-center id info" type="email" placeholder="아이디를 입력해주세요">
       </div>
       <div class="my-2">
         <b class="text-[14px] capitalize ">비밀번호</b>
-        <input class="block w-full border rounded-md bg-gray-100 p-2 text-[14px] outline-none focus:bg-white text-center password info" type="password" placeholder="비밀번호를 입력해주세요">
+        <input id="logoutPassword"class="block w-full border rounded-md bg-gray-100 p-2 text-[14px] outline-none focus:bg-white text-center password info" type="password" placeholder="비밀번호를 입력해주세요">
       </div>
 
       <!--md:hidden이 모바일 환경에서만 로그인 상태 유지가 보이게 하는 코드 -->
       <label class="md:hidden"<input class="mr-1" type="checkbox">로그인 상태 유지</label>
 
        <!-- 로그아웃 버튼을 누르면 check-anchor라는 클래스를 js에서 인식해서 퇴실할 수 있는 이용권 목록이 모달창 형식으로 나옵니다. -->
-      <button class="block w-full bg-cyan-400 text-white text-[14px] p-2 rounded-md my-2 hover:bg-cyan-500 checkout-anchor">로그아웃</button>
+      <button id="logoutButton" class="block w-full bg-cyan-400 text-white text-[14px] p-2 rounded-md my-2 hover:bg-cyan-500 checkout-anchor">로그아웃</button>
 
        <div class="flex justify-between text-[14px]">
          <!-- 이후에 before/after 가상클래스를 통해 꾸미기를 진행할 예정임 -->
@@ -293,7 +293,7 @@
       <textarea></textarea>
     </div>
    <div class="flex items-center justify-center flex-col [&>div]:m-1 [&>div>button]:bg-slate-600 [&>div>button]:border [&>div>button]:text-white [&>div>button]:rounded-md [&>div>button]:text-center">
-
+인증번호 전송
      <!--요 바로 위에 있는 거는 맨 윗줄과 아랫줄만 통제함..-->
 
      <div class="flex items-center justify-center gap-2 [&>button]:w-9 [&>button]:p-1">

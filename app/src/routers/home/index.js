@@ -13,6 +13,15 @@ const path = require('path')
 // const AdminNext = path.join("/home/hosting_users/emc22wonil2/apps/emc22wonil2_emc33wonil/src/adminSetKinds/adminNext.json") 
 // const kokoTime = path.join("/home/hosting_users/emc22wonil2/apps/emc22wonil2_emc33wonil/src/adminSetKinds/kokoTime.json") 
 
+fs.readFile("./src/database/users.json")
+.then((data) => {
+  const a = JSON.parse(data);
+  
+  router.get('/Users', (req, res) => {
+    res.sendfile("./src/database/users.json");
+  });
+})
+
 fs.readFile("./src/database/userGoodsKinds.json")
 .then((data) => {
   const a = JSON.parse(data);
@@ -37,7 +46,7 @@ fs.readFile("./src/adminSetKinds/adminSeet.json")
         .then((data) => {
           
      const b = JSON.parse(data)
-     console.log(b)
+    
      router.get('/setKind', (req,res) =>{
       res.sendfile("./src/adminSetKinds/adminSeet.json") 
      })
@@ -67,10 +76,14 @@ router.get("/productlist", ctrl.output.productlist)
 
 ////////////poset/////////////////
 router.post("/newlogin", ctrl.process.newlogin)
+router.post("/logout", ctrl.process.logout)
+router.post("/logoutTime", ctrl.process.logoutTime)
 router.post("/register", ctrl.process.register)
 router.post("/certification", ctrl.process.certification)
 router.post("/",ctrl.process.index)
 router.post("/adminindex", ctrl.process.adminindex)
 router.post("/adminBench", ctrl.process.adminBench)
 router.post("/adminProductlist", ctrl.process.adminProductlist)
+router.post("/productlist", ctrl.process.productlist)
+router.post("/search", ctrl.process.search)
  module.exports = router      

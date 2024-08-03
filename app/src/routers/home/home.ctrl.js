@@ -62,12 +62,21 @@ const process = {
 
    },
    productlist: async (req, res) => {
-      
+      const days = new Benchs(req.body)
+      const ACC = await days.Acc()//Benchs.js 23 UserStorage UserStorage 321
+
+      const admin = await adminUserUserStorage.adminInfo()
+   
+      return res.json(ACC)
 
 
-   },  adminProductlist: async (req, res) => {
-      
-      
+   }, 
+     adminProductlist: async (req, res) => {
+      const adminuserinfo = new adminUserInfo(req.body)
+      const response = await adminuserinfo.adminUserSeve()//adminUserInfo.js 10 adminUserStorage.js 69
+      // const b = await adminuserinfo.adminNext()
+
+      return res.json(response)
 
    },
    adminindex: async (req, res) => {
@@ -86,6 +95,22 @@ const process = {
       const response = await users.login()
       console.log(response)
       return res.json(response)
+   },
+   logout: async (req, res) => {
+
+      const users = new User(req.body)
+      // const response =await  users.logoutTime(); //User.js 60 UserStorage 594
+      const b = await users.loca();// User.js 80 UserStorage 523
+
+      return res.json(b)
+   },
+   logoutTime: async (req, res) => {
+      console.log(req.body)
+      const users = new User(req.body)
+      const respons = await users.loguttime()
+
+      return res.json(respons)
+
    },
    register: async (req, res) => {
    
@@ -116,7 +141,15 @@ const process = {
 
 
    },
+   search: async (req, res) => {
+      
+     
+      const users = new Benchs(req.body)
+      const response =await users.SEARCH()
+        
+      return res.json(response)
 
+   },
  
 
 

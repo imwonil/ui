@@ -15,6 +15,7 @@ class UserStorage {
 static #uses = {
       id:[], psword:[] ,name:[], phon:[], gender:[] , certification:[]
                }
+        
                static #creditCard = {
                 id:[],phon:[],approvalDay:[],approvalNumber:[],fee:[],hangle:[], cancal:[],name:[],goodsName:[]
 
@@ -60,7 +61,7 @@ static #adminSet = {  kindSet :[], wonset:[] , gender:[] }
   } 
 
   static getUserInfo(phon) {
-     
+  console.log(phon,"64")
     return fs.
     readFile("./src/database/users.json")
     
@@ -72,9 +73,10 @@ static #adminSet = {  kindSet :[], wonset:[] , gender:[] }
       const keys = Object.keys(users)
       const newUsers = keys.reduce((newUsers, filde ) =>{
       newUsers[filde] = users[filde][idx]
+      console.logn
       return newUsers; 
       },{})
-     console.log(newUsers,"78")
+     
       return newUsers;
     }) .catch((err) => console.error(err))
     
@@ -355,8 +357,8 @@ static adminNe() {
 static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초기화 해줌
                          //newLogin 에서 login 하면 실행되는 함수
      
-  const users = await this.getUserInfo(cl.phone)
-   
+  const users = await this.getUserInfo(cl.phon)
+   console.log(users,"361")
   const uiuiu = await this.adminNe()
   const us = this.#uses
   const ad = await this.call() 
@@ -506,29 +508,43 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
  
 static async Addsavesk(add) { ///  자리 선정 localhost:3000 클릭시 실행하는 위치 ///// 
 // 자리 선정하는 함수 경로 bench.js "/"}
-   console.log(add,"509")
+  
    const  adminNexet = await this.adminNe()
    const modiFY = await this.objectsave()
-
-   const ab = await this.call("id") //database/user.json 담겨있는 id
+   const nowTime =  moment().format('yyyy-MM-DD hh:mm')
+   const ab = await this.call("phon") //database/user.json 담겨있는 id
   
    const userGoodsKinds = await this.objectsave()//userGoodsKinds.json
 
 
   
  
-   var userRemove = userGoodsKinds.filter(function (addSave) { return addSave.id === ab.id});
-  
-   const index = add.index
-    console.log(add.index)
+   var userRemove = userGoodsKinds.filter(function (addSave) { return addSave.phon === ab.phon});
+     console.log(userRemove[0])
+     console.log(ab)
+   const index = add.indexOf
+    var changeGender =[]
    const benchSet =  userRemove[0].goodsName[index]
  
-   
-
-   
-    if(benchSet !== add.setGoods) { throw ( "type 의 유형이 않닙니다 또는 :).") }
+   const benchGender =  userRemove[0].gender
+      
+   if(benchGender ==="남자") {console.log("pp")
+   changeGender ="남자 전용"}
+       else if(benchGender ==="여자") { changeGender ="여자 전용"}
+       
+       if(add.goodsName === "고정석"){add.goodsName ="fixedType"}
+     else if(add.goodsName ==="자유석") {add.goodsName ="feeType"}
+          else if(add.goodsName ==="기간제") {add.goodsName="daysType"}
+       
+             
+    if(benchSet !== add.goodsName) { throw ( "type 의 유형이 않닙니다 또는 :).") }
     
-    
+    if(add.gender !=="남여 공용") {
+      
+      if(changeGender !== add.gender) {
+      
+      { throw ( " 성멸이 않닙니다.") }}
+      }
 
       
        
@@ -538,6 +554,8 @@ static async Addsavesk(add) { ///  자리 선정 localhost:3000 클릭시 실행
                 if(resolve) {
          
                   userRemove[0].wonset[index]= `${add.wonset}set`
+                  userRemove[0].loginStart[index] = nowTime
+               
                   fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(userGoodsKinds))
                     resolve();
                 }else{
@@ -561,12 +579,12 @@ static async Addsavesk(add) { ///  자리 선정 localhost:3000 클릭시 실행
             });}
             
            
-
+ 
            
             paymentAPI().then(()  => { return  deliveryAPIS() })  
 
  
-          return userGoodsKinds
+          return adminNexet
   
 
 }
@@ -581,13 +599,13 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
   
   const userGoodsKinds = await this.objectsave()//userGoodsKinds.json  
  
-  console.log(add,"111")
+
   const day = add.day// client 상품구매한 날짜 충전 data 
 
  
   var Nicename = Nice.filter(function (addSave) { return addSave.id === ab.id });
         
-
+  
 
   
   const yy = this.#y 
@@ -738,14 +756,14 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
 
 
 static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
-        
+                 
   const adminNe = await this.adminNe() //adimNext.json //초기화 데디터를 가지고있는 위치
   
   const modiFY = await this.objectsave() // //초기화 데디터를 가지고있는 위치
  
  
-  var kend = modiFY.filter(function (addSave) { return addSave.id === client.id })
-  
+  var kend = modiFY.filter(function (addSave) { return addSave.phon === client.phon })
+   
   
   const KEND =kend[0]
   fs.writeFile("./src/adminSetKinds/adminNext.json", JSON.stringify([KEND]), (err) => {
@@ -755,15 +773,15 @@ static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
            })
 
   
-   const id = client.id
-    fs.writeFile("./src/database/user.json", JSON.stringify({id}), (err) => {
+   const phone = kend[0]
+    fs.writeFile("./src/database/user.json", JSON.stringify(phone), (err) => {
       fs.readFile("./src/database/user.json", "{}", 'utf8', (err, data) => {
         
       });
     })  
   
  
-    return kend     
+    return kend[0]     
        
         
           
@@ -786,7 +804,7 @@ static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
      const dateB = moment(`${nowTime}`);
    
      const login =   kend[0].loginStart[client.index]
-     const nexetTime= dateB.diff(login, 'minute')
+     const nexetTime = dateB.diff(login, 'minute')
     
               
       

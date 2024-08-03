@@ -85,11 +85,12 @@ function indexFunction(number) {
 
 const wonset   =  document.getElementById(number).outerText
 const  gender = document.getElementById(number).getAttribute("genderNmae")
-
+ const indexOf = sessionStorage.getItem("indexOf")
 const req = {
   wonset,
   goodsName,
-  gender
+  gender,
+  indexOf 
 }
  if(wonset === null || goodsName === null || goodsName === null) {return alert("좌석타입이 설정되여 있지는 유형 입니다 유영자에게 문의 하세요")}
 console.log(req)
@@ -101,10 +102,14 @@ console.log(req)
   body: JSON.stringify(req),
 
 })
-  .then((res) => res.json())
-  .then((res) => {
-
-
+  .then((res) => res.json()) 
+  .then((res) => { 
+    if(res.success === false){ alert(res.msg)}
+    console.log(res)
+    alert(`${res[0].name}님 열공하세요`)
+    // sessionStorage.removeItem("cdId")
+    sessionStorage.removeItem("indexof")
+     location.href = "/newLogin";
 
    })
 

@@ -8,24 +8,28 @@ this.body = body
 
 }
 async login(){
-  const client = this.body
-        
   
-  const {phon, psword} = await UserStorage.getUserInfo(client.phone)
-
-  if(phon){
-    
-    
-      if(client.phone === phon &&   client.psword === psword ){
-       const Kinde = await UserStorage.As(client)
-    
-       
-     return  "success",Kinde
-      
-  }
-  return {success: false , msg : "비밀번호가 다릅니다."}
-  }
-  return {success: false , msg : "전화번호가 다릅니다.."}
+  const client = this.body
+ 
+   
+  const {phon, psword}  = await UserStorage.getUserInfo(client.phon)
+  
+    if(phon) {
+         if(client.psword !== psword ) { 
+        return  {success: false , msg: "비밀번호가 다릅니다"} 
+  
+           } else if(client.phon !== phon){
+                        
+            return {success: false, msg: "전화문호가 다릅니다"}
+          } else if (client.phon === phon && client.psword === psword)  {
+          const a = await UserStorage.locaUser(client) 
+          return  a
+          }
+          }
+         
+          return {success: false, msg: "전화문호가 다릅니다"}
+                    
+                   
   }
 
 async register(){
@@ -60,29 +64,24 @@ const client = this.body
 const client = this.body
  
    
-const {id, psword}  = await UserStorage.getUserInfo(client.id)
+const {phon, psword}  = await UserStorage.getUserInfo(client.phon)
 
+  if(phon) {
+       if(client.psword !== psword ) { 
+      return  {success: false , msg: "비밀번호가 다릅니다"} 
 
-  if(client.id === id && client.noName !== "username" && client.psword !== psword  ) {
-           return {success: false , msg: "비밀번호를 확인 하세요"}
-    
-        }else if(client.id !== id && client.noName !== "username" &&client.psword === psword) { 
-           return  {success: false , msg: "아이디를 확인해주세요"} 
-
-              }
-                else if(client.id !== id && client.noName === "username" && client.psword !== psword){
+         } else if(client.phon !== phon){
                       
-                      return client.noName
-                    }
-                    else if(client.id === id && client.noName !== "username" && client.psword === psword) {
-                   
-                      const client =this.body 
-                       const a = await UserStorage.locaUser(client)
-                      return  {a , success:true}
-                    }     else if(client.id !== id && client.noName !== "username" && client.psword !== psword) {
-                   
-                      return  {success: false , msg: "아이디와 비번을 확인해주세요"} 
-                  }
+          return {success: false, msg: "전화문호가 다릅니다"}
+        } else if (client.phon === phon && client.psword === psword)  {
+        const a = await UserStorage.locaUser(client) 
+        return  a
+        }
+        }
+       
+        return {success: false, msg: "전화문호가 다릅니다"}
+                  
+                 
                 }
       
 

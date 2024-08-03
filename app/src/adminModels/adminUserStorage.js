@@ -84,9 +84,10 @@ static  #adminUser = {
   console.log(userinfo,"kkkk")
    const a = await this.adminInfo()
    const kiosck  = await this.objectsave()
-   console.log(userinfo.resave,"lklklklk")
+  
    var menz = kiosck.filter(function (setAdd) { return setAdd.indexType === userinfo.indexType });
 
+ console.log(menz[0])
   if(menz[0] === undefined ) {
    
     kiosck.push({ "indexType":userinfo.indexType,"cdId":`${userinfo.cdId}`,
@@ -100,20 +101,8 @@ static  #adminUser = {
     
   return kiosck 
   
-  }
-  else if(userinfo.feeName !== undefined  &&  userinfo.indexType === "fixedType"  ){
-    menz[0].feeName.push(userinfo.feeName)
-    menz[0].fee.push(userinfo.fee)
-    menz[0].expiry.push(userinfo.expiry)
-   
-    
-     fs.writeFile("./src/adminUser/adminGoodsKiosk.json", JSON.stringify(kiosck) , 'utf8' , (err) => {
-      if (err) throw err;
-       console.log("err") 
-     })
-  }
-  else if(userinfo.feeName !== undefined && userinfo.indexType === "feeType" ){
-    
+  } else if(userinfo.save === "save"  ){
+    console.log("kjuuuu")
     menz[0].feeName.push(userinfo.feeName)
     menz[0].fee.push(userinfo.fee)
     menz[0].expiry.push(userinfo.expiry)
@@ -122,21 +111,9 @@ static  #adminUser = {
      if (err) throw err;
       console.log("err") 
     })
- }else if(userinfo.fee !== undefined && userinfo.indexType === "daysType"){
-  console.log("dkjkj")
-  
-  menz[0].feeName.push(userinfo.feeName)
-  menz[0].fee.push(userinfo.fee)
-  menz[0].expiry.push(userinfo.expiry)
- fs.writeFile("./src/adminUser/adminGoodsKiosk.json", JSON.stringify(kiosck) , 'utf8' , (err) => {
-   if (err) throw err;
-    console.log("err") 
-  })
-}
-  else if(userinfo.delet === "deleted") { 
-   
-
-     
+ }
+  else if(userinfo.delet === "delet") { 
+        
     kiosck.forEach((item, index)=> {
 
   
@@ -156,13 +133,13 @@ static  #adminUser = {
   
     
 
-  } else if(userinfo.resave === 'resave') {  
-    console.log(userinfo.resave)    
-    // var menz = kiosck.filter(function (setAdd) { return setAdd.indexType === userinfo.indexType });
+  } else if(userinfo.save === 'resave' ) {  
+    console.log(userinfo.save,"162")    
    
-    menz[0].feeName[userinfo.index] = userinfo.valueFeeName
-    menz[0].fee[userinfo.index] = userinfo.valuFee
-    menz[0].expiry[userinfo.index] = userinfo.valueExpiry
+  
+    menz[0].feeName[userinfo.index] = userinfo.feeName
+    menz[0].fee[userinfo.index] = userinfo.fee
+    menz[0].expiry[userinfo.index] = userinfo.expiry
     
     
     
