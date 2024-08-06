@@ -94,13 +94,24 @@ const buttons = document.querySelectorAll(".btn");
            const certification= document.querySelector("#certification")
         S_S.addEventListener("click",search)
         function search() {
+
+        const userIndex = data.phon.indexOf(S_P.value)  
+      
       const PhoneInclude =  data.phon.includes(S_P.value)
       const NameInclude =  data.name.includes(S_N.value)
-      
-       const userIndex =  data.name.indexOf(S_N.value)
-           if(!PhoneInclude){return alert("존재하는 전화번호가 없습니다.")}
-             else if(!NameInclude) {return alert("존재하는 이름이 없습니다.")}
-          
+
+       const userNameindex =  data.name.indexOf(S_N.value)
+       
+       const userPhoneindex = data.phon.indexOf(S_P.value)
+       
+       const UsersNAME =     data.name[userNameindex]
+       const UsersPHONE = data.phon[userNameindex]
+     
+
+           if(userNameindex !== userPhoneindex){return alert(" 전화 이름이 다릅니다.")}
+       
+               else if(!PhoneInclude) {return alert("전화번호가 존재 하지 않습니다,")}
+                    else if((!NameInclude)){return alert("존재하지 않은 이름 입니다.")}
              const nowTimeSS = moment().format('ss')
              const comb = S_P.value.substr(9, 10)
              const combination =  nowTimeSS + comb 
@@ -114,7 +125,8 @@ const buttons = document.querySelectorAll(".btn");
            
           
              }
-             console.log(req)
+            alert("인증번호 전송 하였습니다.")
+            console.log(req)
         fetch("/search", {
           method: "POST",
           headers : {

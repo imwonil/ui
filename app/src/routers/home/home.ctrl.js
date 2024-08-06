@@ -62,12 +62,12 @@ const process = {
 
    },
    productlist: async (req, res) => {
-      const days = new Benchs(req.body)
-      const ACC = await days.Acc()//Benchs.js 23 UserStorage UserStorage 321
+      // const days = new Benchs(req.body)
+      // const ACC = await days.Acc()//Benchs.js 23 UserStorage UserStorage 321
 
-      const admin = await adminUserUserStorage.adminInfo()
+      // const admin = await adminUserUserStorage.adminInfo()
    
-      return res.json(ACC)
+      // return res.json(ACC)
 
 
    }, 

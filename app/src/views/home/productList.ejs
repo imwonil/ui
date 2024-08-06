@@ -6,12 +6,8 @@
  
     
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css/home/productList.css">
   
-  
-  
-<html xmlns="http://www.w3.org/1999/xhtml">
-<html lang="ko">
+
 
 <head>     
 <meta charset="utf-8">
@@ -103,130 +99,69 @@
 </head>
 
   <body>
-    <div class="correction-modal justify-center flex items-center h-screen fixed w-full z-50 hidden"> 
+
+    <!-- 결제 모달 시작-->
+
+    <div class="payment-modal justify-center flex items-center h-screen fixed w-full z-50 hidden "> 
+
       <div class="fixed absolute inset-0 bg-gray-300 bg-opacity-75"></div>
-     <!-- 상품 수정 모달 시작-->
-     <div class="flex items-center justify-center w-full md:w-1/3 z-50\         <div class="bg-white rounded-lg p-6 w-full shadow-lg transform transition-all duration-300 ">
+   
+     <div class="flex items-center justify-center w-full md:w-1/3 z-50">        <div class="bg-white rounded-lg p-6 w-full shadow-lg transform transition-all duration-300 ">
              <!-- 모달 헤더 -->
              <div class="flex justify-between items-center border-b-2 border-gray-200 pb-4">
-                 <h2 class="text-xl font-semibold">상품 설정 수정</h2>
+                 <h2 id="money"class="text-xl font-semibold">금액</h2>
 
              </div>
              <div class="mt-6 space-y-4">
 
                <div class="w-full my-5">
                      <div class="relative w-full">
+                      <script type="text/javascript" src="/js/home/jquery-1.9.1.min.js" ></script>
+    
+  <html xmlns="http://www.w3.org/1999/xhtml">
+	<html lang="ko">
+
+	<head>     
+	<meta charset="utf-8">
+	<meta http-equiv="content-type" content="text/html; charset=euc-kr">
                      <button   class="dropdown-button w-full p-2 px-4 mb-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
-                        좌석 입 설정
+                        할부 개월 수 선택
                          <svg xmlns="http://www.w3.org/2000/svg"  class="w-[20px] h-5 ml-2 -mr-1 absolute top-2 right-3" viewBox="0 0 20 20" fill="currentColor">
                              <path fill-rul e="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
                          </svg>
                      </button>
 
-                         <!--좌석 종류 선택 -->
-                         <div class="dropdown-menu absolute right-0 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-20">
-                               <div  class="py-2 p-2">
-                                   <a   class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content goodss" role="menuitem">고정석</a>
-                                   <a   class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content goodss" role="menuitem">자유석</a>
-                                   <a  class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content goodss" role="menuitem">기간제</a>
-               </div>
-                           </div>
+                         <!-- 할부 개월 수 선택 -->
+                         <div id="halboo"class="dropdown-menu absolute right-0 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-20">
+                                   <a   class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content" value = "01" role="menuitem">01개월</a>
+                                   <a  class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content" value = "02" role="menuitem">02개월</a>
 
+                                 <a   class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content"  value = "03" role="menuitem">03개월</a>
+                                  <a   class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content" value = "04" role="menuitem">04개월</a>
+                                  <a  class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content"  value = "05" role="menuitem">05개월</a>
 
-                         <div class="mx-auto ">
+                                 <a  class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content" value = "06" role="menuitem">06개월</a>
 
-                             <div class="mb-4 flex flex-col p-2 bg-white rounded-lg shadow-md gap-2">
-                                 <input  class="w-full block outline-none bg-gray-100 text-center px-4 p-2 text-sm text-gray-700 rounded-md " placeholder="상품명">
-                               <input  class="w-full block outline-none bg-gray-100 text-center px-4 p-2 text-sm text-gray-700 rounded-md " placeholder="가격">
-                               <input  class="w-full block outline-none bg-gray-100 text-center px-4 p-2 text-sm text-gray-700 rounded-md " placeholder="유효기한">
+                                 <a  class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content" value = "07" role="menuitem">07개월</a>
 
-
-
-                             </div>
-
-
-                              <!--적용/취소 버튼 시작, 적용 버튼 누르면 서버로 변경 사항이 전달되어야 한다. 취소 버튼을 누르면 배치도로 돌아가야 한다.-->
-                           <div class=" py-3 flex justify-end">
-                             <button class="adjust-button mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 md:ml-3 md:w-auto md:text-sm"> 수정 </button>
-                              <button class="cancel-button mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 md:ml-3 md:w-auto md:text-sm"> 취소 </button>                 
-                             <!--적용/취소 버튼 종료 -->
-
-                           </div>
-                       </div>
-
-
-
-                         </div>
-
-                 </div>
-
-
-             </div>
-         </div>
-     </div>
-
-     </div>
-      <!-- 상품 수정 모달 종료 -->
-
-
-
-
-
-
-    <div class="addition-modal justify-center flex items-center h-screen fixed w-full z-50 hidden"> 
-      <div class="fixed absolute inset-0 bg-gray-300 bg-opacity-75"></div>
-     <!-- 상품 추가 모달 시작-->
-     <div class="flex items-center justify-center w-full md:w-1/3 z-50">
-         <div class="bg-white rounded-lg p-6 w-full shadow-lg transform transition-all duration-300 ">
-             <!-- 모달 헤더 -->
-             <div class="flex justify-between items-center border-b-2 border-gray-200 pb-4">
-
-
-             </div>
-             <div class="mt-6 space-y-4">
-            
-               <div class="w-full my-5">
-                     <div class="relative w-full">
-                     <button id="seetType"   class="dropdown-button w-full p-2 px-4 mb-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
-                        좌석 타입 
-                         <svg xmlns="http://www.w3.org/2000/svg"   class="w-[20px] h-5 ml-2 -mr-1 absolute top-2 right-3" viewBox="0 0 20 20" fill="currentColor">
-                             <path fill-rule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                         </svg>
-                     </button>
-
-                         <!--좌석 종류 선택 -->
-                         <div class="dropdown-menu absolute right-0 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-20">
-                               <div class="py-2 p-2">
                                 
-                                <!--상품 추가 활성화  -->
-                                   <a  class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content goodss" role="menuitem">고정석</a>
-                                   <a  class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content goodss" role="menuitem">자유석</a>
-                                   <a  class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content goodss" role="menuitem">기간제</a>
+
                </div>
                            </div>
 
 
                          <div class="mx-auto ">
 
-                             <div class="mb-4 flex flex-col p-2 bg-white rounded-lg shadow-md gap-2">
-                                 <input id = "goodsName" class="w-full block outline-none bg-gray-100 text-center px-4 p-2 text-sm text-gray-700 rounded-md " placeholder="상품명">
-                               <input id = "fee" class="w-full block outline-none bg-gray-100 text-center px-4 p-2 text-sm text-gray-700 rounded-md " placeholder="가격">
-                               <input id = "expiry" class="w-full block outline-none bg-gray-100 text-center px-4 p-2 text-sm text-gray-700 rounded-md " placeholder="유효기한">
-
-
-
-                             </div>
-
-
-                              <!--적용/취소 버튼 시작, 적용 버튼 누르면 서버로 변경 사항이 전달되어야 한다. 취소 버튼을 누르면 배치도로 돌아가야 한다.-->
+                              <!--결제하기/닫기 버튼 시작, 적용 버튼 누르면 서버로 변경 사항이 전달되어야 한다. 취소 버튼을 누르면 배치도로 돌아가야 한다.-->
                            <div class=" py-3 flex justify-end">
-                             <button id="save"class="add-Addition-btn mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 md:ml-3 md:w-auto md:text-sm"> 저장 </button>
-                             <button class="add-cancel-btn mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 md:ml-3 md:w-auto md:text-sm"> 취소 </button>                       
-                             <!--적용/취소 버튼 종료 -->
+                           <button class=" mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 md:ml-3 md:w-auto md:text-sm"> <a href="javascript:reqVCAT_HTTP()">결제하기</a> </button>                 
+                          
+                              <button class="cancel-button mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 md:ml-3 md:w-auto md:text-sm"> 닫기 </button>                 
+                             <!--결제하기/닫기 버튼 종료 -->
 
                            </div>
                        </div>
-
+        </from>
 
 
                          </div>
@@ -237,10 +172,12 @@
              </div>
          </div>
      </div>
-   
 
      </div>
-      <!-- 상품 추가 모달 끝-->
+
+
+    
+  
     <div>
         <div class="flex h-screen overflow-y-hidden bg-white" x-data="setup()" x-init="$refs.loading.classList.add('hidden')">
           <!-- 로딩 스크린 -->
@@ -404,9 +341,9 @@
 
 
                        <!--상품 목록 수정 테이블 시작 -->
-                      <table class="border-collapse w-full rounded-md">
+                      <table class="product-table border-collapse w-full rounded-md">
                           <thead>
-                              <tr>
+                              <tr class="styled-tr">
                                   
                                   <th class="styled-th">상품명</th>
                                   <th class="styled-th">유형</th>
@@ -499,108 +436,216 @@
             </footer>
           </div>
 
-
+          
         </div>
-        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
+        
         
     </div>
+   
 
-
-
+      <div class="a">
+      
+      <table>	
+        <tr align="center">
+        
+        </tr>
+      </table> 
+  
+      
+       <li><a id="cads"> </a></li> 
+   
+  
+    <h2 id="cad"> <h2>
+  
+  <from>  
+  <table align="center" cellspacing="0" cellpadding="0" >
+    <tr bgcolor="blue" align ="center">	</tr>
+    <td style="display:none" ><input type="radio" name="myRadios" onclick="handleClick();" value="credit_cancel"/>신용취소</td>
+  
+    <tr align="left" style="display:none" >
+      <td >할부 : <input type="text" name="halbu" value="00"></td>
+        <!-- 아래부분 결재 금액  -->
+      <td type="text" id = "Money"name="money" > 상품 구매 </td>  
+    </tr>
     
-       
-
+  <br>
+  <!-- SendDdata : 결제해 해당  데이타 보냄 RecvData 보낸 데이타정보를 받아옴 -->
+  <input style="display:none" type="text" name="SendData" size="100"><br><br>
+  <textarea style="display:none" name="RecvData" cols="100" rows="5"></textarea>
+  <br><br>
+    <<script type="text/javascript" src="/js/home/jquery-1.9.1.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
-    <script src="../js/adminProductlist.js"></script>
+    <script src="/js/home/productList.js"></script>
 
   </body>
   
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<html lang="ko">
-
-	<head>     
-	<meta charset="utf-8">
-	<meta http-equiv="content-type" content="text/html; charset=euc-kr">
-	
 	
 
 
-<body>
-
-	<form name="form" method="post">
-
-		<div class="a">
-		
-		<table>	
-			<tr align="center">
-			
-			</tr>
-		</table> 
-
+	
+  <!DOCTYPE html>
+  <html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+  <head> 
+      <meta charset="UTF-8">
+      
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="/css/home/Kioce.css">
+      
+      
+      
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <html lang="ko">
+  
+    <head>     
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=euc-kr">
     
-	   <li><a id="cads"> </a></li> 
- 
-
-	<h2 id="cad"> <h2>
-
-<from>  
-<table align="center" cellspacing="0" cellpadding="0" >
-	<tr bgcolor="blue" align ="center">	</tr>
-	<td style="display:none" ><input type="radio" name="myRadios" onclick="handleClick();" value="credit_cancel"/>신용취소</td>
-
-	<tr align="left" style="display:none" >
-		<td >할부 : <input type="text" name="halbu" value="00"></td>
-			<!-- 아래부분 결재 금액  -->
-		<td type="text" id = "Money"name="money" > 상품 구매 </td>  
-	</tr>
-	
-<br>
-<!-- SendDdata : 결제해 해당  데이타 보냄 RecvData 보낸 데이타정보를 받아옴 -->
-<input style="display:none" type="text" name="SendData" size="100"><br><br>
-<textarea style="display:none" name="RecvData" cols="100" rows="5"></textarea>
-<br><br>
-
-<div class="modal hidden">
+     
+      <title>Document</title> 
+  
+  <body> 
+    <ul class="tab">
+      <li class="tab__item active">
+        <a href="#tab1">정기권</a>
+        
+  
+      </li>
+      <li class="tab__item">
+        <a href="#tab2">충전권</a>
+      </li> 
+      <li class="tab__item">
+        <a href="#tab3">일일권</a>
+      </li>
+      
+    </ul>
     
-	<div class="bg"></div>  
-     <div class="modalBox">
-      <h2 id="feeName"> 금액 </h2>
-		 
+    <!-- 탭 내용 영역 //////////////////////////////////// -->
+    <!-- 고정석 -->
+    <div class="tab__content-wrapper">
+       <div id="tab1" class="tab__content active" >
+           <table class="afternoon-session" cellspacing="1">
+          <tbody id = "k">
+             <tr>
+             
+              <th scope="row">상품 이름</th>
+              <th scope="row">금액 </th>
+               <th scope="row">상태</th>
+               <th scope="row">유효기간</th>
          
-    
-		<select name="likeLanguage" id="seet" class="pl">
-
-            <option value="00">할부 개월 수</option>
-            <option value = "00">1 개월</option>
-            <option value = "02">2 개월</option>
-            <option value = "03">3 개월</option>
-            <option value = "04">4 개월</option>
-            <option value = "05">5 개월</option>
-            <option value = "06">6 개월</option>
-            <option value = "07">7 개월</option>
-        </select>
-        <div class = "menuCategory"> 
-          <li><a href="javascript:reqVCAT_HTTP()">결제하기</a></li> 
-          <li><a class="closeBtn " href="/productList">닫기</a></li> 
+               <!-- <th scope="row">등록일</th> -->
+             </tr>
+            </tbody>
+          
+         </table>
+      </div>
+     
+      <!-- 충전권-->
+      <div id="tab2" class="tab__content">
+        <table class="afternoon-session" cellspacing="1">
+          <tbody id = "ree">
+             <tr>
+              <th scope="row">상품 이름</th>
+              <th scope="row">금액 </th>
+               <th scope="row">상태</th>
+               <th scope="row">유효기간</th>
+             </tr>
+            </tbody>
+          
+         </table>
          </div>
-		
-	</div>
-</div>
+  
+        <div id="tab2" class="tab__content">
+        <table class="afternoon-session" cellspacing="1">
+          <tbody id = "rs">
+             <tr>
+              <th scope="row">상품 이름</th>
+              <th scope="row">금액 </th>
+               <th scope="row">상태</th>
+               <th scope="row">유효기간</th>
+         
+               <!-- <th scope="row">등록일</th> -->
+             </tr>
+            </tbody>
+          
+         </table>
+         </div>
+     
+    </div>
+  
 
-</div> 
-</form>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  
+  <html xmlns="http://www.w3.org/1999/xhtml">
+    <html lang="ko">
+  
+    <head>     
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=euc-kr">
+    
+    
+  
+  
 
+  
+    <form name="form" method="post">
+  
+      <div class="a">
+      
+      <table>	
+        <tr align="center">
+        
+        </tr>
+      </table> 
+  
+      
+       <li><a id="cads"> </a></li> 
+   
+  
+    <h2 id="cad"> <h2>
+  
+  <from>  
+  <table align="center" cellspacing="0" cellpadding="0" >
+    <tr bgcolor="blue" align ="center">	</tr>
+    <td style="display:none" ><input type="radio" name="myRadios" onclick="handleClick();" value="credit_cancel"/>신용취소</td>
+  
+    <tr align="left" style="display:none" >
+      <td >할부 : <input type="text" name="halbu" value="00"></td>
+        <!-- 아래부분 결재 금액  -->
+      <td type="text" id = "Money"name="money" > 상품 구매 </td>  
+    </tr>
+    
+  <br>
+  <!-- SendDdata : 결제해 해당  데이타 보냄 RecvData 보낸 데이타정보를 받아옴 -->
+  <input style="display:none" type="text" name="SendData" size="100"><br><br>
+  <textarea style="display:none" name="RecvData" cols="100" rows="5"></textarea>
+  <br><br>
+  
+  
+            <li><a href="javascript:reqVCAT_HTTP()">결제하기</a></li> 
+          
+           </div>
+      
+    </div>
+  </div>
+  
+  </div> 
+  </form>
+  
+  
+  <script type="text/javascript" src="/js/home/jquery-1.9.1.min.js" ></script>
+  
+  
+  <script type="text/javascript" src="/js/home/kioce.js"></script>
+  
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> 
+  </body>
+  
+  
+  </html>
 
-<script type="text/javascript" src="/js/home/jquery-1.9.1.min.js" ></script>
-
-
-<script type="text/javascript" src="/js/home/productList.js"></script>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> 
-</body>
 
 
 
