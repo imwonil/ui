@@ -27,7 +27,7 @@ const money = document.getElementById("money")
 const HALBOO = document.getElementById("halboo")
 const TEB = document.querySelectorAll('.teb');
 const set = document.querySelectorAll('.dropdown-content');
-console.log(set)
+
 const TYPE = document.getElementById("seetType")
 
 
@@ -129,12 +129,12 @@ function tebClick(tebKinde) {
 
 
 
-            tr.appendChild(td0).id = "자유석"
+            tr.appendChild(td0).id = "feeType"
             tr.appendChild(td1).id = menz[0].feeName[y] 
-            tr.appendChild(td2).id =  menz[0].fee[y]+"자유석"
-            tr.appendChild(td3).id =  menz[0].fee[y]+"자유석"
+            tr.appendChild(td2).id =  menz[0].fee[y]+"feeType"  
+            tr.appendChild(td3).id = menz[0].expiry[y]
 
-            document.getElementById(menz[0].fee[y]+"자유석").onclick = () => {payClick()}
+            document.getElementById(menz[0].fee[y]+"feeType").onclick = () => {payClick(td1.outerText,td3.outerText,td2.outerText,"feeType")}
 
           }  
 
@@ -174,7 +174,7 @@ function tebClick(tebKinde) {
 
             tr.appendChild(td0).id = "daysType"
             tr.appendChild(td1).id = menz[0].feeName[y] 
-            tr.appendChild(td2).id = menz[0].fee[y]+"daysType"  
+            tr.appendChild(td2).id =  menz[0].fee[y]+"daysType"  
             tr.appendChild(td3).id = menz[0].expiry[y]
 
 
@@ -182,8 +182,7 @@ function tebClick(tebKinde) {
 
 
 
-
-            document.getElementById(menz[0].fee[y]+"daysType").onclick = () => {payClick()}
+            document.getElementById(menz[0].fee[y]+"daysType").onclick = () => {payClick(payClick(td1.outerText,td3.outerText,td2.outerText,"daysType"))}
 
 
 
@@ -279,6 +278,7 @@ const cancelBtn = document.querySelector(".cancel-button")
 cancelBtn.addEventListener("click", ()=>{
 
   paymentModal.classList.toggle("hidden")
+   location.href = "/productList"
 })
 
 
@@ -289,10 +289,10 @@ cancelBtn.addEventListener("click", ()=>{
 //수정 버튼을 눌러서 나타난 모달에서 수정 버튼을 누르면 새로 고침이 되어서 해당 목록이 테이블에 나타나게끔 js를 설계해야 한다.
 
 function payClick(goodsName,expiry,fee,setGoods) {
-  HALBOO.style=""
-  console.log( HALBOO.style,"llk 293")
+ if(fee <= 50000) { HALBOO.style="display:none"
+                       }
+  
 
-console.log(goodsName,expiry,fee,setGoods)  
 kioceTotall.push(goodsName, expiry, fee,setGoods )
 
 paymentModal.classList.toggle("hidden")
@@ -308,24 +308,29 @@ const result = goodsName.replace(regex, "");
 const number = parseInt(result);
 
 const nowTime = moment().format('yy-MM-DD hh:mm')
-set.forEach((MONEY) => {
+set.forEach((MONEY) => { 
 
-MONEY.onclick = () => {moneyButton(fee,MONEY.innerText)}
+MONEY.onclick = () => {moneyButton(fee,MONEY.innerText)} //할부 개월수 value 값선택
+
   
 })
 
-
+      
  
-  
-function moneyButton(MONEY,halboo) { 
+  if(fee < 50000) {sendbuf = "NICEVCAT" + H7 + "0200" + FS + "10" + FS + "C" + FS + fee + FS + "0" + FS + "0" + FS + "00" + FS + "" + FS + "" + FS + "" + FS + "" + FS + FS + FS + "" + FS + FS + FS + FS + ""+ FS + H7;
 
+      form.SendData.value = sendbuf +"" + kioceTotall ;  }
+
+
+function moneyButton(MONEY,halboo) { 
+  console.log("321")
 const  Button = document.getElementById("cad").addEventListener("click", handleClick('credit'))
 
-function handleClick(myRadio) //카드 결제 information 
+function handleClick(myRadio) //카드 결제 information 결제 버튼을 누르면 실행되는 함수 
 {        
 
- console.log(halboo,"324")
-  console.log(fee,"324")
+//  console.log(halboo,"324")
+//   console.log(fee,"324")
 //  money.addEventListener("click", monechan) 
 
 //  function monechan () {
@@ -336,19 +341,18 @@ const number = parseInt(result);
 console.log(number, "333")
 //  }
 //  paymentModal.classList.toggle("hidden")
-if(fee < 50000 && myRadio == 'credit') {
+
 
   
 
-   sendbuf = "NICEVCAT" + H7 + "0200" + FS + "10" + FS + "C" + FS + fee + FS + "0" + FS + "0" + FS + "00" + FS + "" + FS + "" + FS + "" + FS + "" + FS + FS + FS + "" + FS + FS + FS + FS + ""+ FS + H7;                  
+   sendbuf = "NICEVCAT" + H7 + "0200" + FS + "10" + FS + "C" + FS + fee + FS + "0" + FS + "0" + FS + halboo + FS + "" + FS + "" + FS + "" + FS + "" + FS + FS + FS + "" + FS + FS + FS + FS + ""+ FS + H7;                  
  
 
-} else if(fee > 50000 && myRadio == 'credit')  {
 
-  sendbuf = "NICEVCAT" + H7 + "0200" + FS + "10" + FS + "C" + FS + fee + FS + "0" + FS + "0" + FS + number + FS + "" + FS + "" + FS + "" + FS + "" + FS + FS + FS + "" + FS + FS + FS + FS + ""+ FS + H7;                  
+
  
 
-}
+
  //       else if(myRadio.value == 'credit_cancel') //신용취소
  // {
  //    sendbuf = "NICEVCAT" + H7 + "0420" + FS + "10" + FS + "C" + FS + form.money.value + FS + form.tax.value + FS + form.bongsa.value + FS + form.halbu.value + FS + form.agreenum.value + FS + form.agreedate.value + FS + form.catid.value + FS + FS + FS + FS + form.myunse.value + FS + FS + FS + FS + "" + FS + H7;
@@ -452,7 +456,7 @@ if(fee < 50000 && myRadio == 'credit') {
                console.log(arr1 , "320")
 
            const req = {
-            approvalDay: "300,iiii",   //승인 날짜 표기
+            approvalDay: arr[8],   //승인 날짜 표기
             approvalNumber : number, //승인 번호
             day:number2,            
             setGoods:number1[3],

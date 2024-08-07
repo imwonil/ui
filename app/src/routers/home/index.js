@@ -66,16 +66,17 @@ res.sendfile("./src/adminUser/adminGoodsKiosk.json")
 }).catch((err) => console.error(err));
 
 router.get("/adminindex", ctrl.output.adminindex)
+router.get("/idChange", ctrl.output.idChange)
 router.get("/", ctrl.output.index)
 router.get("/certification", ctrl.output.certification)
-router.get("/newlogin", ctrl.output.newlogin)
+router.get("/login", ctrl.output.login)
 router.get("/register", ctrl.output.register)
 router.get("/certification", ctrl.output.certification)
 router.get("/adminProductlist", ctrl.output.adminProductlist)
 router.get("/productlist", ctrl.output.productlist)
 
 ////////////poset/////////////////
-router.post("/newlogin", ctrl.process.newlogin)
+router.post("/login", ctrl.process.login)
 router.post("/logout", ctrl.process.logout)
 router.post("/logoutTime", ctrl.process.logoutTime)
 router.post("/register", ctrl.process.register)

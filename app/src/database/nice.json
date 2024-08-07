@@ -1,1 +1,1 @@
-[{"id":"wonil","name":"imwonil","phon":"01029718573","approvalNumber":[22804774],"approvalDay":["240730205916"],"fee":["300"],"hangle":["00"],"goodsName":["fixedType"],"cancal":["N"]}]
+[{"id":"wonil","name":"imwonil","phon":"01029718573","approvalNumber":[22804774,3,3],"approvalDay":["240730205916","240807195414","240807200927"],"fee":["300","30","10"],"hangle":["00","00","00"],"goodsName":["fixedType","fixedType","feeType"],"cancal":["N","N","N"]}]
