@@ -5,7 +5,7 @@ const mqtt = require("mqtt");
 const client = mqtt.connect("mqtt://broker.mqtt-dashboard.com", { clientid: "emc22wonil/wonil/ilim" });
 
 const { SolapiMessageService } = require("solapi");
-const messageService = new SolapiMessageService("NCS2VWYIUO94SIGY", "JTGRZN7SISY7EGJZOQBZEXATCFEI1AEP");
+
 const path = require('path')
 const db = require("../config/db")
 class UserStorage { 
@@ -61,7 +61,7 @@ static #adminSet = {  kindSet :[], wonset:[] , gender:[] }
   } 
 
   static getUserInfo(phon) {
-  console.log(phon,"64")
+
     return fs.
     readFile("./src/database/users.json")
     
@@ -73,7 +73,7 @@ static #adminSet = {  kindSet :[], wonset:[] , gender:[] }
       const keys = Object.keys(users)
       const newUsers = keys.reduce((newUsers, filde ) =>{
       newUsers[filde] = users[filde][idx]
-      console.logn
+ 
       return newUsers; 
       },{})
      
@@ -100,7 +100,7 @@ static #adminSet = {  kindSet :[], wonset:[] , gender:[] }
 // }  
 
 static async save(client) {
-
+  const userGoodsKinds = await this.objectsave()
 
   const Users=  this.#uses
   const users = await this.getUser("id", "psword" , "name","phon","certification","gender")
@@ -124,16 +124,16 @@ static async save(client) {
      fs.writeFile("./src/database/users.json", JSON.stringify(Users))
      return {success: true} }
  
-     if(users.id.indexOf(client.id) === -1 && client.Certification !== null){ //아이디 비번분실시 이용
+     if(users.id.indexOf(client.id) === -1 && client.Certification ===  "Certification" ){ //아이디 비번분실시 이용
       console.log("127")
-  First.id.push(client.id);
+ 
   First.psword.push(client.psword);
 
-  console.log(users, First , "save")
+  console.log(users, First , "savechang")
  
   fs.writeFile("./src/database/first.json", JSON.stringify(First))
     
-  users.id.push(First.id[0]);
+  users.id.push(client.id);
   users.name.push(First.name[0]);
   users.phon.push(First.phon[0]);
   users.psword.push(First.psword[0]);
@@ -143,18 +143,20 @@ static async save(client) {
    return {success: true}
 
 
-  }else if(users.id.indexOf(client.id) === -1 && client.Certification === "Certification"){
-           console.log(First.name)
+  }else if(users.phon.includes(client.phon) === true && client.Certification === "CertificationChange"){
+    var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.phon === client.phon });
      const indexof =  users.name.indexOf(First.name[0])
-
-  users.id[indexof] = client.id
+     console.log(indexof)
   users.psword[indexof] =client.psword
 
  
 fs.writeFile("./src/database/users.json", JSON.stringify(users))
+newUserGoodsKinds[0].psword= client.psword
+
+fs.writeFile("./src/database/userGoodsKinds.json", JSON.stringify(userGoodsKinds))
 return {success: true}
 
- 
+
 
   }
     else  {
@@ -183,84 +185,7 @@ return {success: true}
 //   })   
 // }
  } 
-static  async Certification(client) {
-  console.log(client)
-  
-  const Users=  this.#uses
-  const users = await this.getUser("phon","name","certification")
-  console.log(users,"phon")
 
-if(users.phon === undefined) {
-  const Users=  this.#uses
-  Users.phon.push(client.phone)
-  Users.name.push(client.name)
-  Users.certification.push(client.certification)
-  
-  fs.writeFile("./src/database/first.json", JSON.stringify(Users))
-
-  messageService.send({
-    "to": client.phone,
-    "from": "01029718573",
-    "kakaoOptions": {
-      "pfId": "KA01PF240201053925212fFkWt1ESnqq",
-      "templateId": "KA01TP240206110644561nFhQnMjvfkx",
-      // 치환문구가 없을 때의 기본 형태
-      "variables": {
-        "#{name}" :client.name,
-        "#{certification}" : client.certification
-      }
-  
-      // 치환문구가 있는 경우 추가, 반드시 key, value 모두 string으로 기입해야 합니다.
-      /*
-      variables: {
-        "#{변수명}": "임의의 값"
-      }
-      */
-  
-      // disbaleSms 값을 true로 줄 경우 문자로의 대체발송이 비활성화 됩니다.
-      // disableSms: true,
-    } 
-  });
- return {success:true}
-}else if (users.phon !== undefined && !users.phon.includes(client.phone)) {
-  console.log(client,"135")
-  messageService.send({
-    "to": client.phone,
-    "from": "01029718573",
-    "kakaoOptions": {
-      "pfId": "KA01PF240201053925212fFkWt1ESnqq",
-      "templateId": "KA01TP240206110644561nFhQnMjvfkx",
-      // 치환문구가 없을 때의 기본 형태
-      "variables": {
-        "#{name}" :client.name,
-        "#{certification}" : client.certification
-  
-      }
-  
-      // 치환문구가 있는 경우 추가, 반드시 key, value 모두 string으로 기입해야 합니다.
-      /*
-      variables: {
-        "#{변수명}": "임의의 값"
-      }
-      */
-  
-      // disbaleSms 값을 true로 줄 경우 문자로의 대체발송이 비활성화 됩니다.
-      // disableSms: true,
-    }
-  });
-  
-
-  Users.phon.push(client.phone)
-  Users.name.push(client.name)
-  Users.certification.push(client.certification)
-  
-
-  fs.writeFile("./src/database/first.json", JSON.stringify(Users))
-  return {success: true}
-}
-else if (users.phon.includes(client.phone)) {return {success : false}}                        
-
-} 
 static objectsave(...fildes) { //userGoodsKinds data file
   return fs.
   readFile("./src/database/userGoodsKinds.json",  'utf8', (err, data) => {
@@ -382,7 +307,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
 
   const userGoodsKinds = await this.objectsave() //userGoodsKinds.json 파일이 존재 하는곳
 
-  var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
+  var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
   
    
  
@@ -390,7 +315,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
      function  delivery() {
       return new Promise( (resolve, reject) => {
      
-     
+     console.log("1")
         if(resolve) {
             
           const phonSub = users.phon.substring(7,11)
@@ -435,15 +360,15 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
       
         if(resolve) {
           console.log("3")
-          var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
-           console.log(kend[0])
+          var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
+           console.log(kend[0],"441")
           fs.writeFile('./src/adminSetKinds/adminNext.json', JSON.stringify(kend), (err) => {
             fs.readFile('./src/adminSetKinds/adminNext.json', "[]", 'utf8', (err, data) => {
             
             
             });
          })  
-                   fs.writeFile("./src/database/user.json", JSON.stringify(users), (err) => {
+               fs.writeFile("./src/database/user.json", JSON.stringify(users), (err) => {
                 
                   }) 
             resolve();
@@ -467,7 +392,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
              
               const query ="INSERT INTO kiki(id, name,cdId, psword, phon, wonset, UseTime, goodsName, benchName,loginstart, logoutEnd, koko,expiryN,gender) VALUES(?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?,?);";
               db.query(query,
-                [users.phon, users.name, comb, users.psword, users.phon,"{}","{}","{}","{}","{}","{}","{}","{}",users.gender],(err, data) =>{
+                [users.id, users.name, comb, users.psword, users.phon,"{}","{}","{}","{}","{}","{}","{}","{}",users.gender],(err, data) =>{
                 if(err){reject(err)}
                 
                 resolve();
@@ -481,26 +406,28 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
         
           });}
   if(newUserGoodsKinds[0] === undefined  ) {
-    var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
-    delivery(userGoodsKinds).then(() =>{return  next_3(kend)})   //초기화 해주는 함수
+    console.log(cl)
+    
+    delivery().then(() =>{return  next_3()})   //초기화 해주는 함수
                              .then(() =>{return next_4()})
     
-    
+                             var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
+   
+                             return kend[0]
 
-
     
-  return
+  
   }else { 
     
      next_3().then() 
-     var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phone });
+     var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
    
      return kend[0]
      
         }
     
       
-        return 
+
    
   
 }  
@@ -626,6 +553,7 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
       return new Promise((resolve, reject) => {
 
       if(resolve) {
+        
         if(add.setGoods === "fixedType" || add.setGoods === "daysType" ) {
       
         
@@ -643,7 +571,24 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
 
               fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(userGoodsKinds))
             
+               const GOODS ='UPDATE kiki SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
+              const EXPIRY ='UPDATE kiki SET expiryN = JSON_MERGE_PRESERVE(expiryN, ?) WHERE phon = ?';
+              const USETIME ='UPDATE kiki SET UseTime = JSON_MERGE_PRESERVE(UseTime, ?) WHERE phon = ?';
               
+               db.query(GOODS,[JSON.stringify({"goodsName":add.setGoods}), ab.phon], (err, data) => {
+              if (err) return reject(err);
+               resolve(data);
+               })
+               
+              db.query(EXPIRY,[JSON.stringify({"expiryN":expiryN}), ab.phon], (err, data) => {
+              if (err) return reject(err);
+               resolve(data);
+               })
+               db.query(USETIME,[JSON.stringify({"UseTime":`${day*1440}`}), ab.phon], (err, data) => {
+                if (err) return reject(err);
+                 resolve(data);
+                 })
+          
                  if(Nicename[0] === undefined) {  
                   Nice.push({"id": ab.id ,"name":ab.name,"phon":ab.phon, 
                   "approvalNumber":[add.approvalNumber] , "approvalDay":[add.approvalDay],"fee":[add.fee],"hangle":[add.hangle],
@@ -654,8 +599,13 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
                 fs.writeFile("./src/database/nice.json", JSON.stringify(Nice), (err) => {
                  
                 })
-                }
-              else if(Nicename[0].id !== undefined) {  
+                      
+          
+                 
+            
+              
+
+                }else if(Nicename[0].id !== undefined) {  
              
                 Nicename[0].approvalNumber.push(add.approvalNumber)
                 Nicename[0].approvalDay.push(add.approvalDay)
@@ -694,6 +644,8 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
               fs.writeFile("./src/database/nice.json", JSON.stringify(Nice), (err) => {
                
               })
+
+            
               }
             else if(Nicename[0].id !== undefined) {  
            
@@ -708,6 +660,23 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
               })
             }
    
+            const GOODS ='UPDATE kiki SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
+            const EXPIRY ='UPDATE kiki SET expiryN = JSON_MERGE_PRESERVE(expiryN, ?) WHERE phon = ?';
+            const USETIME ='UPDATE kiki SET UseTime = JSON_MERGE_PRESERVE(UseTime, ?) WHERE phon = ?';
+            
+             db.query(GOODS,[JSON.stringify({"goodsName":add.setGoods}), ab.phon], (err, data) => {
+            if (err) return reject(err);
+             resolve(data);
+             })
+             
+            db.query(EXPIRY,[JSON.stringify({"expiryN":expiryN}), ab.phon], (err, data) => {
+            if (err) return reject(err);
+             resolve(data);
+             })
+             db.query(USETIME,[JSON.stringify({"UseTime":`${day*60}`}), ab.phon], (err, data) => {
+              if (err) return reject(err);
+               resolve(data);
+               })
      
        }
           resolve();

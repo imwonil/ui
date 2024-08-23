@@ -51,7 +51,7 @@ let idx = 0;
 
 sendBUTTON.addEventListener("click", send_BUTTON)
 
-function send_BUTTON() { //인증번호 발송 버튼 클릭시 작동함
+function send_BUTTON() { //인증번호 발송 버튼 클릭시 작동하는 함수
   const comb = PHON.value.substr(9, 10)
   const conmbination =  nowTimeSS + comb
  
@@ -63,12 +63,12 @@ console.log(PHON.value)
     
    const  PHONE = data.filter(function (addSave) { return addSave.phon === PHON.value });
    
-   console.log(PHONE[0],"kkkke" )
+
   if(!NAME.value) {  
-  
+    alert("이름 미입력")
 
    setTimeout(() => {
- 
+     //닫기 버튼 없이 자동으로 닫기
 
    }, 2000);
  
@@ -98,7 +98,7 @@ alert("전화번호 미입력")
      
    
      setTimeout(() => {
-   
+      alert("이미 등록한 회원 입니다.")
        
      }, 2000);
      return
@@ -115,7 +115,7 @@ alert("전화번호 미입력")
    }
  
  
-console.log(req,"iii")
+
  
  fetch("/certification", {
  method: "POST",
@@ -130,16 +130,18 @@ console.log(req,"iii")
    console.log(res,"kkjj")
     if(res.success === true) {
 
-     // 인증 번호 요청 하는 logic
+// 인증 번호 요청 하는 logic
+
 // 모달창에  인증요청 했습니다. 라고 띄움
 
 // 중요한건 닫기 버튼 누르지 않아도 창이 닫게 설계바람..
 // 밑에 있는 setTimeout 권장함 이때  if 문안에있는 return 값은 건디지말 것.
+alert("인증요청 하였습니다.")
     
       setTimeout(() => {
  
         location =  "/register"
-     }, 2000);
+     }, 1000);
  
  return 
    }

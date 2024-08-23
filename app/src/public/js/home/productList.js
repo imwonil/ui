@@ -182,7 +182,7 @@ function tebClick(tebKinde) {
 
 
 
-            document.getElementById(menz[0].fee[y]+"daysType").onclick = () => {payClick(payClick(td1.outerText,td3.outerText,td2.outerText,"daysType"))}
+            document.getElementById(menz[0].fee[y]+"daysType").onclick = () => {payClick(td1.outerText,td3.outerText,td2.outerText,"daysType")}
 
 
 
@@ -323,7 +323,7 @@ MONEY.onclick = () => {moneyButton(fee,MONEY.innerText)} //할부 개월수 valu
 
 
 function moneyButton(MONEY,halboo) { 
-  console.log("321")
+
 const  Button = document.getElementById("cad").addEventListener("click", handleClick('credit'))
 
 function handleClick(myRadio) //카드 결제 information 결제 버튼을 누르면 실행되는 함수 
@@ -338,7 +338,7 @@ function handleClick(myRadio) //카드 결제 information 결제 버튼을 누�
 const regex = /[^0-9]/g;
 const result = halboo.replace(regex, "");
 const number = parseInt(result);
-console.log(number, "333")
+
 //  }
 //  paymentModal.classList.toggle("hidden")
 
@@ -382,11 +382,10 @@ console.log(number, "333")
 
       form.RecvData.value = "";
       sendMsg = form.SendData.value;   
-  
-  console.log(sendMsg,"367")
-      if(sendMsg.length == 1)
-        alert("할부 개월수 및 금액을 확인 해주세요");
-      else{            
+ 
+      if(sendMsg.length == 1) {
+      return  alert("할부 개월수 및 금액을 확인 해주세요");
+      }else{            
         if(sendMsg == "REQ_STOP")
         {   
           console.log("succeoos")
@@ -482,7 +481,7 @@ console.log(number, "333")
               alert("결제 되였습니다. ")
                 setTimeout(() => {
 
-                  // location.href = "/newLogin"
+                   location.href = "/login"
                 }, 1500);
 
 

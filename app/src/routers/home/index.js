@@ -87,4 +87,5 @@ router.post("/adminBench", ctrl.process.adminBench)
 router.post("/adminProductlist", ctrl.process.adminProductlist)
 router.post("/productlist", ctrl.process.productlist)
 router.post("/search", ctrl.process.search)
+router.post("/enter", ctrl.process.enter)
  module.exports = router      

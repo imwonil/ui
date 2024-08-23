@@ -10,10 +10,10 @@ this.body = body
 async login(){
   
   const client = this.body
- 
+
    
   const {phon, psword}  = await UserStorage.getUserInfo(client.phon)
-  
+
     if(phon) {
          if(client.psword !== psword ) { 
         return  {success: false , msg: "비밀번호가 다릅니다"} 
@@ -22,7 +22,8 @@ async login(){
                         
             return {success: false, msg: "전화문호가 다릅니다"}
           } else if (client.phon === phon && client.psword === psword)  {
-          const a = await UserStorage.locaUser(client) 
+          const a = await UserStorage.As(client) 
+          
           return  a
           }
           }

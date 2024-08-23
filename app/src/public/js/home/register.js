@@ -6,7 +6,7 @@ const findModal = document.querySelector(".find-modal")
 
 const feather = document.querySelector(".feather")
 const exit = document.querySelector(".exit")
-const GENDERS = document.querySelector("#gender")
+
 
 /**아이디/비번 찾기랑 회원가입 모달 각각 끄는 방법 */
 
@@ -20,7 +20,7 @@ const VERIFICATION = document.querySelector("#verification"),
       
        PSWORD = document.querySelector("#psword"),
        CONFIRM = document.querySelector("#confirm-psword")
- 
+var gender =""
   
       const btnHover = document.querySelectorAll(".flex-1")
    
@@ -28,9 +28,7 @@ const VERIFICATION = document.querySelector("#verification"),
         tabs.addEventListener("click", GENDER)
         function GENDER (){
           console.log(tabs.innerText)
-         console.log(GENDERS)                           
-          document.getElementById(GENDERS.id).setAttribute("placeholder", `${tabs.innerText}`)
-          
+        gender =  tabs.innerText
           }
       
       
@@ -42,7 +40,7 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
    verificaionBUTTON.addEventListener("click", VERIFICAIONBUTTON)
 
    function VERIFICAIONBUTTON() {
-  const genderValue =  document.getElementById(GENDERS.id).getAttribute("placeholder")
+
     fetch('/certifications')
     .then(res => res.json())
     .then(data => {
@@ -50,12 +48,12 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
         const CERTIFICATION = data.certification[0]
         console.log( VERIFICATION.value)
        if(CERTIFICATION !== VERIFICATION.value) {
-        console.log("인증번호가 일치 하지 않습니다.")
+       
         // document.querySelector("#h2").innerText="인증번호가 일치 하지 않습니다.."
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
           
-          
+          alert("인증번호가 일치 하지 않습니다")
           
         }, 2000);
     return
@@ -67,13 +65,13 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
           
-         
+          alert("비밀번호가 일치하지 않습니다")
           
         }, 2000);
         return
     }
     if(!PSWORD.value) {
-        console.log("비밀번호를 입력해주세요")
+      alert("비밀번호를 입력해주세요")
       // document.querySelector("#h2").innerText="비밀번호를 입력해주세요."
       //   document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
@@ -84,13 +82,13 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
         return
       }
 
-      if(genderValue === "성별") {
-       
+      if(gender === "") {
+        alert("성별를 선택해 주세요")
       // document.querySelector("#h2").innerText="비밀번호를 입력해주세요."
       //   document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
           
-         alert("성별를 선택해 주세요")
+        
           
         }, 2000);
         return
@@ -103,7 +101,7 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
     psword : PSWORD.value,
     confirmPsword: CONFIRM.value,
     register:"register"  ,
-    gender: genderValue,
+    gender:gender,
     Certification:"Certification"
     }
     console.log(req)
@@ -121,23 +119,24 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
       console.log(res)
     if(res.success === true) {
       sessionStorage.removeItem("certification")
-      console.log("1")
+      
         // document.querySelector("#h2").innerText="회원가입을 성공적으로 되였습니다.."
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
          
-        location.href = "/newLogin"
-        }, 2000);
+        location.href = "/login"
+        }, 1000);
         return
       }  else if(res.success === false) {
+        alert("존재하는 아이디입니다.")
         // document.querySelector("#h2").innerText="존재하는 아이디입니다."
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
           
-        console.log("kk")
+          
           
         }, 2000); 
-      //alert("존재하는 아이디입니다.")
+      
       }
     })
      })

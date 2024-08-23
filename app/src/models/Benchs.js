@@ -116,7 +116,7 @@ async SEARCH() {
   
   const  client =  this.bench
   const a = await UserStorage.SEarch(client) 
- 
+   console.log(a)
   return a
   
 }

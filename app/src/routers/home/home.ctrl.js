@@ -95,7 +95,7 @@ const process = {
       const users = new User(req.body)
 
       const response = await users.login()
-      console.log(response)
+      console.log(response,"resp")
       return res.json(response)
    },
    logout: async (req, res) => {
@@ -154,7 +154,58 @@ const process = {
    },
  
 
+   enter: async (req, res) => {
 
+      const benchs = new Benchs(req.body)
+      const respons =await benchs.getNext()
+ 
+ 
+        if(respons === "goodsfalse"){
+           return res.json(respons)
+        }
+       else if (respons.success === true) {
+          //MQTT 보내는 쪽
+          var topic = "emc22wonil/wonil/ilim"
+          var message = "2"
+          var options = {
+             retain: true,
+             qos: 0 // 정확도
+ 
+          };
+ 
+          // 받는곳_1
+          var count = 0
+          client.on("message", function (topic, msg, packet) {
+             console.log(" messabe : " + msg);
+ 
+ 
+          });
+          // 받는곳_2
+          client.on("connect", function () {
+             // console.log("connected " + client.connected);
+             client.subscribe(topic, { qos: 0 });
+ 
+          })
+ 
+ 
+          //publish  발해하는 곳
+          function publish(topic, message, options) {
+             console.log(topic, message, "re", options)
+             if (client.connected == true) {
+                // console.log("publish :{ ", topic, " : ", message, "}")
+                //topic으로 를 발행한다.
+ 
+                client.publish(topic, message, options);
+ 
+             }
+          }
+ 
+ 
+          publish(topic, message, options)
+       }
+ 
+       return res.json(respons)
+    },
 
 
 

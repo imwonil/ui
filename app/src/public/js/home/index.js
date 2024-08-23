@@ -1,4 +1,14 @@
 
+//////////////////////////////Object 객체 생성을 선엄함/////////////////////
+class seatInfor {
+  constructor(body) {
+  this.body = body
+    
+    
+    }
+  }
+
+
 const SNLength =document.getElementsByClassName("seats-number").length
 const goods = document.querySelectorAll(".goods")
 const apply = document.getElementById("apply")
@@ -18,6 +28,7 @@ const dropdownButton = [...dropdownButtons]
 const dropdownMenu = [...dropdownMenus]
 
 //기간제, 고정석 id 생성 
+
 for(var i=0; SNLength>i; i++) {
 
    const seetNumger = document.getElementsByClassName("seats-number")[i].outerText 
@@ -48,9 +59,14 @@ for(var i=0; FeeSet>i; i++) {
 
 
 
-fetch('/setKind')
+fetch('/userGoodsKinds')
 .then(res => res.json())
-.then(data => { 
+.then( U_G_D => { 
+
+     fetch('/setKind')
+     .then(res => res.json())
+     .then(data => { 
+
 for(var i=0; data.wonset.length>i; i++) {
 
 
@@ -76,16 +92,80 @@ for(var i=0; data.wonset.length>i; i++) {
       document.getElementById(number).setAttribute("genderNmae",data.gender[i] )
     }
 
+  //   for(var y =0; U_G_D.length > y; y++) {
+  //     for(var k=0; U_G_D[y].wonset.length>k; k++)
+  //  if(U_G_D[y].wonset[k] !=="") {
+
+
+  //   const regex = /[^0-9]/g;
+  //   const result = U_G_D[y].wonset[k].replace(regex, "");
+  //   const number1 = parseInt(result);
+  //   document.getElementById(number1).setAttribute("wonsetInfor", U_G_D[y].phon)
+  //   document.getElementById(number1).setAttribute("useIng","사용중")
+    
    
+  //  }
+ 
+  //  const a=  document.getElementById(number).getAttribute("wonsetInfor")
+  //  const b = document.getElementById(number).getAttribute("useIng")
+    
+  //   if(b === "사용중") {
+  //     console.log(number)
+  //     console.log(a,b,"97") 
+
+  //   }
+
+  //  }
+
+
+
+
+
 }
+U_G_D.forEach((item, index)=> {
+ item.wonset.forEach((itme2,index2)=> {
+  if(itme2 !=="") {
+    const regex = /[^0-9]/g;
+    const result = itme2.replace(regex, "");
+    const seatnumber = parseInt(result);
 
+    const req = {
+
+    phone: item.phon,
+    seatUse : "사용중",
+    seat : seatnumber
+
+    }
+
+
+    const users = new seatInfor(req)
+
+    document.getElementById(seatnumber).setAttribute("seatUse",JSON.stringify(users.body))
+    const setU = document.getElementById(seatnumber).getAttribute("setUse")  
+ 
+
+    document.getElementById(seatnumber).innerText ="사용"
+      
+  
+  }
+    
+ })
+
+})
+})
   })
-function indexFunction(number) {
- const goodsName = document.getElementById(number).getAttribute("setName")
 
+
+
+  function indexFunction(number) { //자석 click 하면 반응하는 함수
+const indexOf = sessionStorage.getItem("indexOf")//login.js 402 line에서 sessionStorage set 생성 
+const goodsName = document.getElementById(number).getAttribute("setName")
 const wonset   =  document.getElementById(number).outerText
 const  gender = document.getElementById(number).getAttribute("genderNmae")
- const indexOf = sessionStorage.getItem("indexOf")
+const seatInfor = document.getElementById(number).getAttribute("seatUse") // 자리 사용자 정보
+if(seatInfor !==null){return alert("사용중인 자리 입니다!!.")}
+if(indexOf === null) {return alert("로그인 후 상품을 먼져 선택 해주세요") } //
+
 const req = {
   wonset,
   goodsName,
@@ -93,7 +173,7 @@ const req = {
   indexOf 
 }
  if(wonset === null || goodsName === null || goodsName === null) {return alert("좌석타입이 설정되여 있지는 유형 입니다 유영자에게 문의 하세요")}
-console.log(req)
+
  fetch("/", {
   method: "POST",
   headers: {
@@ -104,13 +184,15 @@ console.log(req)
 })
   .then((res) => res.json()) 
   .then((res) => { 
-    if(res.success === false){ alert(res.msg)}
+    if(res.success === false){ return alert(res.msg)}
     console.log(res)
     alert(`${res[0].name}님 열공하세요`)
     // sessionStorage.removeItem("cdId")
-    sessionStorage.removeItem("indexof")
-     location.href = "/newLogin";
+    sessionStorage.removeItem("indexOf") //login.js 402 line에서 sessionStorage set 생성 
+     location.href = "/login";
 
    })
 
+
+   
 }
