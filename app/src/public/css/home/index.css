@@ -15,7 +15,7 @@ body {
   margin: 0;
   font-weight: 400;
   background-color: #eee;
-  font-size: 18px;
+
   
   display: grid;
   grid-template-columns: repeat(3, 1fr);
