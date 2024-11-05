@@ -17,10 +17,23 @@ const client = mqtt.connect("mqtt://broker.mqtt-dashboard.com", { clientid: "emc
 
 
 const output = {
-  
 
    adminindex :(req, res) => {
       res.render("home/adminindex")
+   },
+
+
+      adminViews :(req, res) => {
+      res.render("home/adminViews")
+   },
+ calender :(req, res) => {
+      res.render("home/calender")
+   },
+  adminSetproduct :(req, res) => {
+      res.render("home/adminSetproduct")
+   },
+   adminSetinfo :(req, res) => {
+      res.render("home/adminsetinfo")
    },
 
    index :(req, res) => {
@@ -47,9 +60,11 @@ const output = {
    },
 
 
- 
+    adminMessage: (req, res) => {
+      res.render("home/adminMessage")
+   },
 
-
+  
 
 };
 
@@ -63,6 +78,12 @@ const process = {
       return res.json(response)
 
    },
+
+   calender: async (req, res) => {
+    
+
+   },
+   
    productlist: async (req, res) => {
       const days = new Benchs(req.body)
       const ACC = await days.Acc()//Benchs.js 23 UserStorage UserStorage 321
@@ -73,6 +94,53 @@ const process = {
 
 
    }, 
+   adminSetproduct: async (req, res) => {
+      console.log(req.body)
+      const adminId = new Benchs(req.body)
+      const response = await adminId.adimingoods()
+      console.log(response,"djj")
+       return res.json(response)
+
+   },
+
+   adminViews: async (req, res) => {
+
+      const adminId = new Benchs(req.body)
+
+      const response = await adminId.modIfy()
+
+      return res.json(response)
+
+   },
+
+   // goodsPush: async (req, res) => {
+
+    
+   //    const adminId = new Benchs(req.body)
+   //    const response = await adminId.adimingoods()
+   //    console.log(response,"djj")
+   //     return res.json(response)
+
+   //    // const adimingoods=await adminId.adimingoods()
+   // },
+  
+   forcibley: async (req, res) => {
+      console.log(req.body)
+      const benchs = new Benchs(req.body)
+      const respons = benchs.Forcibley()
+      return res.json(respons)
+   },
+   adminSetinfo: async (req, res) => {
+      const days = new Benchs(req.body)
+      const ACC = await days.Acc()//Benchs.js 23 UserStorage UserStorage 321
+
+      const admin = await adminUserUserStorage.adminInfo()
+   
+      return res.json(ACC)
+
+
+   }, 
+   
      adminProductlist: async (req, res) => {
       const adminuserinfo = new adminUserInfo(req.body)
       const response = await adminuserinfo.adminUserSeve()//adminUserInfo.js 10 adminUserStorage.js 69
@@ -95,7 +163,7 @@ const process = {
       const users = new User(req.body)
 
       const response = await users.login()
-      console.log(response,"resp")
+   
       return res.json(response)
    },
    logout: async (req, res) => {
@@ -152,8 +220,22 @@ const process = {
       return res.json(response)
 
    },
- 
+   changeSeat: async (req, res) => {
+         console.log(req.body,"home.ctrl.js 222")
+     
+      const users = new Benchs(req.body)
+      const response =  await users.changseat()
+      return res.json(response)
 
+   },
+   adminMessage: async (req, res) => {
+      // console.log(req.body,"home.ctrl.js 222")
+      const benchs = new Benchs(req.body)
+      const response = await benchs.KoKo()
+      console.log(response,'ctrl 206')
+      return res.json(response)
+},
+   
    enter: async (req, res) => {
 
       const benchs = new Benchs(req.body)

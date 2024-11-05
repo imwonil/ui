@@ -12,6 +12,21 @@
 // console.log(data,"data")
 
 // })
+
+
+
+const warningModal = document.querySelector(".warning-modal")
+
+const warningModalText = document.querySelector(".warning-modal-text")
+
+  const sucModal = document.querySelector(".suc-modal")
+
+  const sucModalText = document.querySelector(".suc-modal-text")
+
+ 
+  const  changeModal = document.querySelector(".change-modal")
+
+
 const checkin = document.querySelector(".checkin-modal")
 const checkinExit = document.querySelector(".checkin-exit")
 const keyboardContainer = document.querySelector(".keyboard-container")
@@ -35,14 +50,12 @@ const findExit = document.querySelector(".find-exit")
 /**아이디/비번 찾기랑 회원가입 모달 각각 끄는 방법 */
 
 
-
+changeModal.classList.toggle("hidden")
 /**X 눌렀을 때 아이디/비밀번호 찾기 및 퇴실 창 제거 */
 findExit.addEventListener("click", ()=>{
 
    findModal.classList.toggle("hidden")
-  loginSection.classList.toggle("hidden")
-  footer.classList.toggle("hidden")
-  body.classList.toggle("flex-layout")
+
 })
 
 
@@ -71,21 +84,6 @@ const footer = document.querySelector(".footer")
 
 
 
-//아이디/비밀번호 변경 모달
-  const changeModal = document.querySelector(".change-modal")
-  const changeExit = document.querySelector(".change-exit")
-
-
-/**X 눌렀을 때 아이디/비밀번호 변경 창 제거 */
-changeExit.addEventListener("click", ()=>{
-
-   changeModal.classList.toggle("hidden")
-  loginSection.classList.toggle("hidden")
-  footer.classList.toggle("hidden")
-  body.classList.toggle("flex-layout")
-})
-
-
 
 // 아이디/비번찾기 모달 생성
 
@@ -95,10 +93,7 @@ findAnchor.forEach((ele)=>{
 
 
          findModal.classList.toggle("hidden")
-         loginSection.classList.toggle("hidden")
-        footer.classList.toggle("hidden")
-
-    body.classList.toggle("flex-layout")
+        
 
 
     // idx를 6으로 함으로써 모달의 첫번째 칸에 커서가 들어간다. 
@@ -129,10 +124,44 @@ findAnchor.forEach((ele)=>{
 
 
 
-       if(userNameindex !== userPhoneindex){return alert(" 전화번호와 이름이 다릅니다.")}
+       if(userNameindex !== userPhoneindex){
+         
+         warningModalText.innerHTML = "전화번호와 이름이 다릅니다."
+          warningModal.classList.toggle("hidden")
 
-                   else if(!PhoneInclude) {return alert("전화번호가 존재 하지 않습니다,")}
-                        else if((!NameInclude)){return alert("존재하지 않은 이름 입니다.")}
+          setTimeout(() => {
+            //  sucModal.classList.toggle("hidden")
+            warningModal.classList.toggle("hidden")
+
+         }, 2000);
+          return
+       }
+
+                   else if(!PhoneInclude) {
+                     
+                       warningModalText.innerHTML = "전화번호가 존재하지 않습니다."
+                     warningModal.classList.toggle("hidden")
+                     setTimeout(() => {
+                      //  sucModal.classList.toggle("hidden")
+                      warningModal.classList.toggle("hidden")
+          
+                   }, 2000); 
+                     return
+                   }
+                        else if((!NameInclude)){
+                          
+                          
+                          
+                        
+                            warningModalText.innerHTML = "존재하지 않는 이름입니다."
+                           warningModal.classList.toggle("hidden")
+                           setTimeout(() => {
+                            //  sucModal.classList.toggle("hidden")
+                            warningModal.classList.toggle("hidden")
+                
+                         }, 2000);
+                        return
+                        }
                  const nowTimeSS = moment().format('ss')
                  const comb = S_P.value.substr(9, 10)
                  const combination =  nowTimeSS + comb 
@@ -146,10 +175,13 @@ findAnchor.forEach((ele)=>{
 
 
                  }
+          
+
+          sucModalText.innerHTML = "인증번호 전송하였습니다."
+          sucModal.classList.toggle("hidden")
                 
-                 alert("인증번호 전송 하였습니다.")
-                
-               
+
+
             fetch("/search", {
               method: "POST",
               headers : {
@@ -160,80 +192,155 @@ findAnchor.forEach((ele)=>{
               })
               .then((res => res.json()))
               .then((res) => {
+                
+                console.log(res)
                 con_bu.addEventListener("click", CONFIRM) 
+                setTimeout(() => {
+                  
+                  sucModal.classList.toggle("hidden") // 인증번호 전송 하였습니다
+      
+               }, 2000); 
                 function CONFIRM() {
-
-                 if(certification.value === res) {
+                
+                 if(certification.value === res.search) {
             const C_P = document.querySelector("#changPhone")
             const C_PS = document.querySelector("#changPsword")
             const C_C_P = document.querySelector("#changConfirm-psword")
             const C_B = document.querySelector("#changButton")
                    changeModal.classList.toggle("hidden")
                    findModal.classList.toggle("hidden")
-              
-              
+
+
          fetch('/users')
          .then(res => res.json())
          .then(data => { 
+      console.log(data)
 
-  
         C_B.addEventListener("click", changeSEND)
 
         function changeSEND () {
           const S_P =    data.phon.includes(C_P.value)
+          // const S_P =    data.phon.indexOf(C_P.value)
            console.log(C_P.value)
            console.log(C_PS.value)
            console.log(C_C_P.value)
 
-         
+
             const req = {
-    
-              
+
+
               phon : C_P.value,
               psword: C_PS.value,
               Certification:"CertificationChange"
-              
+
 
 
            }
+           console.log(C_P.value , res.phone)
+    if(C_P.value !== res.phone) { 
+    warningModalText.innerHTML = "등록된 전화번호가 다릅니다."
+    warningModal.classList.toggle("hidden")
+    
+    setTimeout(() => {
+      
+      warningModal.classList.toggle("hidden")
+
+   }, 2000);
+  return
+  }
+         if(S_P === false) {
+          warningModalText.innerHTML = "전화번호가 다릅니다."
+          warningModal.classList.toggle("hidden")
           
-         if(S_P === false) {return alert("전화번호가 다릅니다.")}
-          if(C_PS.value !== C_C_P.value) {return alert("비밀번호가 일치 하지 않습니다.")}
+          setTimeout(() => {
+            
+            warningModal.classList.toggle("hidden")
+
+         }, 2000);
+        return
+            
+         }
+
+          
+          // if(C_PS.value !== C_C_P.value) {
+             
+          //   warningModalText.innerHTML = "비밀번호가 일치하지 않습니다."
+          //   warningModal.classList.toggle("hidden")
+
+           
+          //   setTimeout(() => {
+              
+          //     warningModal.classList.toggle("hidden")
+  
+          //  }, 2000);
+          // return
+        
+          // } 
+          if(!C_PS.value) { warningModalText.innerHTML = "비밀번호를 설정 하세요."
+          warningModal.classList.toggle("hidden") 
+          setTimeout(() => {
+              
+            warningModal.classList.toggle("hidden")
+
+         }, 2000);
+        return
+        }
             if(S_P === true) {
 
-                  
+
     fetch("/register", {
       method: "POST",
       headers : {
         "Content-Type" :"application/json"
       },
-      
+
        body: JSON.stringify(req),
       })
       .then((res => res.json()))
       .then((res) => {  
-         
-    if(res.success === true){ alert("비밀번호가 수정 되였습니다")
-  location.href = "/login"
+
+    if(res.success === true){ 
+      
+    
+      sucModalText.innerHTML = "비밀번호가 수정 되었습니다."
+      sucModal.classList.toggle("hidden")
+      setTimeout(() => {
+           location.href = "/login"
+          sucModal.classList.toggle("hidden") // 임시로 해둠 location.href 활성화시 삭제 및 주석 처러함
+     }, 2000);
+   
+
   }
       })
 
-              
-          
+
+
             }
 
         }
 
          })
-              
-              
+
+
                   }
 
-                  if(certification.value !== res) {return alert("인증번호가 일치 하지 않습니다.")}
-                   else{
+                  if(certification.value !== res.search) {
+                    
+                    
+                 
+                  
 
+                      warningModalText.innerHTML = "인증번호가 일치 하지 않습니다."
+                       warningModal.classList.toggle("hidden")
+                       setTimeout(() => {
+              
+                        warningModal.classList.toggle("hidden")
+            
+                     }, 2000);
 
-                   }
+                     return
+                  }
+               
                 }
 
                })
@@ -266,7 +373,7 @@ function LOGINBUTTON () {
 
 
 
-  fetch("login", {
+  fetch("/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -278,16 +385,77 @@ function LOGINBUTTON () {
   console.log(res)
 
     if(res.id !== undefined) {
-      alert(`${req.phon} 방갑습니다 :)`)
+      function  next(){
+        return new Promise((resolve, reject) => {
+          console.log("1")
+        if(resolve) {
+            
+          sucModalText.innerHTML =`${req.phon} 반갑습니다 :)`
+          sucModal.classList.toggle("hidden")
+          setTimeout(() => {
+             
+           sucModal.classList.toggle("hidden")
+       
+               
+         }, 1300); 
+        
+         
+            resolve();
+      
+        }else { reject("err")  } 
+      
+        
+      })
+      
+      
+      
+      
+      }
+      function  next2(){
+        return new Promise((resolve, reject) => {
+          console.log("1")
+        if(resolve) {
+            
+          setTimeout(() => {
+            checkin.classList.toggle("hidden");
+      
+            // keyboardContainer.classList.toggle("blur")
+    
+          }, 1200);
+         
+            resolve();
+      
+        }else { reject("err")  } 
+      
+        
+      })
+      
+      
+      
+      
+      }
+      next().then(( )  => {return  next2()})  
+        //  .then(() =>{ return next2()})
+         
 
+      
+
+      // sucModalText.innerHTML =`${req.phon} 방갑습니다 :)`
+      //  sucModal.classList.toggle("hidden")
+      //  setTimeout(() => {
+          
+      //   sucModal.classList.toggle("hidden")
+    
+            
+      // }, 1600); 
 
       /*입실(checkin-anchor)을 눌렀을 때 checkin 모달창 열림 */
-      setTimeout(() => {
-        checkin.classList.toggle("hidden");
-        loginSection.classList.toggle("blur")
-        // keyboardContainer.classList.toggle("blur")
+      // setTimeout(() => {
+      //   checkin.classList.toggle("hidden");
+      //   loginSection.classList.toggle("blur")
+      //   // keyboardContainer.classList.toggle("blur")
 
-      }, 500);
+      // }, 2000);
 
       if(res.goodsName.length === 0 ) {
         console.log("po")
@@ -383,7 +551,15 @@ function LOGINBUTTON () {
 
     }
     else if (res.success === false) {
-        alert(res.msg)
+    
+      warningModalText.innerHTML = `${res.msg}`
+       warningModal.classList.toggle("hidden")
+       setTimeout(() => {
+          
+        warningModal.classList.toggle("hidden")
+    
+            
+      }, 1600); 
       } 
 
     })
@@ -565,7 +741,7 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
     //tab의 매개변수가 ele인 것을 실수하지 말것
 
 
-    
+
     /**수정,
      * 각 탭을 누를 때마다 두개의 플레이스홀더 중 첫번째 플레이스 홀더에
      * 커서가 들어갈 수 있게 focus 매서드를 쓴다.  */
@@ -577,12 +753,12 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
     }, 0); // 현재 이벤트 루프가 완료된 후 실행
 
 
-      
-     const TAB =  ele.dataset.alt
-      
-    if(TAB === "tab3") {
 
-  console.log("kkk")
+     const TAB =  ele.innerText
+       
+    if(TAB === "로그아웃") {
+
+        console.log("jjj")
       logoutButton.addEventListener("click", logOUT) 
 
   function logOUT() {
@@ -609,16 +785,20 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
           var conter =0; 
           if(res.id !== undefined) {
 
-            if(res.goodsName.length === "0") {alert("상품이 존재하지 않습니다")
+            if(res.goodsName.length === "0") {
+              
+               warningModal.classList.toggle("hidden")
+                warningModalText.innerHTML = "상품이 존재하지 않습니다."
+  
 
-             location.href = "/"
+             location.href = "/login"
           }
 
 
             /*입실(checkin-anchor)을 눌렀을 때 checkin 모달창 열림 */
 
               checkin.classList.toggle("hidden");
-              loginSection.classList.toggle("blur")
+        
               // keyboardContainer.classList.toggle("blur") //err 남
 
 
@@ -629,9 +809,7 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
              }
 
               var time =  (res.UseTime[i]%1440) //나머지 분
-              var hour =  Math.floor(time/60) // 시간
-
-
+              
 
             var day = Math.floor( res.UseTime[i]/1400) // 1일
             var hour =  Math.floor(time/60) // 시간
@@ -639,7 +817,7 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
             var hours =  Math.floor(res.UseTime[i]/60)
 
             var mon = Math.floor( time/60)
-        
+
 
                const useSet = document.getElementById("useSet")
             const div = document.createElement('div')
@@ -706,11 +884,16 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
             }    
             if(conter === 0) {
 
-              alert("퇴실할 상품이 없습니다.")
+
+              warningModal.classList.toggle("hidden")
+                warningModalText.innerHTML = "퇴실할 상품이 없습니다."
+              
                location.href = "/login"
           }
 
-                      }   else if (res.success === false) { alert(res.msg) } 
+                      }   else if (res.success === false) {    warningModalText.innerHTML = `${res.msg}`
+                                                            warningModal.classList.toggle("hidden")
+ } 
 
                       function logoutTime(indexID,text) {
 
@@ -720,7 +903,7 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
 
                         if (res.loginStart[index] !== "N") {
                           const req = {
-                            id: res.id,
+                            phone: res.phon,
                             logOutTime: nowTime,
                             index,
                             adminId:"user"
@@ -738,8 +921,12 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
                           }).then((res) => res.json())
                             .then((res) => {
                                                  if (res.success) {
-                                alert("퇴실 처리 되였습니다.")
-                                location.href = "/"
+
+
+                                                   sucModalText.innerHTML = "퇴실 처리 되었습니다."
+                                                   sucModal.classList.toggle("hidden")
+                                
+                                location.href = "/login"
 
                                  }
 
@@ -770,7 +957,8 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
       // }).then((res) => res.json())
       //   .then((data) => { })
 
-    }    if(TAB === "tab2") { 
+    }    if(TAB === "문열기") { 
+      console.log("문열기")
     const enterId=document.querySelector("#enterId")
     const enterPassword = document.querySelector("#enterPassword")
     const enterNext = document.querySelector("#enterNext")
@@ -783,7 +971,7 @@ function next() {
   id: enterId.value,
   psword: enterPassword.value
  }
-          
+
  fetch("/enter", {
   method: "POST",
   headers: {
@@ -799,24 +987,24 @@ function next() {
     location = "/login"
 
    }else if(res.success === false){
-   return alert(res.mag)
-     
-   }else if(res === "goodsfalse") {
-    alert("상품이 존재 하지 않습니다.")
+      sucModalText.innerHTML = `${res.mag}`
+      sucModal.classList.toggle("hidden")
 
+
+   }else if(res === "goodsfalse") {
+
+
+      warningModal.classList.toggle("hidden")
+       warningModalText.innerHTML = "상품이 존재 하지 않습니다."
+     
 location = "/login"
    }
-  
+
 
   })
 }
-  
+
     }
 
   })
 })
-
-
-
-
-

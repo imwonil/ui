@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
- 
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>replit</title>
-  <link rel="stylesheet" href="/css/home/index.css">
-  <script src="/js/home/index.js" defer></script>
+  <link rel="stylesheet" href="css/home/index.css">
+  <script src="js/home/index.js" defer></script>
   <!-- <script src="/js/home/adminViews.js" defer></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" ></script>
 
@@ -47,11 +47,84 @@
 </head>
 
 <body class="">
+
+       
+
+  
   <!--페이지 전체를 grid 레이아웃으로 정하겠다.
   ++처음부터 vh 단위로 시작했어야 했는데 왜 그랬을까.... 왜 px를 고집했을까-->
 
-     <div class="modal-container justify-center flex items-center h-screen fixed w-full z-50 hidden"> 
-        <div class="fixed absolute inset-0 bg-gray-300 bg-opacity-75"></div>
+
+  <div class = "warning-modal justify-center flex items-center h-screen fixed w-full z-50 sm:top-1/4 hidden">
+     <div class="fixed inset-0 bg-gray-300 bg-opacity-75 z-20">
+
+     </div>
+
+     <!-- 모달 -->
+
+       <div class="sm:w-1/4 sm:h-screen flex items-end justify-center pt-4  px-4 pb-24 text-center sm:block sm:p-0 z-50">
+         <!-- 모달 패널 -->
+         <div class="w-full inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+             <!-- 모달 컨텐츠 -->
+             <div class="sm:flex sm:items-start">
+               <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                 <!-- Heroicon name: outline/exclamation -->
+                 <svg width="64px" height="64px" class="h-6 w-6 text-red-600" stroke="currentColor" fill="none" viewBox="0 0 24.00 24.00" xmlns="http://www.w3.org/2000/svg" stroke="#ef4444" stroke-width="0.45600000000000007">
+                   <path d="M12 7.25C12.4142 7.25 12.75 7.58579 12.75 8V13C12.75 13.4142 12.4142 13.75 12 13.75C11.5858 13.75 11.25 13.4142 11.25 13V8C11.25 7.58579 11.5858 7.25 12 7.25Z" fill="#ef4444"></path>
+                   <path d="M12 17C12.5523 17 13 16.5523 13 16C13 15.4477 12.5523 15 12 15C11.4477 15 11 15.4477 11 16C11 16.5523 11.4477 17 12 17Z" fill="#ef4444"></path>
+                   <path fill-rule="evenodd" clip-rule="evenodd" d="M8.2944 4.47643C9.36631 3.11493 10.5018 2.25 12 2.25C13.4981 2.25 14.6336 3.11493 15.7056 4.47643C16.7598 5.81544 17.8769 7.79622 19.3063 10.3305L19.7418 11.1027C20.9234 13.1976 21.8566 14.8523 22.3468 16.1804C22.8478 17.5376 22.9668 18.7699 22.209 19.8569C21.4736 20.9118 20.2466 21.3434 18.6991 21.5471C17.1576 21.75 15.0845 21.75 12.4248 21.75H11.5752C8.91552 21.75 6.84239 21.75 5.30082 21.5471C3.75331 21.3434 2.52637 20.9118 1.79099 19.8569C1.03318 18.7699 1.15218 17.5376 1.65314 16.1804C2.14334 14.8523 3.07658 13.1977 4.25818 11.1027L4.69361 10.3307C6.123 7.79629 7.24019 5.81547 8.2944 4.47643ZM9.47297 5.40432C8.49896 6.64148 7.43704 8.51988 5.96495 11.1299L5.60129 11.7747C4.37507 13.9488 3.50368 15.4986 3.06034 16.6998C2.6227 17.8855 2.68338 18.5141 3.02148 18.9991C3.38202 19.5163 4.05873 19.8706 5.49659 20.0599C6.92858 20.2484 8.9026 20.25 11.6363 20.25H12.3636C15.0974 20.25 17.0714 20.2484 18.5034 20.0599C19.9412 19.8706 20.6179 19.5163 20.9785 18.9991C21.3166 18.5141 21.3773 17.8855 20.9396 16.6998C20.4963 15.4986 19.6249 13.9488 18.3987 11.7747L18.035 11.1299C16.5629 8.51987 15.501 6.64148 14.527 5.40431C13.562 4.17865 12.8126 3.75 12 3.75C11.1874 3.75 10.4379 4.17865 9.47297 5.40432Z" fill="#ef4444"></path>
+                 </svg>
+               </div>
+               <div class="mt-3 text-center sm:mt-0 sm:ml-6 sm:text-left">
+                 <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline"> 메세지 </h3>
+                 <div class="mt-2">
+                   <p class="warning-modal-text text-sm text-gray-500"> 인증번호가 일치하지 않습니다.</p>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+         </div>
+       </div>
+
+   </div>
+
+
+
+  <div class = "suc-modal justify-center flex items-center h-screen fixed w-full z-50 sm:top-1/4 hidden">
+     <div class="fixed inset-0 bg-gray-300 bg-opacity-75 z-20">
+
+     </div>
+
+     <!-- 모달 -->
+
+       <div class="sm:w-1/4 sm:h-screen flex items-end justify-center pt-4  px-4 pb-24 text-center sm:block sm:p-0 z-50">
+         <!-- 모달 패널 -->
+         <div class="w-full inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+             <!-- 모달 컨텐츠 -->
+             <div class="sm:flex sm:items-start">
+               <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10">
+
+                 <i class="text-green-400 fa-2x fa-regular fa-circle-check"></i>
+               </div>
+               <div class="mt-3 text-center sm:mt-0 sm:ml-6 sm:text-left">
+                 <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline"> 메세지 </h3>
+                 <div class="mt-2">
+                   <p class="suc-modal-text text-sm text-gray-500"> 인증번호가 일치하지 않습니다.</p>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+         </div>
+       </div>
+
+   </div>
+
+     <div class="modal-container justify-center flex items-center h-screen fixed w-full z-50 hidden top-1/5"> 
+        <div class="fixed inset-0 bg-gray-300 bg-opacity-75"></div>
        <!-- Modal Start-->
        <div class="flex items-center justify-center w-1/2 z-50">
            <div class="bg-white rounded-lg p-6 w-full shadow-lg transform transition-all duration-300 ">
@@ -76,9 +149,9 @@
                            <!--좌석 종류 선택 -->
                            <div class="dropdown-menu absolute right-0 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-20">
                                  <div class="py-2 p-2">
-                                     <a href="#" class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content goods" role="menuitem">고정석</a>
-                                     <a href="#" class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content goods" role="menuitem">자유석</a>
-                                     <a href="#" class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content goods" role="menuitem">기간제</a>
+                                     <a href="#" class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content" role="menuitem">고정석</a>
+                                     <a href="#" class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content" role="menuitem">자유석</a>
+                                     <a href="#" class="block px-4 py-2 mb-1 text-sm text-gray-700 rounded-md bg-white hover:bg-gray-100 dropdown-content" role="menuitem">기간제</a>
                  </div>
                              </div>
 
@@ -87,15 +160,15 @@
                            <div class="mx-auto ">
 
                                <div class="mb-4 flex space-x-4 p-2 bg-white rounded-lg shadow-md">
-                                   <button x-on:click="openTab = 1" :class="{ 'bg-black text-white': openTab === 1 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300 bg-gray-100 text-sm goods">남자 전용</button>
-                                   <button x-on:click="openTab = 2" :class="{ 'bg-black text-white': openTab === 2 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300 bg-gray-100 text-sm goods">여자 전용</button>
-                                  <button x-on:click="openTab = 3" :class="{ 'bg-black text-white': openTab === 3 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300 bg-gray-100 text-sm goods">남여 공용</button>
+                                   <button x-on:click="openTab = 1" :class="{ 'bg-black text-white': openTab === 1 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300 bg-gray-100 text-sm">남자 전용</button>
+                                   <button x-on:click="openTab = 2" :class="{ 'bg-black text-white': openTab === 2 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300 bg-gray-100 text-sm">여자 전용</button>
+                                  <button x-on:click="openTab = 3" :class="{ 'bg-black text-white': openTab === 3 }" class="flex-1 py-2 px-4 rounded-md focus:outline-none focus:shadow-outline-blue transition-all duration-300 bg-gray-100 text-sm">남여 공용</button>
                                </div>
 
 
                                 <!--적용/취소 버튼 시작, 적용 버튼 누르면 서버로 변경 사항이 전달되어야 한다. 취소 버튼을 누르면 배치도로 돌아가야 한다.-->
                              <div class="bg-gray-50 py-3 flex justify-end">
-                               <button  id = "apply" class="adjust-button w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"> 적용 </button>
+                               <button class="adjust-button w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"> 적용 </button>
                                <button class="cancel-button mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"> 취소 </button>                       
                                <!--적용/취소 버튼 종료 -->
 
@@ -118,7 +191,31 @@
 
   
    <header>
-     <a href="#none" style="font-size: 1.2rem;">좌석 배치</a>
+
+     <div class="flex justify-between items-center bg-white h-full">
+       <a href = "/" class="ml-3">
+         <svg
+           class="w-6 h-6 text-gray-400"
+           xmlns="http://www.w3.org/2000/svg"
+           fill="none"
+           viewBox="0 0 24 24"
+           stroke="currentColor"
+         >
+           <path
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             stroke-width="2"
+             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+           />
+         </svg>
+       </a>
+       <a href="#none" class="mr-10 text-xl font-bold">좌석 배치</a>
+       <span></span>
+     </div>
+     
+
+
+     
    </header>
   <div class="icon-container">
     <span class="icon-wrap"><span class="icon"></span><span class="icon-info">사용가능</span></span>
@@ -609,6 +706,14 @@
   
   <script src="script/jquery-1.12.4.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+
+  <script>
+    // document.querySelector로 x-ref에 접근하기
+    const modalElement = document.querySelector('[x-ref="modalComponent"]');
+    console.log(modalElement);  // 모달 요소를 콘솔에 출력
+  </script>
+
+  
 </body>
 </html>
 

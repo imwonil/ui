@@ -1,18 +1,10 @@
 [
     {
-        "sendName": "fixedDeadine",
-        "Text": "이용해주셔서 감사합니다.~",
-        "send": "YES",
-        "set": "1",
-        "daySend": "33",
-        "timeSend": 60
-    },
-    {
-        "sendName": "feeDeadine",
-        "Text": "ㅇㄴㄹㅇㄴㄹ",
-        "send": "YES",
-        "set": "1",
-        "daySend": "",
-        "timeSend": 15900
+        "sendeType": "고정석",
+        "messageTitl": "이기적인놈",
+        "Text": "ewe",
+        "timeSend": 1020,
+        "messageKindeindexOf": 0,
+        "set": 1
     }
 ]

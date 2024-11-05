@@ -1,5 +1,15 @@
-"use strict"
+ "use strict"
 
+
+const warningModal = document.querySelector(".warning-modal")
+const warningModalText = document.querySelector(".waring-modal-text")
+const sucModal = document.querySelector(".warning-modal")
+const sucModalText = document.querySelector(".suc-modal-text")
+const justify = document.querySelector(".judyigy")
+const modalMasg = document.querySelector(".suc-modal-text")
+// console.log(warningModal)
+// console.log(sucModal)
+// 
 let tebKinde = "고정석"
 
 tebClick(tebKinde);
@@ -291,7 +301,7 @@ cancelBtn.addEventListener("click", ()=>{
 function payClick(goodsName,expiry,fee,setGoods) {
  if(fee <= 50000) { HALBOO.style="display:none"
                        }
-  
+
 
 kioceTotall.push(goodsName, expiry, fee,setGoods )
 
@@ -312,19 +322,22 @@ set.forEach((MONEY) => {
 
 MONEY.onclick = () => {moneyButton(fee,MONEY.innerText)} //할부 개월수 value 값선택
 
-  
+
 })
 
-      
- 
+
+
   if(fee < 50000) {sendbuf = "NICEVCAT" + H7 + "0200" + FS + "10" + FS + "C" + FS + fee + FS + "0" + FS + "0" + FS + "00" + FS + "" + FS + "" + FS + "" + FS + "" + FS + FS + FS + "" + FS + FS + FS + FS + ""+ FS + H7;
 
       form.SendData.value = sendbuf +"" + kioceTotall ;  }
 
+  if(fee > 50000) {sendbuf = "NICEVCAT" + H7 + "0200" + FS + "10" + FS + "C" + FS + fee + FS + "0" + FS + "0" + FS + "00" + FS + "" + FS + "" + FS + "" + FS + "" + FS + FS + FS + "" + FS + FS + FS + FS + ""+ FS + H7;
+
+      form.SendData.value = sendbuf +"" + kioceTotall ;  }
 
 function moneyButton(MONEY,halboo) { 
 
-const  Button = document.getElementById("cad").addEventListener("click", handleClick('credit'))
+// const  Button = document.getElementById("cad").addEventListener("click", handleClick('credit'))
 
 function handleClick(myRadio) //카드 결제 information 결제 버튼을 누르면 실행되는 함수 
 {        
@@ -343,14 +356,14 @@ const number = parseInt(result);
 //  paymentModal.classList.toggle("hidden")
 
 
-  
+
 
    sendbuf = "NICEVCAT" + H7 + "0200" + FS + "10" + FS + "C" + FS + fee + FS + "0" + FS + "0" + FS + halboo + FS + "" + FS + "" + FS + "" + FS + "" + FS + FS + FS + "" + FS + FS + FS + FS + ""+ FS + H7;                  
- 
 
 
 
- 
+
+
 
 
  //       else if(myRadio.value == 'credit_cancel') //신용취소
@@ -361,7 +374,7 @@ const number = parseInt(result);
 
 
  form.SendData.value = sendbuf +"" + kioceTotall ;    // 이 정보를 가지고 post 
-  
+
 
 }   
 
@@ -369,7 +382,7 @@ const number = parseInt(result);
       // 
 }
 
-      
+
     }
 
 
@@ -382,9 +395,21 @@ const number = parseInt(result);
 
       form.RecvData.value = "";
       sendMsg = form.SendData.value;   
- 
+
       if(sendMsg.length == 1) {
-      return  alert("할부 개월수 및 금액을 확인 해주세요");
+   
+
+        // warningModal.classList.toggle("hidden")
+        // warningModalText.innerHTML = "할부 개월 수 및 금액을 확인 해주세요"
+
+        justify.classList.toggle("hidden")
+        modalMasg.innerHTML = "할부 개월 수 및 금액을 확인 해주세요"
+      //  setTimeout(() => {
+      //    paymentModal.classList.toggle("hidden")
+      //    justify.classList.toggle("hidden")
+      //     location.href = "/login"
+      //  }, 900);
+        return 
       }else{            
         if(sendMsg == "REQ_STOP")
         {   
@@ -411,6 +436,7 @@ const number = parseInt(result);
         {      
           console.log("err")
           //요청 시 중복방지로직을 필수로 처리해주세요. 
+          
           if(iFlag == '0')
           {
 
@@ -432,18 +458,31 @@ const number = parseInt(result);
 
 
                 const arr1 = sendbuf.split("",40);
-               
+
                 const str = `${form.RecvData.value}`
-                  
+
                 const arr = str.split("",20);
-               
-               const number1= arr1[19].split(",", 4)
-            
-      
+
+                const number1= arr1[19].split(",", 4)
+
+
             const trimStr = arr[16].split(' ').join('');
             console.log(trimStr,"438")
-           if(trimStr === "거래거절할부개월오류" ) {return alert(trimStr)}   
-               
+           if(trimStr === "거래거절할부개월오류" ) {
+             
+                                          // warningModalText.innerHTML = `${trimStr}`
+                                          //  warningModal.classList.toggle("hidden")
+
+
+                                           justify.classList.toggle("hidden")
+                                           modalMasg.innerHTML =`${trimStr}`
+                                          setTimeout(() => {
+                                           
+                                             location.href = "/productList"
+                                          }, 900);
+                                             
+                                          }   
+
                 const regex = /[^0-9]/g;
                 const result = number1[0].replace(regex, "");
                 const number = parseInt(result);
@@ -462,8 +501,8 @@ const number = parseInt(result);
             fee:number1[2],
              expiry:number1[1],
             hangle:arr[6],
-            
- 
+
+
            }
            console.log(req, "332")
 
@@ -478,11 +517,18 @@ const number = parseInt(result);
               .then((res => res.json()))
               .then(( res) => {
                 console.log(res)
-              alert("결제 되였습니다. ")
-                setTimeout(() => {
+       
 
+                // sucModalText.innerHTML = "결제 되었습니다."
+                //  sucModal.classList.toggle("hidden")
+
+                 justify.classList.toggle("hidden")
+                 modalMasg.innerHTML = '결제 되였습니다.'
+                setTimeout(() => {
+                  paymentModal.classList.toggle("hidden")
+                  justify.classList.toggle("hidden")
                    location.href = "/login"
-                }, 1500);
+                }, 900);
 
 
               })
@@ -496,15 +542,35 @@ const number = parseInt(result);
 
                   //응답 받지 않아서 예외 처리
                 }
-                else
-                  alert('AJAX 통신 실패! NVCAT 실행 여부 확인!');
+                else{  
+                
+
+                  justify.classList.toggle("hidden")
+                  modalMasg.innerHTML = 'AJAX 통신 실패! NVCAT 실행 여부 확인!'
+                    
+                  setTimeout(() => {
+                   
+                    justify.classList.toggle("hidden")
+                   
+                  }, 900);
 
                 iFlag = '0';
                }
-            });      
+              }
+            });   
+               
           }
-          else   
-            alert('버튼 중복 클릭');            
+          else  {   
+            justify.classList.toggle("hidden")
+          modalMasg.innerHTML = '요금 중복 되였습니다.'
+          setTimeout(() => {
+                   
+            justify.classList.toggle("hidden")
+           
+          }, 900);
+          } 
+          
+          
         }
       }         
 
@@ -543,8 +609,3 @@ const number = parseInt(result);
       n = n + '';
       return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
     }
-
-
-
-
-

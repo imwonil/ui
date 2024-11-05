@@ -120,6 +120,15 @@ async SEARCH() {
   return a
   
 }
+
+async changseat() {
+  
+  const  client =  this.bench
+  const a = await UserStorage.changSEAT(client) 
+   console.log(a)
+  return a
+  
+}
 }
 module.exports = Benchs;
 

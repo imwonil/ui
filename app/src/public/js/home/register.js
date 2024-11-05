@@ -8,6 +8,21 @@ const feather = document.querySelector(".feather")
 const exit = document.querySelector(".exit")
 
 
+  const warningModal = document.querySelector(".warning-modal")
+
+    const modalText = document.querySelector(".modal-text")
+    const cancelBtn = document.querySelector(".cancel-btn")
+
+
+
+      cancelBtn.addEventListener("click", ()=>{
+        warningModal.classList.toggle("hidden")
+      })
+
+     
+      
+      
+
 /**아이디/비번 찾기랑 회원가입 모달 각각 끄는 방법 */
 
 
@@ -17,23 +32,23 @@ const exit = document.querySelector(".exit")
 const VERIFICATION = document.querySelector("#verification"),
        ID = document.querySelector("#id"),
        PHONE = document.querySelector("#phone"),
-      
+
        PSWORD = document.querySelector("#psword"),
        CONFIRM = document.querySelector("#confirm-psword")
 var gender =""
-  
+
       const btnHover = document.querySelectorAll(".flex-1")
-   
+
       btnHover.forEach((tabs)=>{
         tabs.addEventListener("click", GENDER)
         function GENDER (){
           console.log(tabs.innerText)
         gender =  tabs.innerText
           }
-      
-      
+
+
         })
-  
+
 
 const verificaionBUTTON = document.querySelector(".bg-gray-900")
 
@@ -48,55 +63,66 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
         const CERTIFICATION = data.certification[0]
         console.log( VERIFICATION.value)
        if(CERTIFICATION !== VERIFICATION.value) {
-       
-        // document.querySelector("#h2").innerText="인증번호가 일치 하지 않습니다.."
+
+
+          modalText.innerHTML = "인증번호가 일치 하지 않습니다"
+         warningModal.classList.toggle("hidden")
+ 
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
-          
-          alert("인증번호가 일치 하지 않습니다")
-          
+
+           warningModal.classList.toggle("hidden")
+
+
         }, 2000);
     return
        }
- 
+
       if(CONFIRM.value !== PSWORD.value ){
-        console.log("비밀번호가 일치하지 않습니다.")
+        modalText.innerHTML = "비밀번호가 일치하지 않습니다"
+         warningModal.classList.toggle("hidden")
+    
         // document.querySelector("#h2").innerText="비밀번호가 일치하지 않습니다."
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
-          
-          alert("비밀번호가 일치하지 않습니다")
-          
+
+           warningModal.classList.toggle("hidden")
+
         }, 2000);
         return
     }
     if(!PSWORD.value) {
-      alert("비밀번호를 입력해주세요")
+      modalText.innerHTML = "비밀번호를 입력해주세요"
+       warningModal.classList.toggle("hidden")
+     
       // document.querySelector("#h2").innerText="비밀번호를 입력해주세요."
       //   document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
-          
-         
-          
+           warningModal.classList.toggle("hidden")
+
+
         }, 2000);
         return
       }
 
       if(gender === "") {
-        alert("성별를 선택해 주세요")
+        
+         modalText.innerHTML = "성별을 선택해 주세요"
+         warningModal.classList.toggle("hidden")
+      
       // document.querySelector("#h2").innerText="비밀번호를 입력해주세요."
       //   document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
-          
-        
-          
+           warningModal.classList.toggle("hidden")
+
+
         }, 2000);
         return
       }
-    
+
     const Certification =sessionStorage.getItem("certification")
     const req = {
-    
+
     id : ID.value,
     psword : PSWORD.value,
     confirmPsword: CONFIRM.value,
@@ -105,13 +131,13 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
     Certification:"Certification"
     }
     console.log(req)
-    
+
     fetch("/register", {
     method: "POST",
     headers : {
       "Content-Type" :"application/json"
     },
-    
+
      body: JSON.stringify(req),
     })
     .then((res => res.json()))
@@ -119,24 +145,28 @@ const verificaionBUTTON = document.querySelector(".bg-gray-900")
       console.log(res)
     if(res.success === true) {
       sessionStorage.removeItem("certification")
-      
+
         // document.querySelector("#h2").innerText="회원가입을 성공적으로 되였습니다.."
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
-         
+
         location.href = "/login"
         }, 1000);
         return
       }  else if(res.success === false) {
-        alert("존재하는 아이디입니다.")
+
+      modalText.innerHTML = "존재하는 아이디입니다."
+       warningModal.classList.toggle("hidden")
+
+   
         // document.querySelector("#h2").innerText="존재하는 아이디입니다."
         // document.querySelector(".modal").classList.remove("hidden")
         setTimeout(() => {
-          
-          
-          
+
+          warningModal.classList.toggle("hidden")
+
         }, 2000); 
-      
+
       }
     })
      })
@@ -205,7 +235,7 @@ let idx = 0;
 //   ele.addEventListener("click", ()=>{
 //   console.log("kkk")
 //     idx = infos.indexOf(ele)
-    
+
 //     if(info[idx].value !== ""){
 //       arr.length = 0;
 //       arr = info[idx].value.split("")

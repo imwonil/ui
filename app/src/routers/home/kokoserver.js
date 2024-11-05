@@ -4,154 +4,436 @@ const { SolapiMessageService } = require("solapi");
 const messageService = new SolapiMessageService("NCS2VWYIUO94SIGY", "JTGRZN7SISY7EGJZOQBZEXATCFEI1AEP");
 const fs =  require('fs').promises
 const path = require('path')
+const db = require("../../config/db")
+var crypto = require("crypto");
+var axios = require("axios");
+const moment = require("moment")
 
 var crypto = require("crypto");
 var axios = require("axios");
-
-
-
-// const ADminGoodsKiosk = path.join("/home/hosting_users/emc22wonil2/apps/emc22wonil2_emc33wonil/src/adminUser/adminGoodsKiosk.json") 
-// const UserGoodsKinds = path.join("/home/hosting_users/emc22wonil2/apps/emc22wonil2_emc33wonil/src/database/userGoodsKinds.json") 
-// // const AdminNext = path.join("/home/hosting_users/emc22wonil2/apps/emc22wonil2_emc33wonil/src/adminSetKinds/adminNext.json") 
-// const KOKOtime = path.join("/home/hosting_users/emc22wonil2/apps/emc22wonil2_emc33wonil/src/database/kokoTime.json") 
-
-var crypto = require("crypto");
-var axios = require("axios");
-// router.post("/koko", (req, res) =>{
-// //    const benchs = new Benchs(req.body)
-// // })
 
 //  setInterval(times, 20001);
 
 
-function times() {
-  console.log("3")
-
-fs. readFile("./src/database/kokotime.json")
-.then((data) => {
-const datas = JSON.parse(data)
-
-if(datas[0] !== undefined) { 
-  const timesend =  datas[0].timeSend
- 
-  fs. readFile("./src/database/userGoodsKinds.json")
-    .then((dats) => { 
-     const dataS = JSON.parse(dats)
-      if(dataS[0] !== undefined) { 
-        const userId = datas.filter(function (addSave) { return addSave.sendName === "fixedDeadine" });
-
-        if(userId[0].timeSend !== undefined) { 
-        for(var q = 0; q<dataS.length; q ++) { 
-              for(var b = 0; b<dataS[q].UseTime.length; b ++)  {
-         
-                
-            
-                
-                 var dayss = Math.floor(dataS[q].UseTime[b]/1440)
-                
-                   var tme =  (dataS[q].UseTime[b]%1440) //나머지 분
-                 // var day = Math.floor( data[0].UseTime[listInfo]/1400) // 1일
-                   var hour =  Math.floor(tme/60) // 시간
-                 // var min = tme%60  // 분
-                 // consle.log(datas[index].timeSend)
-              
-               
-                       if(userId[0].timeSend > dataS[q].UseTime[b] && dataS[q].koko[b] === "N") {
-                        
-                        
-                        const time =dataS[q].UseTime[b]/60
-                           messageService.send({
-                             "to": dataS[q].phon,
-                             "from": "01029718573",
-                                      "kakaoOptions": {
-                                        "pfId": "KA01PF240201053925212fFkWt1ESnqq",
-                                        "templateId": "KA01TP2402010546287663onuf9g48Ts",
-                                        // 치환문구가 없을 때의 기본 형태
-                                        "variables": {
-                                          "#{NAME}" :`${dataS[q].name}님의`,
-                                          "#{time}" : `${dataS[q].UseTime[b]}분`
-                                    
-                                        }
-                                    
-                                        // 치환문구가 있는 경우 추가, 반드시 key, value 모두 string으로 기입해야 합니다.
-                                        /*
-                                        variables: {
-                                          "#{변수명}": "임의의 값"
-                                        }
-                                        */
-                                    
-                                        // disbaleSms 값을 true로 줄 경우 문자로의 대체발송이 비활성화 됩니다.
-                                        // disableSms: true,
-                                      }
-                                    });
-                       
-                                   dataS[q].koko[b] = "Y"
-                                  
-                                   fs.writeFile("./src/database/userGoodskinds.json", JSON.stringify(dataS), (err) => {
-                
-                                   })  
-                                    var now = new Date().toISOString();
-                                    // 16진수 64자의 랜덤 값 생성
-                                    var genRanHex = size =>
-                                      [...Array(size)]
-                                        .map(() => Math.floor(Math.random() * 16).toString(16))
-                                        .join("");
-                                    var salt = genRanHex(64);
-                                    var message = now + salt;
-                                    var apiKey = "NCS2VWYIUO94SIGY";
-                                    var apiSecret = "JTGRZN7SISY7EGJZOQBZEXATCFEI1AEP";
-                                    var signature = crypto.createHmac("sha256", apiSecret).update(message).digest("hex");
-                                    
-                                    // 생성한 시그니처를 사용하여 API 호출
-                                    var uri = `https://api.solapi.com/messages/v4/list?limit=1`;
-                                    axios
-                                      .get(uri, {
-                                        headers: {
-                                          Authorization: `HMAC-SHA256 apiKey=${apiKey}, date=${now}, salt=${salt}, signature=${signature}`
-                                        }
-                                      })
-                                      .then(res => {
-                                         console.log(res.data, "ok");
-                                      })
-                                      .catch(error => {
-                                        console.log(error.response.data);
-                                      });
-                       
-                                   }
-                                 
-                                  
-                                   
-            
-           
-           }
-             
-         
-      }
-       
-    }
-      }
-
-    })
-}
-
-            
+// function times() {
+//   const kkk = "SELECT json_extract(UseTime, '$.UseTime[0]') AS value FROM kakaoAlarm WHERE phon = ?";
+//   function  next(){
+//     return new Promise((resolve, reject) => {
+//       console.log("1")
+//     if(resolve) {
+        
+//        userGoodsKinds.forEach((itme, index) => {
+//                   itme.UseTime.forEach((useTime, inde) => {
                    
-                
+//                     if(useTime !=="" && itme.loginStart[inde] !== ""){
+                      
+//                            const nowTime =  moment().format('yyyy-MM-DD hh:mm')
+//                             const dateB = moment(`${nowTime}`);
+//                             const login =   userGoodsKinds[index].loginStart[inde]
+                             
+//                              const nexetTime= dateB.diff(login, 'minute')
                   
-             
-
-       
-     
-     
-
-}).catch((err) => console.error(err));
-
-
-
-
-
-
-} 
-
+                                      
+//                             const kk = userGoodsKinds[index].UseTime[inde] - nexetTime
+                         
+                           
+//                             userGoodsKinds[index].UseTime[inde] = kk
+//                             userGoodsKinds[index].loginStart[inde] = nowTime
+//                             userGoodsKinds[index].loginStart[inde] = nowTime
+//                             console.log(userGoodsKinds[index].id)
+//                             const goodsExpire = `UPDATE kakaoAlarm SET UseTime = JSON_SET(UseTime, '$.UseTime[${inde}]', ${kk}) WHERE phon = ?`;
+                            
+                                   
+//                                      // 쿼리 실행
+//                                      db.query(goodsExpire, [`${userGoodsKinds[index].phon}`], (err, data) => {
+//                                        if (err) {
+//                                          // 쿼리 실행 중 오류 발생 시 reject 호출
+//                                          return reject(err);
+//                                        }
+//                                        // 쿼리 성공 시 resolve 호출
+//                                        resolve(data);
+//                                      });
   
+//                     }
+              
+  
+//                   })
+  
+  
+//        })
+    
+    
+     
+//         resolve();
+  
+//     }else { reject("err")  } 
+  
+    
+//   })
+  
+  
+  
+  
+//   }
+//   //loginStart - 컬럼명 kakaoAlarm 테이블명   '$.loginStart[0]' 배열에 순서 
+//   db.query(kkk, ["01071038573"], (err, data) => {
+//     // ["010710385735"] 특정한 값을 지정 id 와 같음 phon
+//       if (err) return reject(err);
+      
+//       const loginStartArr =   JSON.parse(data[0].value)
+
+//       // console.log(loginStartArr,"28")
+ 
+//   });
+
+//   fs.readFile("./src/database/userGoodsKinds.json")
+//   .then((data) => {
+
+//   const userGoodsdata = JSON.parse(data)
+//    userGoodsdata.forEach((item, index) => {
+
+//         if(item.UseTime.length > 0) {
+//           console.log(item.name ,item.goodsName)
+
+//         }else if(item.UseTime.length <= 0) {
+
+//            console.log(item.name,"ppp")
+
+//         }
+   
+
+//    })
+// })
+
+
+
+
+// }  
+// setInterval(inspect, 60000);
+inspect()
+function inspect() { 
+ 
+  fs.readFile("./src/database/userGoodsKinds.json")
+  .then((data) => {
+   
+  const userGoodsKinds = JSON.parse(data)
+  
+  const nowTime =  moment().format('yyyy-MM-DD hh:mm')
+  
+  function  next(){
+    return new Promise((resolve, reject) => {
+      console.log("1")
+    if(resolve) {
+      const DBUseTimeData = "SELECT json_extract(UseTime, '$[0]') AS value FROM kakaoAlarm WHERE phon = ?";     
+      const DBLoginStart = "SELECT json_extract(loginStart, '$[0]') AS value FROM kakaoAlarm WHERE phon = ?";
+      const DBAllPhonData = "SELECT phon FROM kakaoAlarm";  //kakaoAlarm 테이블 에서 전체 길를 알l아냄   
+        new Promise((resolve, reject) => {
+          db.query(DBAllPhonData, (err, data) => { 
+              if (err) {
+                  return reject(err); // Rejects the promise on error
+              }
+              
+
+             data.forEach((item, index) => {
+              return new Promise((resolve, reject) => {
+                db.query(DBAllPhonData, (err, data) => { 
+                    if (err) {
+                        return reject(err); // Rejects the promise on error
+                    }
+                    
+      
+                   data.forEach((item, index) => {
+                    console.log(item.phon) 
+                 
+            db.query(DBLoginStart, [`${item.phon}`], (err, datas) => { 
+              if (err) return reject(err);
+              
+               const DBphon=  JSON.parse( datas[0].value)
+                   console.log(DBphon)
+              
+                if(DBphon.UseTime !== undefined) {
+                    console.log(DBphon,"phon")
+           
+       
+                  console.log(item.phon,"itme")
+                  
+                } if(DBphon.UseTime === undefined) { //삭제되는 구간 db에서 useTime 하나도 없으면 userGoodsKind 에서 goods가 N 이면
+      
+                  console.log(item.phon,"delet")
+      
+      
+                  const DeleteDB = `DELETE FROM kakaoAlarm WHERE phon = ?`;
+                  // db.query(DeleteDB, [item.phon], (err, data) => {
+                  //     if (err) {
+                  //         // If there's an error during query execution, reject the promise
+                  //         return reject(err);
+                  //     }
+                  //     // If the query is successful, resolve the promise
+                  //     resolve(data);
+                  // });
+                }
+              resolve(data);
+          });
+      
+                   })
+                    resolve(data); // Resolves with the data
+                });
+            });
+
+           
+
+             })
+              resolve(data); // Resolves with the data
+          });
+      });
+                
+                   
+                    // if(useTime !=="" && itme.loginStart[inde] !== ""){
+                      
+                    //        const nowTime =  moment().format('yyyy-MM-DD hh:mm')
+                    //         const dateB = moment(`${nowTime}`);
+                    //         const login =   userGoodsKinds[index].loginStart[inde]
+                             
+                    //          const nexetTime= dateB.diff(login, 'minute')
+                  
+                                      
+                    //         const kk = userGoodsKinds[index].UseTime[inde] - nexetTime
+                         
+                           
+                           
+                    //         const goodsExpire = `UPDATE kakaoAlarm SET UseTime = JSON_SET(UseTime, '$.UseTime[${inde}]' ,  ${kk}) WHERE phon = ?`;
+                           
+                                   
+                    //                  // 쿼리 실행
+                    //                  db.query(goodsExpire, [`${userGoodsKinds[index].phon}`], (err, data) => {
+                    //                    if (err) {
+                    //                      // 쿼리 실행 중 오류 발생 시 reject 호출
+                    //                      return reject(err);
+                    //                    }
+                    //                    // 쿼리 성공 시 resolve 호출
+                    //                    resolve(data);
+                    //                  });
+  
+                    // }
+              
+  
+               
+  
+  
+
+    
+    
+     
+        resolve();
+  
+    }else { reject("err")  } 
+  
+    
+  })
+  
+  
+  
+  
+  }
+
+  function  next_2(){
+    return new Promise((resolve, reject) => {
+      
+    if(resolve) {
+      
+
+      const kkk = "SELECT json_extract(loginStart, '$.loginStart[0]') AS value FROM kakaoAlarm WHERE phon = ?";
+      const DBUseTimeData = "SELECT json_extract(UseTime, '$[0]') AS value FROM kakaoAlarm WHERE phon = ?";     
+
+      
+
+      const DBAllPhonData = "SELECT phon FROM kakaoAlarm";       
+      return new Promise((resolve, reject) => {
+          db.query(DBAllPhonData, (err, data) => { 
+              if (err) {
+                  return reject(err); // Rejects the promise on error
+              }
+              console.log(data.length,"전채 길이");
+
+             data.forEach((item, index) => {
+              console.log(item.phon)
+           
+      db.query(DBUseTimeData, [`${item.phon}`], (err, datas) => { 
+        if (err) return reject(err);
+        
+         const DBphon=  JSON.parse( datas[0].value)
+          
+        
+          if(DBphon.UseTime !== undefined) {
+              console.log(DBphon,"phon")
+     
+ 
+            console.log(item.phon,"itme")
+            
+          } if(DBphon.UseTime === undefined) { //삭제되는 구간 db에서 useTime 하나도 없으면
+
+            console.log(item.phon,"delet")
+
+
+            const DeleteDB = `DELETE FROM kakaoAlarm WHERE phon = ?`;
+            db.query(DeleteDB, [item.phon], (err, data) => {
+                if (err) {
+                    // If there's an error during query execution, reject the promise
+                    return reject(err);
+                }
+                // If the query is successful, resolve the promise
+                resolve(data);
+            });
+          }
+        resolve(data);
+    });
+
+             })
+              resolve(data); // Resolves with the data
+          });
+      });
+  
+    }else { reject("err")  } 
+  
+    
+  })
+   
+  
+  
+  
+  }
+ 
+  
+  function  next_4() {
+    return new Promise((resolve, reject) => {
+    
+      
+        if(userGoodsKinds[0].loginStart !== "") { 
+          console.log("4 진입")
+      if(resolve) {
+         
+        for(var q = 0; q<userGoodsKinds.length; q ++) {
+          
+          for(var b = 0; b<userGoodsKinds[q].UseTime.length; b ++)  {
+       
+           
+                 
+                if(userGoodsKinds[q].expiryName[b] < nowTime   ) {
+                     //  유효기간 경과시 db 삭제 SQL 쿼리 문자열 정의 
+                     const goodsExpire = `UPDATE kakaoAlarm SET goodsName = JSON_REMOVE(goodsName, '$.goodsName[${b}]') WHERE phon = ?`;
+                     const expirationDate = `UPDATE kakaoAlarm SET expiryN = JSON_REMOVE(expiryN, '$.expiryN[${b}]') WHERE phon = ?`;
+                     const USETIME = `UPDATE kakaoAlarm SET UseTime = JSON_REMOVE(UseTime, '$.UseTime[${b}]') WHERE phon = ?`;     
+                            
+                              // 쿼리 실행
+                              db.query(goodsExpire, [`${userGoodsKinds[q].phon}`], (err, data) => {
+                                if (err) {
+                                  // 쿼리 실행 중 오류 발생 시 reject 호출
+                                  return reject(err);
+                                }
+                                // 쿼리 성공 시 resolve 호출
+                                resolve(data);
+                              });
+                           
+                                    
+                                 db.query(expirationDate , [`${userGoodsKinds[q].phon}`], (err, data) => {
+                                if (err) {
+                                  // 쿼리 실행 중 오류 발생 시 reject 호출
+                                  return reject(err);
+                                }
+                                // 쿼리 성공 시 resolve 호출
+                                resolve(data);
+                              });
+                              db.query(USETIME , [`${userGoodsKinds[q].phon}`], (err, data) => {
+                                if (err) {
+                                  // 쿼리 실행 중 오류 발생 시 reject 호출
+                                  return reject(err);
+                                }
+                                // 쿼리 성공 시 resolve 호출
+                                resolve(data);
+                              });
+        
+        
+                    }else if( userGoodsKinds[q].UseTime[b] < 0 ) {
+                   
+               
+            //  사용시간 지나면 삭제 SQL 쿼리 문자열 정의 
+   const goodsExpire = `UPDATE kakaoAlarm SET goodsName = JSON_REMOVE(goodsName, '$.goodsName[${b}]') WHERE phon = ?`;
+   const expirationDate = `UPDATE kakaoAlarm SET expiryN = JSON_REMOVE(expiryN, '$.expiryN[${b}]') WHERE phon = ?`;
+   const USETIME = `UPDATE kakaoAlarm SET UseTime = JSON_REMOVE(UseTime, '$.UseTime[${b}]') WHERE phon = ?`;    
+          
+            // 쿼리 실행
+            db.query(goodsExpire, [`${userGoodsKinds[q].phon}`], (err, data) => {
+              if (err) {
+                // 쿼리 실행 중 오류 발생 시 reject 호출
+                return reject(err);
+              }
+              // 쿼리 성공 시 resolve 호출
+              resolve(data);
+            });
+         
+                  
+               db.query(expirationDate , [`${userGoodsKinds[q].phon}`], (err, data) => {
+              if (err) {
+                // 쿼리 실행 중 오류 발생 시 reject 호출
+                return reject(err);
+              }
+              // 쿼리 성공 시 resolve 호출
+              resolve(data);
+            });
+            db.query(USETIME , [`${userGoodsKinds[q].phon}`], (err, data) => {
+              if (err) {
+                // 쿼리 실행 중 오류 발생 시 reject 호출
+                return reject(err);
+              }
+              // 쿼리 성공 시 resolve 호출
+              resolve(data);
+            });
+         
+                       
+                    }
+             
+     
+            
+          }
+         
+        }
+         
+    
+        }
+     
+           resolve();
+        
+      }else { 
+        reject("err")
+      } 
+    
+    
+    
+    })
+  
+  
+  
+  
+  }
+  
+  
+  
+  
+  if(userGoodsKinds[0] !== undefined) {
+  // next().then(( )  => {return  next_2()})  
+          //  .then(() =>{ return next_2()})
+          
+          next()
+          
+      //  nex_2() UseTime 만기되면 제가 되는 함수
+      //  nex_3() clint 가 설정한 시간내에 카카오톡 실행 하는 함수
+      //  nex_4() Usetime 만기되면 db 데이터 제거 되는 함수
+      
+  }
+  
+  })
+   
+  
+  }
+   
 module.exports = router 

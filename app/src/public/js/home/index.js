@@ -1,10 +1,16 @@
+const warningModal = document.querySelector(".warning-modal")
 
+
+const warningModalText = document.querySelector(".warning-modal-text")
+  const sucModal = document.querySelector(".suc-modal")
+
+  const sucModalText = document.querySelector(".suc-modal-text")
+  
 //////////////////////////////Object 객체 생성을 선엄함/////////////////////
 class seatInfor {
   constructor(body) {
   this.body = body
-    
-    
+        
     }
   }
 
@@ -14,7 +20,13 @@ const goods = document.querySelectorAll(".goods")
 const apply = document.getElementById("apply")
 const FeeSet =document.getElementsByClassName("sc-seats-number").length
 
+console.log(SNLength,"1")
+console.log(FeeSet,"2")
+console.log(goods,"3")
+// console.log(startBtn,"4")
+// console.log(occupancyBtn,"5")
 
+// console.log(cancelBtn)
 let isDropdownOpen = true;
 let idx = 0;
 
@@ -163,8 +175,29 @@ const goodsName = document.getElementById(number).getAttribute("setName")
 const wonset   =  document.getElementById(number).outerText
 const  gender = document.getElementById(number).getAttribute("genderNmae")
 const seatInfor = document.getElementById(number).getAttribute("seatUse") // 자리 사용자 정보
-if(seatInfor !==null){return alert("사용중인 자리 입니다!!.")}
-if(indexOf === null) {return alert("로그인 후 상품을 먼져 선택 해주세요") } //
+if(seatInfor !==null){
+  warningModalText.innerHTML = "사용중인 자리 입니다."
+warningModal.classList.toggle("hidden")
+setTimeout(() => {
+  warningModal.classList.toggle("hidden")
+
+
+}, 2000);
+return 
+}
+if(indexOf === null) {
+
+  warningModalText.innerHTML = "로그인 후 상품을 먼져 선택 해주세요"
+warningModal.classList.toggle("hidden")
+
+
+setTimeout(() => {
+    warningModal.classList.toggle("hidden")
+
+
+ }, 2000);
+return
+} //
 
 const req = {
   wonset,
@@ -172,7 +205,11 @@ const req = {
   gender,
   indexOf 
 }
- if(wonset === null || goodsName === null || goodsName === null) {return alert("좌석타입이 설정되여 있지는 유형 입니다 유영자에게 문의 하세요")}
+
+
+
+
+ if(wonset === null || goodsName === null || goodsName === null) {return alert("좌석타입이 설정되어 있지 않은 유형입니다. 관리자에게 문의하세요")}
 
  fetch("/", {
   method: "POST",
@@ -184,13 +221,32 @@ const req = {
 })
   .then((res) => res.json()) 
   .then((res) => { 
-    if(res.success === false){ return alert(res.msg)}
-    console.log(res)
-    alert(`${res[0].name}님 열공하세요`)
-    // sessionStorage.removeItem("cdId")
-    sessionStorage.removeItem("indexOf") //login.js 402 line에서 sessionStorage set 생성 
-     location.href = "/login";
+    if(res.success === false){ 
 
+      console.log("215")
+      warningModalText.innerHTML = res.msg
+      warningModal.classList.toggle("hidden")   
+       setTimeout(() => {
+          
+        warningModal.classList.toggle("hidden")
+    
+            
+      }, 1600); 
+      return 
+    } else{ 
+      sucModalText.innerHTML = `${res[0].name}님 열공하세요`
+
+      sucModal.classList.toggle("hidden")
+      console.log("223")
+   
+    setTimeout(() => {
+          
+       location.href = "/login";
+  
+          
+    }, 1600); 
+    sessionStorage.removeItem("indexOf") //login.js 402 line에서 sessionStorage set 생성 
+  }
    })
 
 

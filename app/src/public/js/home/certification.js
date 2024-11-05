@@ -1,5 +1,18 @@
 // window.Hangul = require('hangul-js'); 
 /**가상 키보드 부분 */
+
+const warningModal = document.querySelector(".warning-modal")
+
+const warningModalText = document.querySelector(".warning-modal-text")
+
+  const sucModal = document.querySelector(".suc-modal")
+  const TegKeyboard = document.querySelector(".keyboard")
+  const sucModalText = document.querySelector(".suc-modal-text")
+
+  const keyboard = document.querySelector(".justify-center")
+  const regiModal = document.querySelector(".regi-modal")
+  console.log(regiModal)
+
 const buttons = document.querySelectorAll(".btn");
   const fortis = document.querySelectorAll(".fortis")
  const textarea = document.querySelector("textarea")
@@ -17,7 +30,7 @@ const buttons = document.querySelectorAll(".btn");
 
  const NAME = document.querySelector("#name"),
        PHON = document.querySelector("#phon")
-     
+
 
 /**아이디/비밀번호/번호 끝 네자리/비밀번호 앞 두자리/아이디/비밀번호 => 0, 1, 2, 3, 4, 5 
 이렇게 새롭게 idx를 매기겠음. fadeIn으로부터 인덱스를 추출하겠음.*/
@@ -54,75 +67,88 @@ sendBUTTON.addEventListener("click", send_BUTTON)
 function send_BUTTON() { //인증번호 발송 버튼 클릭시 작동하는 함수
   const comb = PHON.value.substr(9, 10)
   const conmbination =  nowTimeSS + comb
- 
-console.log(PHON.value)
-  fetch("/userGoodsKinds") 
+
+  fetch("/users") 
   .then(res => res.json())
   .then(data => { 
-    
-    
-   const  PHONE = data.filter(function (addSave) { return addSave.phon === PHON.value });
-   
 
+  
+   const  PHONE = data.phon.indexOf(PHON.value)
+   console.log(PHONE)
   if(!NAME.value) {  
-    alert("이름 미입력")
-
+    regiModal.classList.toggle("hidden")  //center off
+    TegKeyboard.classList.toggle("hidden") //키보드 off
+    
+    warningModalText.innerText = "이름 미입력"
+    warningModal.classList.toggle("hidden") //경고메세지 on
    setTimeout(() => {
-     //닫기 버튼 없이 자동으로 닫기
-
+     warningModal.classList.toggle("hidden") //경고메세지 off
+     regiModal.classList.toggle("hidden") // center on
+     TegKeyboard.classList.toggle("hidden") //키보드 on
    }, 2000);
- 
-   
+
+
    return
  }
  if(!PHON.value) {  
-   
+
  //  phon.value 의 값을 넣지않고 버튼을 클릭 했을 때....
 // 모달창에 이름을 입력해주세요 띄우게 해줌
 // html  26 line id=naem 롤 설정함....
 // 중요한건 닫기 버튼 누르지 않아도 창이 닫게 설계바람..
 // 밑에 있는 setTimeout 권장함 이때  if 문안에있는 return 값은 건디지말 것.
+regiModal.classList.toggle("hidden")  //center off
+TegKeyboard.classList.toggle("hidden") //키보드 off    
+warningModalText.innerHTML = "전화번호 미입력"
+   
+    
+     warningModal.classList.toggle("hidden")
+
+   
    setTimeout(() => {
-alert("전화번호 미입력")
+      warningModal.classList.toggle("hidden")
+      regiModal.classList.toggle("hidden")
+     
+TegKeyboard.classList.toggle("hidden") 
    }, 2000);
- 
+
   return
    } 
-   if(PHONE[0] !== undefined) {
-    
- // 이미등록한 회원 일 경우 
-// 모달창에  등록된 회원입니다. 라고 띄움
-
-// 중요한건 닫기 버튼 누르지 않아도 창이 닫게 설계바람..
-// 밑에 있는 setTimeout 권장함 이때  if 문안에있는 return 값은 건디지말 것.
-     
-   
+   if(PHONE !== -1) {
+    console.log("kkk")
+      regiModal.classList.toggle("hidden")
+       warningModalText.innerHTML = "이미 등록한 회원 입니다."
+       warningModal.classList.toggle("hidden")
+       TegKeyboard.classList.toggle("hidden") //키보드 off
      setTimeout(() => {
-      alert("이미 등록한 회원 입니다.")
-       
+
+        warningModal.classList.toggle("hidden")
+
+        regiModal.classList.toggle("hidden")
+        TegKeyboard.classList.toggle("hidden") //키보드 off
      }, 2000);
      return
    }
-   if(PHONE[0] === undefined) {
- 
+   if(PHONE  === -1) {
+
      const req = {
        title:"certification",
        phone : PHON.value,
        name: NAME.value,
        certification:conmbination
- 
-    
-   }
- 
- 
 
- 
+
+   }
+
+
+
+
  fetch("/certification", {
  method: "POST",
  headers : {
    "Content-Type" :"application/json"
  },
- 
+
   body: JSON.stringify(req),
  })
  .then((res => res.json()))
@@ -136,16 +162,22 @@ alert("전화번호 미입력")
 
 // 중요한건 닫기 버튼 누르지 않아도 창이 닫게 설계바람..
 // 밑에 있는 setTimeout 권장함 이때  if 문안에있는 return 값은 건디지말 것.
-alert("인증요청 하였습니다.")
-    
+regiModal.classList.toggle("hidden")
+sucModalText.innerHTML = "메세지 전송하였습니다."
+sucModal.classList.toggle("hidden")
+TegKeyboard.classList.toggle("hidden") //키보드 off
+      // regiModal.classList.toggle("hidden")
+      // sucModalText.innerHTML = "인증요청 하였습니다."
+      // sucModalText.classList.toggle("hidden")
+
       setTimeout(() => {
- 
-        location =  "/register"
+        //  sucModal.classList.toggle("hidden")
+         location =  "/register"
      }, 1000);
- 
+
  return 
    }
-   
+
 
    })
  }

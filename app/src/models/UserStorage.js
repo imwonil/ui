@@ -5,9 +5,10 @@ const mqtt = require("mqtt");
 const client = mqtt.connect("mqtt://broker.mqtt-dashboard.com", { clientid: "emc22wonil/wonil/ilim" });
 
 const { SolapiMessageService } = require("solapi");
-
+const messageService = new SolapiMessageService("NCS9ZPGT6GJKQKYG", "C7P1EC1QEQ2ZRGTAYUOKNGHKWUDMBBUX");
 const path = require('path')
-const db = require("../config/db")
+const db = require("../config/db");
+const { CONNREFUSED } = require("dns");
 class UserStorage { 
 
   
@@ -185,7 +186,84 @@ return {success: true}
 //   })   
 // }
  } 
+static  async Certification(client) {
+  console.log(client)
+  
+  const Users=  this.#uses
+  const users = await this.getUser("phon","name","certification")
+  console.log(users,"phon")
 
+if(users.phon === undefined) {
+  const Users=  this.#uses
+  Users.phon.push(client.phone)
+  Users.name.push(client.name)
+  Users.certification.push(client.certification)
+  
+  fs.writeFile("./src/database/first.json", JSON.stringify(Users))
+ console.log("1")
+  messageService.send({
+    "to": client.phone,
+    "from": "01029718573",
+    "kakaoOptions": {
+      "pfId": "KA01PF240201072156304ikVz36WEuTC",
+      "templateId": "KA01TP230131084504073zoRX27WkwHB",
+      // 치환문구가 없을 때의 기본 형태
+      "variables": {
+       
+        "#{인증번호}" : client.certification
+      }
+  
+      // 치환문구가 있는 경우 추가, 반드시 key, value 모두 string으로 기입해야 합니다.
+      /*
+      variables: {
+        "#{변수명}": "임의의 값"
+      }
+      */
+  
+      // disbaleSms 값을 true로 줄 경우 문자로의 대체발송이 비활성화 됩니다.
+      // disableSms: true,
+    } 
+  });
+ return {success:true}
+}else if (users.phon !== undefined && !users.phon.includes(client.phone)) {
+  console.log(client,"135")
+  messageService.send({
+    "to": client.phone,
+    "from": "01029718573",
+    "kakaoOptions": {
+      "pfId": "KA01PF240201072156304ikVz36WEuTC",
+      "templateId": "KA01TP230131084504073zoRX27WkwHB",
+      // 치환문구가 없을 때의 기본 형태
+      "variables": {
+      
+        "#{인증번호}" : client.certification
+  
+      }
+  
+      // 치환문구가 있는 경우 추가, 반드시 key, value 모두 string으로 기입해야 합니다.
+      /*
+      variables: {
+        "#{변수명}": "임의의 값"
+      }
+      */
+  
+      // disbaleSms 값을 true로 줄 경우 문자로의 대체발송이 비활성화 됩니다.
+      // disableSms: true,
+    }
+  });
+  
+
+  Users.phon.push(client.phone)
+  Users.name.push(client.name)
+  Users.certification.push(client.certification)
+  
+
+  fs.writeFile("./src/database/first.json", JSON.stringify(Users))
+  return {success: true}
+}
+else if (users.phon.includes(client.phone)) {return {success : false}}                        
+
+} 
 static objectsave(...fildes) { //userGoodsKinds data file
   return fs.
   readFile("./src/database/userGoodsKinds.json",  'utf8', (err, data) => {
@@ -198,7 +276,7 @@ static objectsave(...fildes) { //userGoodsKinds data file
 
 
 ////////////////////// 위 부분은 User 저장및 로그인 과정 ////////////
-static async call (){ // 폴더 database/user.json 정보를 읽어 오겠다
+static async call(){ // 폴더 database/user.json 정보를 읽어 오겠다
    return fs.
    readFile("./src/database/user.json")
    .then((data) => {
@@ -274,21 +352,36 @@ static adminNe() {
 // ------ src/client 에서 입력한 id를 가지고 데이터를 불러오겠다. ---------//
 
 
-
+static async dataKakaAlarm(phon) {
+   console.log(phon,"356")
+     
+  return new Promise((resolve, reject) => {
+    const query ="SELECT * FROM kakaoAlarm  WHERE phon = ?"
+    db.query(query,[phon], (err, data) =>{
+      
+      if(err) reject(`${err}`)
+     
+    return  resolve(data[0])
+    })
+  
+    return 
+  })
+}
 
 ///////////////////////////////////////////////////////////////////////
 
 
 static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초기화 해줌
                          //newLogin 에서 login 하면 실행되는 함수
-     
-  const users = await this.getUserInfo(cl.phon)
-   console.log(users,"361")
+                        
+                         const users = await this.getUserInfo(cl.phon)
+
   const uiuiu = await this.adminNe()
   const us = this.#uses
-  const ad = await this.call() 
-   
+  
  
+
+  const dataKaKao =await this.dataKakaAlarm(cl.phon)
    // 회원 가입 할떄 작성한 정보
   const a =this.#set
 
@@ -308,7 +401,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
   const userGoodsKinds = await this.objectsave() //userGoodsKinds.json 파일이 존재 하는곳
 
   var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
-  
+
    
  
 
@@ -348,12 +441,6 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
     }
 
 
-
-       
-     
-  
-
-  
       function  next_3() {
         return new Promise((resolve, reject) => {
          
@@ -361,7 +448,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
         if(resolve) {
           console.log("3")
           var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
-           console.log(kend[0],"441")
+           
           fs.writeFile('./src/adminSetKinds/adminNext.json', JSON.stringify(kend), (err) => {
             fs.readFile('./src/adminSetKinds/adminNext.json', "[]", 'utf8', (err, data) => {
             
@@ -405,11 +492,44 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
                     } 
         
           });}
-  if(newUserGoodsKinds[0] === undefined  ) {
-    console.log(cl)
+
+              function next_5() {
+                
+                
+          return new  Promise((resolve, reject) => {
+           
+         
+
+            console.log(dataKaKao,"U/S 502")
+          if(resolve) {
+            console.log("5")
+            return new Promise((resolve, reject) => {
+              const phonSub = users.phon.substring(7,11)
+              const pswsub = users.psword.substring(0,2) 
+              const comb = phonSub + pswsub //문열기 비번 조합 comb
+             
+              const query ="INSERT INTO kakaoAlarm(phon,wonset,UseTime,goodsName,benchName,loginStart, logoutEnd, koko,expiryN) VALUES( ?, ?,?, ?, ?, ?, ?,?,?);";
+              console.log(users.phon, "U/S 502")
+              db.query(query,
+                [users.phon,"{}","{}","{}","{}","{}","{}","{}","{}"],(err, data) =>{
+                if(err){reject(err)}
+                
+                resolve();
+                
+              }) 
+            })
+              
+          } else{
+            reject("err");
+                    } 
+        
+          });}
+  if(newUserGoodsKinds[0] === undefined && dataKaKao === undefined)  {
+      console.log("U/S 527")
     
     delivery().then(() =>{return  next_3()})   //초기화 해주는 함수
                              .then(() =>{return next_4()})
+                             .then(() =>{return next_5()})
     
                              var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
    
@@ -417,14 +537,24 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
 
     
   
-  }else { 
+  }else if(dataKaKao === undefined && newUserGoodsKinds[0] !== undefined) { 
+    next_3().then(() =>{return  next_5()})   //초기화 해주는 함수
+  
+    console.log("542")
     
-     next_3().then() 
      var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
    
      return kend[0]
      
+        } else if(dataKaKao !== undefined && newUserGoodsKinds[0] !== undefined) {
+
+          next_3().then() 
+          var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
+          
+           return kend[0]
         }
+
+
     
       
 
@@ -447,8 +577,7 @@ static async Addsavesk(add) { ///  자리 선정 localhost:3000 클릭시 실행
   
  
    var userRemove = userGoodsKinds.filter(function (addSave) { return addSave.phon === ab.phon});
-     console.log(userRemove[0])
-     console.log(ab)
+    
    const index = add.indexOf
     var changeGender =[]
    const benchSet =  userRemove[0].goodsName[index]
@@ -464,27 +593,52 @@ static async Addsavesk(add) { ///  자리 선정 localhost:3000 클릭시 실행
           else if(add.goodsName ==="기간제") {add.goodsName="daysType"}
        
              
-    if(benchSet !== add.goodsName) { throw ( "type 의 유형이 않닙니다 또는 :).") }
+    if(benchSet !== add.goodsName) { throw ( "보유하신 이용권으로 선택할 수 없는 자리입니다.") }
     
     if(add.gender !=="남여 공용") {
       
       if(changeGender !== add.gender) {
       
-      { throw ( " 성멸이 않닙니다.") }}
+      { throw ( "성별 제한이 있는 좌석입니다.") }}
       }
 
+  
       
-       
            function  paymentAPI() {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                 if(resolve) {
-         
+
+                      
+        const kkk = "SELECT json_extract(loginStart, '$.loginStart[0]') AS value FROM kakaoAlarm WHERE phon = ?";
+
+        //loginStart - 컬럼명 kakaoAlarm 테이블명  
+        db.query(kkk, ["010710385735"], (err, data) => {
+            if (err) return reject(err);
+            // 데이터가 이미 객체일 가능성이 높으므로 추가적인 변환이 필요 없을 수 있음
+            console.log(data[0].value, "dkfdjjf");
+            resolve(data);
+        });
+        
+                  const nowTime =  moment().format('yyyy-MM-DD hh:mm')
                   userRemove[0].wonset[index]= `${add.wonset}set`
                   userRemove[0].loginStart[index] = nowTime
-               
+                  //  `UPDATE kakaoAlarm SET loginStart = JSON_SET(loginStart, '$.loginStart[${index}]', nowTime ) WHERE phon = ?`;
+                  const loginstart = `UPDATE kakaoAlarm SET loginStart = JSON_SET(loginStart, '$.loginStart[${index}]', '${nowTime}') WHERE phon = ?`;
+                                 
+                  // 쿼리 실행
+                  db.query(loginstart, [`${userRemove[0].phon}`], (err, data) => {
+                    if (err) {
+                      // 쿼리 실행 중 오류 발생 시 reject 호출
+                      return reject(err);
+                    }
+                    // 쿼리 성공 시 resolve 호출
+                    resolve(data);
+                  });
                   fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(userGoodsKinds))
-                    resolve();
+                    
+                  resolve();
+
                 }else{
                 reject("err");
                         }   },300);
@@ -530,7 +684,7 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
   const day = add.day// client 상품구매한 날짜 충전 data 
 
  
-  var Nicename = Nice.filter(function (addSave) { return addSave.id === ab.id });
+  const  Nicename = Nice.filter(function (addSave) { return addSave.phon === ab.phon });
         
   
 
@@ -546,9 +700,9 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
   const number = parseInt(result);
    //////////문자가 숫자가 혼합해있으면 숫자만추출 /////////////
   const expiryN =  moment ().add(number, 'day').format ('yyyy-MM-DD hh:mm')  //유효기간
-  var userRemove = userGoodsKinds.filter(function (addSave) { return addSave.id === ab.id });
+  const  userRemove = userGoodsKinds.filter(function (addSave) { return addSave.phon === ab.phon });
 
-
+    
     function  delivery() { 
       return new Promise((resolve, reject) => {
 
@@ -557,24 +711,30 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
         if(add.setGoods === "fixedType" || add.setGoods === "daysType" ) {
       
         
-            
-              userRemove[0].UseTime.push(`${day*1440}`)
+          console.log( userRemove[0].UseTime, "629")
+             userRemove[0].UseTime.push(`${day*60}`)
               userRemove[0].goodsName.push(add.setGoods)
               userRemove[0].expiryName.push(expiryN)
-              userRemove[0].benchName.push (`${add.day}-day`) 
+              userRemove[0].benchName.push (`${add.day}-Time`) 
               userRemove[0].wonset.push("")
               userRemove[0].loginStart.push("")
               userRemove[0].logoutEnd.push("")
-              userRemove[0].koko.push("N") 
+                         
+              userRemove[0].koko.push("N")
               userRemove[0].goods = "Y"
               
+             
 
               fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(userGoodsKinds))
             
-               const GOODS ='UPDATE kiki SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
+              const GOODS ='UPDATE kiki SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
               const EXPIRY ='UPDATE kiki SET expiryN = JSON_MERGE_PRESERVE(expiryN, ?) WHERE phon = ?';
               const USETIME ='UPDATE kiki SET UseTime = JSON_MERGE_PRESERVE(UseTime, ?) WHERE phon = ?';
-              
+
+              const KakaGOODS ='UPDATE kakaoAlarm SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
+              const kakaEXPIRY ='UPDATE kakaoAlarm SET expiryN = JSON_MERGE_PRESERVE(expiryN, ?) WHERE phon = ?';
+              const kakaUSETIME ='UPDATE kakaoAlarm SET UseTime = JSON_MERGE_PRESERVE(UseTime, ?) WHERE phon = ?';
+              const kakaloginStart ='UPDATE kakaoAlarm SET loginStart = JSON_MERGE_PRESERVE(loginStart, ?) WHERE phon = ?';
                db.query(GOODS,[JSON.stringify({"goodsName":add.setGoods}), ab.phon], (err, data) => {
               if (err) return reject(err);
                resolve(data);
@@ -588,7 +748,25 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
                 if (err) return reject(err);
                  resolve(data);
                  })
+
+                 db.query(KakaGOODS,[JSON.stringify({"goodsName":add.setGoods}), ab.phon], (err, data) => {
+                  if (err) return reject(err);
+                   resolve(data);
+                   })
+                   
+                  db.query(kakaEXPIRY,[JSON.stringify({"expiryN":expiryN}), ab.phon], (err, data) => {
+                  if (err) return reject(err);
+                   resolve(data);
+                   })
+                   db.query(kakaUSETIME,[JSON.stringify({"UseTime":`${day*1440}`}), ab.phon], (err, data) => {
+                    if (err) return reject(err);
+                     resolve(data);
+                     })
           
+                     db.query(kakaloginStart,[JSON.stringify({"loginStart":""}), ab.phon], (err, data) => {
+                      if (err) return reject(err);
+                       resolve(data);
+                       })
                  if(Nicename[0] === undefined) {  
                   Nice.push({"id": ab.id ,"name":ab.name,"phon":ab.phon, 
                   "approvalNumber":[add.approvalNumber] , "approvalDay":[add.approvalDay],"fee":[add.fee],"hangle":[add.hangle],
@@ -620,7 +798,7 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
        
       }else if(add.setGoods === "feeType") { 
      
-       
+           
             
               userRemove[0].UseTime.push(`${day*60}`)
               userRemove[0].goodsName.push(add.setGoods)
@@ -688,8 +866,7 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
       
 
   
-   
- var userRemove = userGoodsKinds.filter(function (addSave) { return addSave.id === ab.id });
+
   
 
  
@@ -700,7 +877,7 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
   
     if(resolve) {
     
-      var kend = userGoodsKinds.filter(function (addSave) { return addSave.id === `${ab.id}` });
+     const  kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === `${ab.phon}` });
      
      fs.writeFile('./src/adminSetKinds/adminNext.json',JSON.stringify(kend), (err) => {
      fs.readFile("./src/adminSetKinds/adminNext.json", "{}", 'utf8', (err, data) => {
@@ -767,13 +944,13 @@ static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
     const adminNe = await this.adminNe() //adimNext.json //초기화 데디터를 가지고있는 위치
   
     const modiFY = await this.objectsave()
-    var kend = modiFY.filter(function (addSave) { return addSave.id === client.id });
+    var kend = modiFY.filter(function (addSave) { return addSave.phon === client.phone });
     //  Number(kend[0].loginStart[client.index])
   
      const dateB = moment(`${nowTime}`);
    
      const login =   kend[0].loginStart[client.index]
-     const nexetTime = dateB.diff(login, 'minute')
+     const nexetTime = dateB.diff(login, 'minute') //시간차
     
               
       
@@ -784,7 +961,7 @@ static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
      
       return new Promise((resolve, reject) => {
      
-        var kend = modiFY.filter(function (addSave) { return addSave.id === client.id });
+        var kend = modiFY.filter(function (addSave) { return addSave.phon === client.phone });
        
         
         if(kend[0].UseTime[client.index]>0 && kend[0].wonset[client.index] !== undefined  && client.adminId === "user") {
@@ -886,6 +1063,22 @@ return newuser
 
   
  return {success : true}
+ } 
+
+ static async changSEAT (user) {
+  //여기서 add 는 고정석, 자유석, 기간제 
+  
+  console.log(user)
+
+  const userGoodsKinds = await this.objectsave() //"./src/database/userGoodsKinds.json".json
+   var  userinfor = userGoodsKinds.filter(function (setAdd) { return setAdd.phon === user.Phone });
+       
+     userinfor[0].wonset[user.indexOf] = `${user.changSeat}set`
+
+     fs.writeFile("./src/database/userGoodsKinds.json", JSON.stringify(userGoodsKinds ), (err) => {
+    })  
+    
+    return {success:true}
  } 
 
  static async adminSetKindSave(add) { // 좌석 유형 설정 adminbench
@@ -1012,14 +1205,14 @@ static async adminnext(userIds) {
 } 
 
 static async modify(userIds) { // admin 에서 자리 이동 adminViews 에서 클릭시 작동함수
- 
+  
   const next =await this.adminNe()
   const modiFY = await this.objectsave() //"./src/database/userGoodsKinds.json".json
   
 
 
-  console.log(userIds)
-    var menz = modiFY.filter(function (setAdd) { return setAdd.id === userIds.id });
+  console.log(userIds,"iii")
+    var menz = modiFY.filter(function (setAdd) { return setAdd.phon === userIds.phon});
 
      const indexOF = menz[0].wonset.indexOf(userIds.wonsetIndexOf)
     if(userIds.goodsName === undefined) {
@@ -1035,18 +1228,31 @@ static async modify(userIds) { // admin 에서 자리 이동 adminViews 에서 �
   
     
        return  modiFY
-    } else if(userIds.goodsName !== undefined) {
-      
+    } else if(userIds.goodsName !== undefined && userIds.User === "clinet") {
+       
      
       function  deliveryAPI() {
         return new Promise((resolve, reject) => {
         setTimeout(() => {
         if(resolve) {
-            menz[0].wonset[userIds.index -1] = userIds.wonset
-            menz[0].loginStart[userIds.index -1] = userIds.loginStart
+           
+
+            modiFY.forEach((itme, index) =>{
+
+            if(itme.phon === userIds.phon) {
+              menz[0].wonset[userIds.index] = `${userIds.wonset}set`
+              menz[0].loginStart[userIds.index] = userIds.loginStart
+             itme.wonset[userIds.index] = `${userIds.wonset}set`
+             itme.loginStart[userIds.index] = userIds.loginStart
+
+            }
+      
+            })
+            
             fs.writeFile('./src/adminSetKinds/adminNext.json', JSON.stringify(menz), (err) => {
             })    
-           fs.writeFile("./src/database/userGoodsKinds.json", JSON.stringify(modiFY), (err) => {
+        
+            fs.writeFile("./src/database/userGoodsKinds.json", JSON.stringify(modiFY), (err) => {
               })    
            
             resolve();
@@ -1147,10 +1353,10 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
 
   const  modiFY = await this.objectsave() //adminGoodsKinds.json data 
  
-  const kindinfo = await modiFY.filter(function (modiFY) { return modiFY.id === userIds.userId });
- 
+  const kindinfo = await modiFY.filter(function (modiFY) { return modiFY.phon === userIds.phone });
+   console.log(kindinfo[0],"1242")
   const expiryN =  moment ().add(userIds.expiryName, 'day').format ('yyyy-MM-DD hh:mm') 
-
+  
   const indexs = []
   //////////문자와  숫자가 혼합해있으면 숫자만추출 /////////////
   const regex = /[^0-9]/g;
@@ -1177,7 +1383,7 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
          
            
          if(userIds.feeName === "fixedType" || userIds.feeName === "daysType") {
-          kindinfo[0].benchName.push(userIds.goodsName)
+           kindinfo[0].benchName.push(userIds.goodsName)
            kindinfo[0].goodsName.push(userIds.feeName)  
            kindinfo[0].expiryName.push(expiryN) 
            kindinfo[0].UseTime.push(number*1440 )
@@ -1250,25 +1456,31 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
 }
   }
   static async forciBley(client) {
-   console.log("kkkkkkkkkkkkkkkkk")
+   console.log(client,"00")
+   
     const userGoodsKinds = await this.objectsave() //userGoodsKinds.json 파일이 존재 하는곳
     const nowTime =  moment().format('yyyy-MM-DD hh:mm')
-    var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.phone === client.phone });
+    var newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.phon === client.phone });
+    if(client.forcTime ===null ) {client.forcTime ="0"
+  }
    const dayTime = Number(client.forcDay)*1440 + Number(client.forcTime)
-
+   
    if(newUserGoodsKinds[0] === undefined && client.id === "ADMIN") {
-    userGoodsKinds.push({"id": client.id ,"name":"ADMIN", "cdId":client.cdId,
+    console.log("1351")
+    userGoodsKinds.push({"id": client.id,"phon": client.phone ,"name":"ADMIN", "cdId":client.cdId,
      "wonset":[client.cdId], "UseTime":[dayTime] , "goodsName":[],
     "benchName":[],"expiryName":[],
-    "loginStart": [nowTime], "logoutEnd" : []})
+    "loginStart": [nowTime], "logoutEnd" : [], "koko":[]
+   })
    
     fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(userGoodsKinds))
    }
    if(newUserGoodsKinds[0] !== undefined && client.id === "ADMIN") {
     const userGoodsKinds = await this.objectsave()
-   
+    console.log("1361")
     userGoodsKinds.forEach((item, index) =>{
       if(item.id === "ADMIN") {
+        
          item.wonset.push(client.wonset)  
         item.UseTime.push(dayTime)  
         item.loginStart.push(nowTime) 
@@ -1279,6 +1491,7 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
 
 
     })
+    console.log(userGoodsKinds)
    fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(userGoodsKinds))
     }
     return {success : true}
@@ -1293,7 +1506,7 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
     
   if(newUserGoodsKinds[0] === undefined ){
 
-    return {success : false , mag: "등록된 회원이 아닙니다. 회원가입하시고"}
+    return {success : false , mag: "등록된 회원이 이니거나 휴대폰 끝네자리 비번 앞두자리가 옳지 않습니다." }
    }else if(newUserGoodsKinds[0].goodsName[0] !== undefined && newUserGoodsKinds[0] !== undefined ) {
     
     return {success : true} 
@@ -1307,58 +1520,108 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
    }
          
   }
-  static async KOKO(client) {
-
+  static async KOKO(adminRes) {
+                console.log(adminRes)
     const userGoodsKinds = await this.objectsave()
    fs. readFile("./src/database/kokoTime.json")
 .then((data) => { 
   
-const datas = JSON.parse(data)
+const kakadatas = JSON.parse(data)
 
-var kokoFile = datas.filter(function (addSave) { return addSave.sendName === client.sendName });
+var kokoFile = kakadatas.filter(function (addSave) { return addSave.messageTitl === adminRes.messageTitl });
+console.log(kokoFile)
+const deadineDaysTime = Number(adminRes.timeDeadline*60) + Number(adminRes.dayDeadline*1440)
 
+console.log(deadineDaysTime,"1438")
 
- if(kokoFile[0] === undefined ) {
-   const add = Number(client.timeSend*60) + Number(client.daySend*1440)
-   datas.push({"sendName":client.sendName, "Text":client.Text, 
-                "timeSend":add, "send":"YES", "set":client.set})
+ if(kokoFile[0] === undefined && adminRes.save === "new") {
+   const deadineDaysTime = Number(adminRes.timeDeadline*60) + Number(adminRes.dayDeadline*1440)
 
-    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(datas))
-  }else if( kokoFile[0].sendName === "fixedDeadine" && client.save === "option") {
-    const add = Number(client.timeSend*60) + Number(client.daySend*1440)
-    const a = datas.map((item) => item.sendName === client.sendName ? { ...item, "Text": client.Text ,  "timeSend":add, "set":client.set } : item)
-    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+   console.log(deadineDaysTime,"1438")
+   kakadatas.push({"sendeType":adminRes.sendeType,"messageTitl":adminRes.messageTitl, "Text":adminRes.meageContents, 
+                "timeSend":deadineDaysTime, "messageKindeindexOf":adminRes.messageKindeindexOf ,"set":adminRes.set})
+
+    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(kakadatas))
+  } if(kokoFile[0] !== undefined && adminRes.save === "new") {
+
+    kakadatas.push({"messageTitl":adminRes.messageTitl, "Text":adminRes.meageContents, 
+    "timeSend":deadineDaysTime, "set":adminRes.set})
+
+fs.writeFile("./src/database/kokoTime.json",JSON.stringify(kakadatas))
+
+  } if(kokoFile[0] !== undefined && adminRes.save === "UseChange") {
+     
+      kokoFile[0].set = adminRes.set
+
+   
+fs.writeFile("./src/database/kokoTime.json",JSON.stringify(kakadatas))
+
+return {success: true}
+  } if(kokoFile[0] === undefined && adminRes.save === "revise") {
+    console.log("1468")
+
+    kakadatas[adminRes.indexOf].sendeType = adminRes.sendeType
+    kakadatas[adminRes.indexOf].set = adminRes.set
+    kakadatas[adminRes.indexOf].messageTitl = adminRes.messageTitl
+    kakadatas[adminRes.indexOf].Text = adminRes.meageContents
+    kakadatas[adminRes.indexOf].timeSend = deadineDaysTime
  
-  }else if(client.sendName === "fixedDeadine" && client.save === "save") {
-    const add = Number(client.timeSend*60) + Number(client.daySend*1440)
-    const a = datas.map((item) => item.sendName === client.sendName ? { ...item, "set":client.set } : item)
-    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
-   return a 
-  }else if( kokoFile[0].sendName === "feeDeadine" && client.save === "option") {
-    const add = Number(client.timeSend*60) + Number(client.daySend*1440)
-    const a = datas.map((item) => item.sendName === client.sendName ? { ...item, "Text": client.Text , "timeSend":add, "set":client.set } : item)
-    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
-  }else if( client.sendName === "feeDeadine" && client.save === "save") {
-    console.log("se2")
-    const a = datas.map((item) => item.sendName === client.sendName ? { ...item, "set":client.set } : item)
-    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
-  }else if( client.sendName === "expiryDeadine" && client.save === "option") {
-    const add = Number(client.timeSend*60) + Number(client.daySend*1440)
-    const a = datas.map((item) => item.sendName === client.sendName ? { ...item, "Text": client.Text , "timeSend":add, "set":client.set } : item)
-    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
-  }else if( client.sendName === "expiryDeadine" && client.save === "save") {
-    console.log("4")
-    const a = datas.map((item) => item.sendName === client.sendName ? { ...item, "set":client.set } : item)
-    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
-  }else if( client.sendName === "information" && client.save === "option") {
-    const add = Number(client.timeSend*60) + Number(client.daySend*1440)
-    const a = datas.map((item) => item.sendName === client.sendName ? { ...item, "Text": client.Text , "timeSend":add, "set":client.set } : item)
-    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
-  }else if( client.sendName === "information" && client.save === "save") {
-    console.log("sedii")
-    const a = datas.map((item) => item.sendName === client.sendName ? { ...item, "set":client.set } : item)
-    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(kakadatas))
+
+return {success: true}
+
+
+  }if(kokoFile[0] !== undefined && adminRes.save === "Delete") {
+    console.log("1468")
+
+    // Niceinformation[0].approvalNumber.splice(index, 1);
+    kakadatas.splice(adminRes.indexOf, 1)
+   
+ 
+    fs.writeFile("./src/database/kokoTime.json",JSON.stringify(kakadatas))
+
+return {success: true}
+
+
   }
+
+
+  
+  // else if( kokoFile[0].sendName === "fixedDeadine" && adminRes.save === "option") {
+  //   const deadineDaysTime = Number(adminRes.timeSend*60) + Number(adminRes.daySend*1440)
+  //   const a = datas.map((item) => item.sendName === adminRes.sendName ? { ...item, "Text": adminRes.Text ,  "timeSend":deadineDaysTime, "set":adminRes.set } : item)
+  //   fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+ 
+  // }else if(adminRes.sendName === "fixedDeadine" && adminRes.save === "save") {
+  //   const deadineDaysTime = Number(adminRes.timeSend*60) + Number(adminRes.daySend*1440)
+  //   const a = datas.map((item) => item.sendName === adminRes.sendName ? { ...item, "set":adminRes.set } : item)
+  //   fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+  //  return a 
+  // }else if( kokoFile[0].sendName === "feeDeadine" && adminRes.save === "option") {
+  //   const deadineDaysTime = Number(adminRes.timeSend*60) + Number(adminRes.daySend*1440)
+  //   const a = datas.map((item) => item.sendName === adminRes.sendName ? { ...item, "Text": adminRes.Text , "timeSend":deadineDaysTime, "set":adminRes.set } : item)
+  //   fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+  // }else if( adminRes.sendName === "feeDeadine" && adminRes.save === "save") {
+  //   console.log("se2")
+  //   const a = datas.map((item) => item.sendName === adminRes.sendName ? { ...item, "set":adminRes.set } : item)
+  //   fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+  // }else if( adminRes.sendName === "expiryDeadine" && adminRes.save === "option") {
+  //   const deadineDaysTime = Number(adminRes.timeSend*60) + Number(adminRes.daySend*1440)
+  //   const a = datas.map((item) => item.sendName === adminRes.sendName ? { ...item, "Text": adminRes.Text , "timeSend":deadineDaysTime, "set":adminRes.set } : item)
+  //   fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+  // }else if( adminRes.sendName === "expiryDeadine" && adminRes.save === "save") {
+  //   console.log("4")
+  //   const a = datas.map((item) => item.sendName === adminRes.sendName ? { ...item, "set":adminRes.set } : item)
+  //   fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+  // }else if( adminRes.sendName === "information" && adminRes.save === "option") {
+  //   const deadineDaysTime = Number(adminRes.timeSend*60) + Number(adminRes.daySend*1440)
+  //   const a = datas.map((item) => item.sendName === adminRes.sendName ? { ...item, "Text": adminRes.Text , "timeSend":deadineDaysTime, "set":adminRes.set } : item)
+  //   fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+  // }else if( adminRes.sendName === "information" && adminRes.save === "save") {
+  //   console.log("sedii")
+  //   const a = datas.map((item) => item.sendName === adminRes.sendName ? { ...item, "set":adminRes.set } : item)
+  //   fs.writeFile("./src/database/kokoTime.json",JSON.stringify(a))
+  // }
 })
      return {success: true}
   } 
@@ -1430,7 +1693,7 @@ console.log(Niceinfor.id)
 static async SEarch(search){
   
   const Users=  this.#uses
-
+   console.log(search)
  
 Users.certification.push(search.conmbination)
 Users.id.push(search.id)
@@ -1440,16 +1703,39 @@ Users.psword.push(search.psword)
 
 fs.writeFile("./src/database/first.json", JSON.stringify(Users))
   
+  // messageService.send({
+  //   "to": search.Phone,
+  //   "from": "01029718573",
+  //   "kakaoOptions": {
+  //     "pfId": "KA01PF240201053925212fFkWt1ESnqq",
+  //     "templateId": "KA01TP240206110644561nFhQnMjvfkx",
+  //     // 치환문구가 없을 때의 기본 형태
+  //     "variables": {
+  //       "#{name}" :search.name,
+  //       "#{certification}" : search.conmbination
+  //     }
+  
+  //     // 치환문구가 있는 경우 추가, 반드시 key, value 모두 string으로 기입해야 합니다.
+  //     /*
+  //     variables: {
+  //       "#{변수명}": "임의의 값"
+  //     }
+  //     */
+  
+  //     // disbaleSms 값을 true로 줄 경우 문자로의 대체발송이 비활성화 됩니다.
+  //     // disableSms: true,
+  //   } 
+  // });
   messageService.send({
-    "to": search.Phone,
+    "to": search.phon,
     "from": "01029718573",
     "kakaoOptions": {
-      "pfId": "KA01PF240201053925212fFkWt1ESnqq",
-      "templateId": "KA01TP240206110644561nFhQnMjvfkx",
+      "pfId": "KA01PF240201072156304ikVz36WEuTC",
+      "templateId": "KA01TP230131084504073zoRX27WkwHB",
       // 치환문구가 없을 때의 기본 형태
       "variables": {
-        "#{name}" :search.name,
-        "#{certification}" : search.conmbination
+       
+        "#{인증번호}" : search.conmbination
       }
   
       // 치환문구가 있는 경우 추가, 반드시 key, value 모두 string으로 기입해야 합니다.
@@ -1463,8 +1749,11 @@ fs.writeFile("./src/database/first.json", JSON.stringify(Users))
       // disableSms: true,
     } 
   });
-
-return  search.conmbination
+const req = {
+  search : search.conmbination,
+  phone : search.phon
+}
+return  req
 }
 }
 

@@ -13,14 +13,14 @@ async login(){
 
    
   const {phon, psword}  = await UserStorage.getUserInfo(client.phon)
-
+                          
     if(phon) {
          if(client.psword !== psword ) { 
         return  {success: false , msg: "비밀번호가 다릅니다"} 
   
            } else if(client.phon !== phon){
                         
-            return {success: false, msg: "전화문호가 다릅니다"}
+            return {success: false, msg: "전화번호가 다릅니다"}
           } else if (client.phon === phon && client.psword === psword)  {
           const a = await UserStorage.As(client) 
           
@@ -28,7 +28,7 @@ async login(){
           }
           }
          
-          return {success: false, msg: "전화문호가 다릅니다"}
+          return {success: false, msg: "전화번호와 비밀번호를 모두 입력해주세요"}
                     
                    
   }
@@ -73,14 +73,14 @@ const {phon, psword}  = await UserStorage.getUserInfo(client.phon)
 
          } else if(client.phon !== phon){
                       
-          return {success: false, msg: "전화문호가 다릅니다"}
+          return {success: false, msg: "전화번호가 다릅니다"}
         } else if (client.phon === phon && client.psword === psword)  {
         const a = await UserStorage.locaUser(client) 
         return  a
         }
         }
        
-        return {success: false, msg: "전화문호가 다릅니다"}
+        return {success: false, msg: "전화번호가 다릅니다"}
                   
                  
                 }
