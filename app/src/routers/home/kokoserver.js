@@ -128,38 +128,48 @@ function inspect() {
       const DBLoginStart = "SELECT json_extract(loginStart, '$[0]') AS value FROM kakaoAlarm WHERE phon = ?";
       const DBAllPhonData = "SELECT phon FROM kakaoAlarm";  //kakaoAlarm 테이블 에서 전체 길를 알l아냄   
         new Promise((resolve, reject) => {
-          db.query(DBAllPhonData, (err, data) => { 
+          db.query(DBAllPhonData, (err, loginSubtract) => { 
               if (err) {
                   return reject(err); // Rejects the promise on error
               }
               
 
-             data.forEach((item, index) => {
+              loginSubtract.forEach((item, index) => {
               return new Promise((resolve, reject) => {
-                db.query(DBAllPhonData, (err, data) => { 
+                db.query(DBAllPhonData, (err, loginSubtract) => { 
                     if (err) {
                         return reject(err); // Rejects the promise on error
                     }
-                    
-      
-                   data.forEach((item, index) => {
-                    console.log(item.phon) 
-                 
+                
             db.query(DBLoginStart, [`${item.phon}`], (err, datas) => { 
               if (err) return reject(err);
               
-               const DBphon=  JSON.parse( datas[0].value)
-                   console.log(DBphon)
+               const dbloginstart=  JSON.parse( datas[0].value)
+               
               
-                if(DBphon.UseTime !== undefined) {
-                    console.log(DBphon,"phon")
-           
-       
-                  console.log(item.phon,"itme")
+                if(dbloginstart.loginStart !== undefined  ) {
+                 
+                     for(var y =0; dbloginstart.loginStart.length>y; ++y)  {
+                                
+                      if(dbloginstart.loginStart[y] !== '') {
+                       
+
+                        const nowTime =  moment().format('yyyy-MM-DD hh:mm')
+                        const dateB = moment(`${nowTime}`);
+                        const login =   dbloginstart.loginStart[y]
+                        
+                         const nexetTime= dateB.diff(login, 'minute')
+                         console.log(nexetTime,"ii")
+                          console.log(((loginSubtract[index].phon)),"kk")
+                          // const kk = userGoodsKinds[index].UseTime[inde] - nexetTime
+                      }
+
+                     }                
+                 
                   
-                } if(DBphon.UseTime === undefined) { //삭제되는 구간 db에서 useTime 하나도 없으면 userGoodsKind 에서 goods가 N 이면
+                } if(dbloginstart.UseTime === undefined) { //삭제되는 구간 db에서 useTime 하나도 없으면 userGoodsKind 에서 goods가 N 이면
       
-                  console.log(item.phon,"delet")
+             
       
       
                   const DeleteDB = `DELETE FROM kakaoAlarm WHERE phon = ?`;
@@ -175,7 +185,7 @@ function inspect() {
               resolve(data);
           });
       
-                   })
+                 
                     resolve(data); // Resolves with the data
                 });
             });
@@ -261,16 +271,16 @@ function inspect() {
       db.query(DBUseTimeData, [`${item.phon}`], (err, datas) => { 
         if (err) return reject(err);
         
-         const DBphon=  JSON.parse( datas[0].value)
+         const dbloginstart=  JSON.parse( datas[0].value)
           
         
-          if(DBphon.UseTime !== undefined) {
-              console.log(DBphon,"phon")
+          if(dbloginstart.UseTime !== undefined) {
+              console.log(dbloginstart,"phon")
      
  
             console.log(item.phon,"itme")
             
-          } if(DBphon.UseTime === undefined) { //삭제되는 구간 db에서 useTime 하나도 없으면
+          } if(dbloginstart.UseTime === undefined) { //삭제되는 구간 db에서 useTime 하나도 없으면
 
             console.log(item.phon,"delet")
 
