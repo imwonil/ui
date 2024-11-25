@@ -740,30 +740,30 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
                resolve(data);
                })
                
-              db.query(EXPIRY,[JSON.stringify({"expiryN":expiryN}), ab.phon], (err, data) => {
+              db.query(EXPIRY,[JSON.stringify({"expiryN":[expiryN]}), ab.phon], (err, data) => {
               if (err) return reject(err);
                resolve(data);
                })
-               db.query(USETIME,[JSON.stringify({"UseTime":`${day*1440}`}), ab.phon], (err, data) => {
+               db.query(USETIME,[JSON.stringify({"UseTime":[`${day*1440}`]}), ab.phon], (err, data) => {
                 if (err) return reject(err);
                  resolve(data);
                  })
 
-                 db.query(KakaGOODS,[JSON.stringify({"goodsName":add.setGoods}), ab.phon], (err, data) => {
+                 db.query(KakaGOODS,[JSON.stringify({"goodsName":[add.setGoods]}), ab.phon], (err, data) => {
                   if (err) return reject(err);
                    resolve(data);
                    })
                    
-                  db.query(kakaEXPIRY,[JSON.stringify({"expiryN":expiryN}), ab.phon], (err, data) => {
+                  db.query(kakaEXPIRY,[JSON.stringify({"expiryN":[expiryN]}), ab.phon], (err, data) => {
                   if (err) return reject(err);
                    resolve(data);
                    })
-                   db.query(kakaUSETIME,[JSON.stringify({"UseTime":`${day*1440}`}), ab.phon], (err, data) => {
+                   db.query(kakaUSETIME,[JSON.stringify({"UseTime":[`${day*1440}`]}), ab.phon], (err, data) => {
                     if (err) return reject(err);
                      resolve(data);
                      })
           
-                     db.query(kakaloginStart,[JSON.stringify({"loginStart":""}), ab.phon], (err, data) => {
+                     db.query(kakaloginStart,[JSON.stringify({"loginStart":[""]}), ab.phon], (err, data) => {
                       if (err) return reject(err);
                        resolve(data);
                        })
@@ -982,6 +982,24 @@ static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
            fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(modiFY))
      
           }
+          const goodsExpire = `UPDATE kakaoAlarm SET loginStart = JSON_SET(loginStart, '$.loginStart[${client.index}]', "") WHERE phon = ?`;
+           
+          console.log(goodsExpire,"expe")
+      // console.log(item.indexOF[index])
+      // console.log(index,"index 숫자")
+      // console.log(item.UseTimeSubtract[index])
+      // console.log(item.phon)
+      // console.log(goodsExpire )
+
+      console.log(kend[0].phon)
+                   db.query(goodsExpire, [kend[0].phon], (err, data) => {
+                         if (err) {
+                           // 쿼리 실행 중 오류 발생 시 reject 호출
+                           return reject(err);
+                         }
+                         // 쿼리 성공 시 resolve 호출
+                        
+                       });
          
        } else {
         if(resolve) {
