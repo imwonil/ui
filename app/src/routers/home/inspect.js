@@ -416,7 +416,7 @@ function  next_4() {
 
 //  next_3 함수 start
 function next_3() {
-  console.log("3 진입")
+
 
 fs. readFile("./src/database/kokoTime.json")
 .then((kokoData) => {

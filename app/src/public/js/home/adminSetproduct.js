@@ -253,7 +253,8 @@ goodsInfo.onclick = () => {enter(e)}
         phone : userPhone,
         expiryName: expiryDate.value,
         goodsName :UserGoodsPush.goods,
-        feeName :  UserGoodsPush.goodsKind
+        feeName :  UserGoodsPush.goodsKind,
+        cardCancel : "admin"
        }
 
     console.log(req)

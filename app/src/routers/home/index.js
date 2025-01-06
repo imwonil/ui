@@ -65,6 +65,15 @@ router.get('/certifications', (req,res) =>{
 })
 }).catch((err) => console.error(err));
 
+
+fs. readFile("./src/database/userGoodsKindspayment.json")
+.then((data) => {
+const d = JSON.parse(data)
+ 
+router.get('/userGoodsKindspayment', (req,res) =>{
+  res.sendfile("./src/database/userGoodsKindspayment.json");
+})
+}).catch((err) => console.error(err));
 fs.readFile("./src/adminSetKinds/adminSeet.json")
         .then((data) => {
           
@@ -98,7 +107,65 @@ fs.readFile("./src/database/kokoTime.json")
   })
   .catch((err) => console.error(err));
   
+  fs. readFile("./src/adminSetKinds/adminNext.json")
+      .then ((data) => {
+      const h = JSON.parse(data)
+    
+   if(h.phon !== undefined) {
+    
+      router.get (`/adminUinfo=${h[0].phon}`, (req, res) => {
+        res.render("home/detailedUserInfo") 
+         })
+        }else{
+        
+          router.get (`/adminUinfo=${h[0].phon}`, (req, res) => {
+            res.render("home/detailedUserInfo") 
+             })
 
+        }
+      }).catch((err) => console.error(err));  
+
+//   fs.readFile("./src/adminSetKinds/adminNext.json")
+// .then ((data) => {
+// const h = JSON.parse(data)
+
+// router.get ('/adminNext', (req, res) => {
+//   res.sendfile("./src/adminSetKinds/adminNext.json") 
+// })
+// }).catch((err) => console.error(err));  
+
+//   fs. readFile("./src/adminSetKinds/adminNext.json")
+//       .then ((data) => {
+//       const h = JSON.parse(data)
+//       console.log(h[0].phon,"jdjfj")
+//    if(h.phon !== undefined) {
+         
+//       router.get (`/allUserInfo=${h[0].phon}`, (req, res) => {
+//         res.render("home/detailedUserInfo") 
+//          })
+//         }
+//       }).catch((err) => console.error(err));  
+
+  fs.readFile("./src/adminSetKinds/adminNext.json")
+.then ((data) => {
+const h = JSON.parse(data)
+
+router.get ('/adminNext', (req, res) => {
+  res.sendfile("./src/adminSetKinds/adminNext.json") 
+})
+}).catch((err) => console.error(err));  
+
+  // fs. readFile("./src/adminSetKinds/adminNext.json")
+  //     .then ((data) => {
+  //     const h = JSON.parse(data)
+  //     console.log(h[0].phon,"jdjfj")
+  //  if(h.phon !== undefined) {
+         
+  //     router.get (`/allUserInfo=${h[0].phon}`, (req, res) => {
+  //       res.render("home/detailedUserInfo") 
+  //        })
+  //       }
+  //     }).catch((err) => console.error(err));  
 router.get("/adminindex", ctrl.output.adminindex)
 router.get("/adminSetinfo", ctrl.output.adminSetinfo)
 router.get("/adminViews", ctrl.output.adminViews)
@@ -113,6 +180,8 @@ router.get("/productlist", ctrl.output.productlist)
 router.get("/adminSetproduct", ctrl.output.adminSetproduct)
 router.get("/calender", ctrl.output.calender)
 router.get("/adminMessage", ctrl.output.adminMessage)
+router.get("/detailedUserInfo", ctrl.output.detailedUserInfo)
+router.get("/allUserInfo", ctrl.output.allUserInfo)
 ////////////poset/////////////////
 
 router.post("/login", ctrl.process.login)
@@ -135,5 +204,9 @@ router.post("/forcibley", ctrl.process.forcibley)
 router.post("/calender", ctrl.process.calender)
 router.post("/changeSeat", ctrl.process.changeSeat)
 router.post("/adminMessage", ctrl.process.adminMessage)
+router.post("/detailedUserInfo", ctrl.process.detailedUserInfo)
+router.post("/allUserInfo", ctrl.process.allUserInfo)
+router.post("/paymentHistory", ctrl.process.paymentHistory)
+router.post("/cardcanel", ctrl.process.cardcanel)
 
  module.exports = router      

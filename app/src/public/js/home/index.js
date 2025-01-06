@@ -45,12 +45,11 @@ for(var i=0; SNLength>i; i++) {
 
    const seetNumger = document.getElementsByClassName("seats-number")[i].outerText 
    
+
     document.getElementsByClassName("seats-number")[i].id = seetNumger
    
        const text=  document.getElementById(seetNumger).innerText
    
-
-  
    
       const indexID =  document.getElementById(seetNumger).id =seetNumger;
     document.getElementById(seetNumger).onclick = () => {indexFunction(text )};
@@ -86,20 +85,39 @@ for(var i=0; data.wonset.length>i; i++) {
     const result = data.wonset[i].replace(regex, "");
     const number = parseInt(result);
    
+
+    //남자 전용, 여자 전용은 sc-seats이라는 클래스가 있는 스터디라운지 좌석말고 나머지 자리에 대해서
+    //index.ejs에서 책상을 상징하는 네모랗고 주황색인 부분 배경 스타일을 바꾸면 됩니다. 
+    //색깔은 #ffffff랑 #c0c0c0 둘 중 하나로 
+
+  if(data.gender[i]=== "남자 전용") {
+    // console.log( document.getElementById(number).style)
+    console.log("kjjererer")
+   const setColor=  document.getElementById(number).style ="background-color:#ffffff"
+
+  }
+if(data.gender[i]=== "여자 전용") {
+  // console.log( document.getElementById(number).style)
+ const setColor=  document.getElementById(number).style ="background-color: #c0c0c0"
+
+}
+
    if(data.kindSet[i]=== "고정석") {
-   const setColor=  document.getElementById(number).style ="background-color: #761ced;"
+    console.log( document.getElementById(number).style)
+   const setColor=  document.getElementById(number).style ="background-color: #7ffd7f"
     document.getElementById(number).setAttribute("setName",data.kindSet[i] )
     document.getElementById(number).setAttribute("genderNmae",data.gender[i] )
 }
    else if(data.kindSet[i] === "기간제")  {
-    const setColor=  document.getElementById(number).style="background-color: #4cc4d4;"  
+    console.log( document.getElementById(number), "기간제")
+    const setColor=  document.getElementById(number).style="background-color: #00ffff"  
     document.getElementById(number).setAttribute("setName",data.kindSet[i] )
     document.getElementById(number).setAttribute("genderNmae",data.gender[i] )
   }
     
    else if(data.kindSet[i] === "자유석") {
        
-      const setColor=  document.getElementById(number).style ="background-color: #4cc4d4;" 
+      const setColor=  document.getElementById(number).style ="background-color: #ed1cbc;" 
       document.getElementById(number).setAttribute("setName",data.kindSet[i] )
       document.getElementById(number).setAttribute("genderNmae",data.gender[i] )
     }
@@ -170,11 +188,13 @@ U_G_D.forEach((item, index)=> {
 
 
   function indexFunction(number) { //자석 click 하면 반응하는 함수
+    console.log(number)
 const indexOf = sessionStorage.getItem("indexOf")//login.js 402 line에서 sessionStorage set 생성 
 const goodsName = document.getElementById(number).getAttribute("setName")
 const wonset   =  document.getElementById(number).outerText
 const  gender = document.getElementById(number).getAttribute("genderNmae")
 const seatInfor = document.getElementById(number).getAttribute("seatUse") // 자리 사용자 정보
+console.log(gender,goodsName)
 if(seatInfor !==null){
   warningModalText.innerHTML = "사용중인 자리 입니다."
 warningModal.classList.toggle("hidden")
@@ -185,6 +205,8 @@ setTimeout(() => {
 }, 2000);
 return 
 }
+
+
 if(indexOf === null) {
 
   warningModalText.innerHTML = "로그인 후 상품을 먼져 선택 해주세요"
@@ -211,6 +233,8 @@ const req = {
 
  if(wonset === null || goodsName === null || goodsName === null) {return alert("좌석타입이 설정되어 있지 않은 유형입니다. 관리자에게 문의하세요")}
 
+
+ //성별 제한 여부 확인
  fetch("/", {
   method: "POST",
   headers: {
@@ -219,6 +243,7 @@ const req = {
   body: JSON.stringify(req),
 
 })
+
   .then((res) => res.json()) 
   .then((res) => { 
     if(res.success === false){ 

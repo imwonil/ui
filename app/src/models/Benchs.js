@@ -9,7 +9,7 @@ this.bench = bench
 async Add() {
   const add = this.bench;
 
-  
+ 
   try{
   const a = await UserStorage.Addsavesk(add);
   }catch(err) {
@@ -63,7 +63,7 @@ async TimeSubAdd() {
   
   const  c =  this.bench
   const a = await UserStorage.timesubadd(c) 
- 
+
   return a
 }
 async adimingoods() {
@@ -104,6 +104,15 @@ async KoKo() {
   return a
   
 }
+async Cardcanel() {
+  
+  const  client =  this.bench
+  const a = await UserStorage.cardcanel(client) 
+ 
+  return a
+  
+}
+
 async Nice() {
   
   const  client =  this.bench
@@ -129,6 +138,8 @@ async changseat() {
   return a
   
 }
+
+
 }
 module.exports = Benchs;
 

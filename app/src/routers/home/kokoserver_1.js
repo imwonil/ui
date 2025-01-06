@@ -84,8 +84,8 @@ static async next13() { //db 모든 loginStart 조회
        
 static async next18() {
 
-       const DBUseTimeAllData = "SELECT json_extract(UseTime, '$[0]') AS value FROM kakaoAlarm WHERE phon = ?";    
- const   DBUseTimeChange = await this.DBUseTimeChange()
+      
+ const  DBUseTimeChange = await this.DBUseTimeChange()
     
       const DBLoginStart = "SELECT json_extract(loginStart, '$[0]') AS value FROM kakaoAlarm WHERE phon = ?";
       const DBAllPhonData = "SELECT phon FROM kakaoAlarm";  //kakaoAlarm 테이블 에서 전체 길를 알l아냄   

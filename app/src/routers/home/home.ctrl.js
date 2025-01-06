@@ -64,12 +64,39 @@ const output = {
       res.render("home/adminMessage")
    },
 
+   detailedUserInfo: (req, res) => {
+      res.render("home/detailedUserInfo")
+   },
+ 
   
+   allUserInfo :(req, res) => {
+      res.render("home/allUserInfo")
+   },
 
 };
 
 
 const process = {
+  
+
+   cardcanel: async (req, res) => {
+      
+      //   console.log(req.body,"dkfk")
+         const users = new Benchs(req.body)
+         const respons = await users.Cardcanel() 
+   
+          return res.json(respons)
+   
+      },
+   paymentHistory: async (req, res) => {
+      
+      //   console.log(req.body,"dkfk")
+         const users = new Benchs(req.body)
+         const respons = await users.Nice() 
+   
+          return res.json(respons)
+   
+      },
    index: async (req, res) => {
       
       const benchs = new Benchs(req.body)
@@ -235,7 +262,20 @@ const process = {
       console.log(response,'ctrl 206')
       return res.json(response)
 },
+detailedUserInfo: async (req, res) => {
+   const adminId = new Benchs(req.body)
+   const response = await adminId.adminNext()
+   console.log(response)
+   return res.json(response)
    
+},
+allUserInfo: async (req, res) => {
+   const adminId = new Benchs(req.body)
+   const response = await adminId.TimeSubAdd()
+
+   return res.json(response)
+
+},
    enter: async (req, res) => {
 
       const benchs = new Benchs(req.body)
@@ -253,14 +293,14 @@ const process = {
              retain: true,
              qos: 0 // 정확도
  
-          };
- 
+          };  
+   
           // 받는곳_1
           var count = 0
           client.on("message", function (topic, msg, packet) {
              console.log(" messabe : " + msg);
  
- 
+  
           });
           // 받는곳_2
           client.on("connect", function () {

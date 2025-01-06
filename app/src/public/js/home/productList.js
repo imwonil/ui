@@ -28,6 +28,8 @@ const setup = () => {
  const kioceTotall = []
 //드롭다운은 html 103: 참고
 const timeID =  moment().format('1MMDDhhmmss') 
+
+const nowDate = moment().format('yyyyMMDDhhmm')
 //좌석 종류 선택, 상품, 시간 같이 옵션의 대가리 부분
 const dropdownButtons = document.querySelectorAll('.dropdown-button');
 //일일권, 기간제, 고정석 등 요소들의 컨테이너
@@ -460,13 +462,14 @@ const number = parseInt(result);
                 const arr1 = sendbuf.split("",40);
 
                 const str = `${form.RecvData.value}`
-
+                console.log(str,"모든데이터")
                 const arr = str.split("",20);
+                
+                const number1= arr1[19].split(",", 4)  
 
-                const number1= arr1[19].split(",", 4)
 
-
-            const trimStr = arr[16].split(' ').join('');
+            const trimStr = arr[16].split('').join('');
+            const trimStr2 =
             console.log(trimStr,"438")
            if(trimStr === "거래거절할부개월오류" ) {
              
@@ -484,9 +487,11 @@ const number = parseInt(result);
                                           }   
 
                 const regex = /[^0-9]/g;
-                const result = number1[0].replace(regex, "");
-                const number = parseInt(result);
-
+                const result = trimStr.replace(regex, "");
+                const number = result
+                
+                
+                console.log(number,"승인번호",result,"regex",regex)
                 const regex1 = /[^0-9]/g;
                 const result1= number1[0].replace(regex1, "");
                 const number2 = parseInt(result1);
@@ -494,13 +499,14 @@ const number = parseInt(result);
                console.log(arr1 , "320")
 
            const req = {
-            approvalDay: arr[8],   //승인 날짜 표기
-            approvalNumber : number, //승인 번호
+            approvalDay: arr[8],   //승인 날짜 표기 6짜리만 표기 ex)241228
+            approvalNumber :number, //승인 번호
             day:number2,            
             setGoods:number1[3],
             fee:number1[2],
-             expiry:number1[1],
+            expiry:number1[1],
             hangle:arr[6],
+            nowDATE:nowDate
 
 
            }
@@ -527,8 +533,8 @@ const number = parseInt(result);
                 setTimeout(() => {
                   paymentModal.classList.toggle("hidden")
                   justify.classList.toggle("hidden")
-                   location.href = "/login"
-                }, 900);
+                    location.href = "/login"
+                }, 1300);
 
 
               })

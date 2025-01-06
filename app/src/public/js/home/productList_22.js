@@ -461,7 +461,7 @@ const number = parseInt(result);
                 const regex = /[^0-9]/g;
                 const result = number1[0].replace(regex, "");
                 const number = parseInt(result);
-
+               console.log(number,"승인번호")
                 const regex1 = /[^0-9]/g;
                 const result1= number1[0].replace(regex1, "");
                 const number2 = parseInt(result1);
@@ -481,29 +481,29 @@ const number = parseInt(result);
            }
            console.log(req, "332")
 
-             fetch("/productlist", {
-              method: "POST",
-              headers : {
-                "Content-Type" :"application/json"
-              },
+            //  fetch("/productlist", {
+            //   method: "POST",
+            //   headers : {
+            //     "Content-Type" :"application/json"
+            //   },
 
-               body: JSON.stringify(req),
-              })
-              .then((res => res.json()))
-              .then(( res) => {
-                console.log(res)
+            //    body: JSON.stringify(req),
+            //   })
+            //   .then((res => res.json()))
+            //   .then(( res) => {
+            //     console.log(res)
        
 
-                sucModalText.innerHTML = "결제 되었습니다."
-                 sucModal.classList.toggle("hidden")
+            //     sucModalText.innerHTML = "결제 되었습니다."
+            //      sucModal.classList.toggle("hidden")
 
-                setTimeout(() => {
+            //     setTimeout(() => {
 
-                   location.href = "/login"
-                }, 1500);
+            //       //  location.href = "/login"
+            //     }, 1500);
 
 
-              })
+            //   })
 
                }
                , error       : function(request, status, error) {

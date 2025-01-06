@@ -291,13 +291,25 @@ static async call(){ // 폴더 database/user.json 정보를 읽어 오겠다
 //////// admin data ////////////////
 static  nice() {
   return fs.
-  readFile("./src/database/nice.json")
+  readFile("./src/database/paymentHistory.json")
   .then((data) => {
     
   return JSON.parse(data)
   }).catch((err) => console.error(err))
 
 }
+
+
+static  userpayment() {
+  return fs.
+  readFile("./src/database/userGoodsKindspayment.json")
+  .then((data) => {
+    
+  return JSON.parse(data)
+  }).catch((err) => console.error(err))
+
+}
+
 // fs.writeFile("./src/database/nice.json", JSON.stringify(users), (err) => {
 //   fs.readFile("./src/database/nice.json", "{}", 'utf8', (err, data) => {
     
@@ -417,7 +429,7 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
                   userGoodsKinds.push({"id": users.id ,"name":users.name, "cdId": comb,
                               "psword":users.psword,  "phon":users.phon, "gender":users.gender,"wonset":[] ,
                               "UseTime":[] , "goodsName":[],  "benchName":[],"expiryName":[],
-                              "loginStart": [], "logoutEnd" : [], "koko":[], "goods":"N",  
+                              "loginStart": [], "logoutEnd" : [], "cardCancel":[],"approvalDay":[], "koko":[], "goods":"N",  
                                } 
                               )
                              
@@ -477,14 +489,16 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
               const pswsub = users.psword.substring(0,2) 
               const comb = phonSub + pswsub //문열기 비번 조합 comb
              
-              const query ="INSERT INTO kiki(id, name,cdId, psword, phon, wonset, UseTime, goodsName, benchName,loginstart, logoutEnd, koko,expiryN,gender) VALUES(?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?,?);";
+              
+              const query ="INSERT INTO kakaoAlarm(phon,wonset,UseTime,goodsName,benchName,loginStart, logoutEnd, koko,expiryN,frist) VALUES( ?, ?,?, ?, ?, ?, ?,?,?,?);";
+              console.log(users.phon, "U/S 502")
               db.query(query,
-                [users.id, users.name, comb, users.psword, users.phon,"{}","{}","{}","{}","{}","{}","{}","{}",users.gender],(err, data) =>{
+                [users.phon,"{}","{}","{}","{}","{}","{}","{}","{}","Y"],(err, data) =>{
                 if(err){reject(err)}
                 
                 resolve();
                 
-              }) 
+              })
             })
               
           } else{
@@ -497,21 +511,17 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
                 
                 
           return new  Promise((resolve, reject) => {
-           
-         
-
-            console.log(dataKaKao,"U/S 502")
-          if(resolve) {
+           if(resolve) {
             console.log("5")
             return new Promise((resolve, reject) => {
               const phonSub = users.phon.substring(7,11)
               const pswsub = users.psword.substring(0,2) 
               const comb = phonSub + pswsub //문열기 비번 조합 comb
              
-              const query ="INSERT INTO kakaoAlarm(phon,wonset,UseTime,goodsName,benchName,loginStart, logoutEnd, koko,expiryN) VALUES( ?, ?,?, ?, ?, ?, ?,?,?);";
+              const query ="INSERT INTO kakaoAlarm(phon,wonset,UseTime,goodsName,benchName,loginStart, logoutEnd, koko,expiryN,frist) VALUES( ?, ?,?, ?, ?, ?, ?,?,?,?);";
               console.log(users.phon, "U/S 502")
               db.query(query,
-                [users.phon,"{}","{}","{}","{}","{}","{}","{}","{}"],(err, data) =>{
+                [users.phon,"{}","{}","{}","{}","{}","{}","{}","{}","Y"],(err, data) =>{
                 if(err){reject(err)}
                 
                 resolve();
@@ -524,29 +534,24 @@ static  async As(cl) {   //기존 로그인 id, psword 를 덮어쓰기 즉 초�
                     } 
         
           });}
-  if(newUserGoodsKinds[0] === undefined && dataKaKao === undefined)  {
+  if(newUserGoodsKinds[0] === undefined && dataKaKao === undefined)  { // 최초 데이터 아무것도 없을때 
       console.log("U/S 527")
     
     delivery().then(() =>{return  next_3()})   //초기화 해주는 함수
                              .then(() =>{return next_4()})
                              .then(() =>{return next_5()})
-    
                              var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
-   
-                             return kend[0]
+                              return kend[0]
 
     
   
-  }else if(dataKaKao === undefined && newUserGoodsKinds[0] !== undefined) { 
-    next_3().then(() =>{return  next_5()})   //초기화 해주는 함수
-  
-    console.log("542")
-    
-     var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
+  }else if(dataKaKao === undefined && newUserGoodsKinds[0] !== undefined) {  //userGoodsKinds.json 에서 user data 는 있으나 DB 정보가 없을 때
+    next_3().then(() =>{return  next_5()})   
+    var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
    
      return kend[0]
      
-        } else if(dataKaKao !== undefined && newUserGoodsKinds[0] !== undefined) {
+        } else if(dataKaKao !== undefined && newUserGoodsKinds[0] !== undefined) { //userGoddskinds.json 와 DB 정보가 있을 때
 
           next_3().then() 
           var kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === cl.phon });
@@ -610,15 +615,15 @@ static async Addsavesk(add) { ///  자리 선정 localhost:3000 클릭시 실행
                 if(resolve) {
 
                       
-        const kkk = "SELECT json_extract(loginStart, '$.loginStart[0]') AS value FROM kakaoAlarm WHERE phon = ?";
+        // const kkk = "SELECT json_extract(loginStart, '$.loginStart[0]') AS value FROM kakaoAlarm WHERE phon = ?";
 
-        //loginStart - 컬럼명 kakaoAlarm 테이블명  
-        db.query(kkk, ["010710385735"], (err, data) => {
-            if (err) return reject(err);
-            // 데이터가 이미 객체일 가능성이 높으므로 추가적인 변환이 필요 없을 수 있음
-            console.log(data[0].value, "dkfdjjf");
-            resolve(data);
-        });
+        // //loginStart - 컬럼명 kakaoAlarm 테이블명  
+        // db.query(kkk, ["010710385735"], (err, data) => {
+        //     if (err) return reject(err);
+        //     // 데이터가 이미 객체일 가능성이 높으므로 추가적인 변환이 필요 없을 수 있음
+        //     console.log(data[0].value, "dkfdjjf");
+        //     resolve(data);
+        // });
         
                   const nowTime =  moment().format('yyyy-MM-DD hh:mm')
                   userRemove[0].wonset[index]= `${add.wonset}set`
@@ -673,7 +678,8 @@ static async Addsavesk(add) { ///  자리 선정 localhost:3000 클릭시 실행
 static async days(add) { // kiosk 버튼을 누르면 day data 등록
  
   const Nice =  await this.nice()
-
+  const UserPayment =  await this.userpayment()
+console.log(add)
   const creditCard = this.#creditCard
   const ab = await this.call("id") //초기화 된 정보
 
@@ -711,43 +717,48 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
         if(add.setGoods === "fixedType" || add.setGoods === "daysType" ) {
       
         
-          console.log( userRemove[0].UseTime, "629")
-             userRemove[0].UseTime.push(`${day*60}`)
+         
+              userRemove[0].UseTime.push(`${day*1440}`)
               userRemove[0].goodsName.push(add.setGoods)
               userRemove[0].expiryName.push(expiryN)
               userRemove[0].benchName.push (`${add.day}-Time`) 
               userRemove[0].wonset.push("")
               userRemove[0].loginStart.push("")
               userRemove[0].logoutEnd.push("")
-                         
+              userRemove[0].cardCancel.push("N")
+              userRemove[0].approvalDay.push(add.approvalDay)
               userRemove[0].koko.push("N")
               userRemove[0].goods = "Y"
               
              
 
               fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(userGoodsKinds))
-            
-              const GOODS ='UPDATE kiki SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
-              const EXPIRY ='UPDATE kiki SET expiryN = JSON_MERGE_PRESERVE(expiryN, ?) WHERE phon = ?';
-              const USETIME ='UPDATE kiki SET UseTime = JSON_MERGE_PRESERVE(UseTime, ?) WHERE phon = ?';
+           /////////////////////////-----------다른 데이테 베이스 -----------------/////////////////////// 
+              // const GOODS ='UPDATE kiki SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
+              // const EXPIRY ='UPDATE kiki SET expiryN = JSON_MERGE_PRESERVE(expiryN, ?) WHERE phon = ?';
+              // const USETIME ='UPDATE kiki SET UseTime = JSON_MERGE_PRESERVE(UseTime, ?) WHERE phon = ?';
 
+              //  db.query(GOODS,[JSON.stringify({"goodsName":add.setGoods}), ab.phon], (err, data) => {
+              // if (err) return reject(err);
+              //  resolve(data);
+              //  })
+               
+              // db.query(EXPIRY,[JSON.stringify({"expiryN":[expiryN]}), ab.phon], (err, data) => {
+              // if (err) return reject(err);
+              //  resolve(data);
+              //  })
+              //  db.query(USETIME,[JSON.stringify({"UseTime":[`${day*1440}`]}), ab.phon], (err, data) => {
+              //   if (err) return reject(err);
+              //    resolve(data);
+              //    })
+        /////////////////////////-----------다른 데이테 베이스 -----------------///////////////////////   
+         
               const KakaGOODS ='UPDATE kakaoAlarm SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
               const kakaEXPIRY ='UPDATE kakaoAlarm SET expiryN = JSON_MERGE_PRESERVE(expiryN, ?) WHERE phon = ?';
               const kakaUSETIME ='UPDATE kakaoAlarm SET UseTime = JSON_MERGE_PRESERVE(UseTime, ?) WHERE phon = ?';
               const kakaloginStart ='UPDATE kakaoAlarm SET loginStart = JSON_MERGE_PRESERVE(loginStart, ?) WHERE phon = ?';
-               db.query(GOODS,[JSON.stringify({"goodsName":add.setGoods}), ab.phon], (err, data) => {
-              if (err) return reject(err);
-               resolve(data);
-               })
-               
-              db.query(EXPIRY,[JSON.stringify({"expiryN":[expiryN]}), ab.phon], (err, data) => {
-              if (err) return reject(err);
-               resolve(data);
-               })
-               db.query(USETIME,[JSON.stringify({"UseTime":[`${day*1440}`]}), ab.phon], (err, data) => {
-                if (err) return reject(err);
-                 resolve(data);
-                 })
+       
+            
 
                  db.query(KakaGOODS,[JSON.stringify({"goodsName":[add.setGoods]}), ab.phon], (err, data) => {
                   if (err) return reject(err);
@@ -768,21 +779,17 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
                        resolve(data);
                        })
                  if(Nicename[0] === undefined) {  
-                  Nice.push({"id": ab.id ,"name":ab.name,"phon":ab.phon, 
+            
+                  Nice.push({"id": ab.id ,"name":ab.name, "phon":ab.phon, 
                   "approvalNumber":[add.approvalNumber] , "approvalDay":[add.approvalDay],"fee":[add.fee],"hangle":[add.hangle],
-                  "goodsName":[add.setGoods], "cancal": ["N"] 
+                  "goodsName":[add.setGoods], "cardCancel": ["N"] ,"nowsDATE": `${add.approvalDay}`
                    } 
                   )
                            
-                fs.writeFile("./src/database/nice.json", JSON.stringify(Nice), (err) => {
+                fs.writeFile("./src/database/paymentHistory.json", JSON.stringify(Nice), (err) => {
                  
                 })
-                      
-          
-                 
-            
               
-
                 }else if(Nicename[0].id !== undefined) {  
              
                 Nicename[0].approvalNumber.push(add.approvalNumber)
@@ -791,7 +798,8 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
                 Nicename[0].hangle.push(add.hangle)
                 Nicename[0].goodsName.push(add.setGoods)
                 Nicename[0].cancal.push("N")
-                fs.writeFile("./src/database/nice.json", JSON.stringify(Nice), (err) => {
+                Nicename[0].nowsDATE =  `${add.approvalDay}`
+                fs.writeFile("./src/database/paymentHistory.json", JSON.stringify(Nice), (err) => {
                  
                 })
               }
@@ -802,59 +810,66 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
             
               userRemove[0].UseTime.push(`${day*60}`)
               userRemove[0].goodsName.push(add.setGoods)
+              
               userRemove[0].expiryName.push(expiryN)
               userRemove[0].benchName.push (`${add.day}-Time`) 
               userRemove[0].wonset.push("")
               userRemove[0].loginStart.push("")
               userRemove[0].logoutEnd.push("")
-                         
+              userRemove[0].cardCancel.push("N")
+              userRemove[0].approvalDay.push(add.approvalDay)
               userRemove[0].koko.push("N")
               userRemove[0].goods = "Y"
                fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(userGoodsKinds))
             
                if(Nicename[0] === undefined) {  
-                Nice.push({"id": ab.id ,"name":ab.name,"phon":ab.phon, 
+                Nice.push({"id": ab.id ,"name":ab.name,"phon":ab.phon, "nowsDATE":ab.nowDATE,
                 "approvalNumber":[add.approvalNumber] , "approvalDay":[add.approvalDay],"fee":[add.fee],"hangle":[add.hangle],
-                "cancal": ["N"] , "goodsName":[add.setGoods]
+                "goodsName":[add.setGoods], "cancal": ["N"] ,"nowsDATE": `${add.approvalDay}`
                  } 
                 )
                          
-              fs.writeFile("./src/database/nice.json", JSON.stringify(Nice), (err) => {
-               
-              })
+                fs.writeFile("./src/database/paymentHistory.json", JSON.stringify(Nice), (err) => {
+                 
+                })
 
             
               }
             else if(Nicename[0].id !== undefined) {  
-           
+              Nicename[0].nowsDATE = `${add.approvalDay}`
               Nicename[0].approvalNumber.push(add.approvalNumber)
               Nicename[0].approvalDay.push(add.approvalDay)
               Nicename[0].fee.push(add.fee)
               Nicename[0].hangle.push(add.hangle)
               Nicename[0].goodsName.push(add.setGoods)
               Nicename[0].cancal.push("N")
-              fs.writeFile("./src/database/nice.json", JSON.stringify(Nice), (err) => {
-               
+              fs.writeFile("./src/database/paymentHistory.json", JSON.stringify(Nice), (err) => {
+                 
               })
             }
    
-            const GOODS ='UPDATE kiki SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
-            const EXPIRY ='UPDATE kiki SET expiryN = JSON_MERGE_PRESERVE(expiryN, ?) WHERE phon = ?';
-            const USETIME ='UPDATE kiki SET UseTime = JSON_MERGE_PRESERVE(UseTime, ?) WHERE phon = ?';
+            const KakaGOODS ='UPDATE kakaoAlarm SET goodsName = JSON_MERGE_PRESERVE(goodsName, ?) WHERE phon = ?';
+            const kakaEXPIRY ='UPDATE kakaoAlarm SET expiryN = JSON_MERGE_PRESERVE(expiryN, ?) WHERE phon = ?';
+            const kakaUSETIME ='UPDATE kakaoAlarm SET UseTime = JSON_MERGE_PRESERVE(UseTime, ?) WHERE phon = ?';
+            const kakaloginStart ='UPDATE kakaoAlarm SET loginStart = JSON_MERGE_PRESERVE(loginStart, ?) WHERE phon = ?';
             
-             db.query(GOODS,[JSON.stringify({"goodsName":add.setGoods}), ab.phon], (err, data) => {
-            if (err) return reject(err);
-             resolve(data);
-             })
-             
-            db.query(EXPIRY,[JSON.stringify({"expiryN":expiryN}), ab.phon], (err, data) => {
-            if (err) return reject(err);
-             resolve(data);
-             })
-             db.query(USETIME,[JSON.stringify({"UseTime":`${day*60}`}), ab.phon], (err, data) => {
+            db.query(KakaGOODS,[JSON.stringify({"goodsName":[add.setGoods]}), ab.phon], (err, data) => {
               if (err) return reject(err);
                resolve(data);
                })
+               
+              db.query(kakaEXPIRY,[JSON.stringify({"expiryN":[expiryN]}), ab.phon], (err, data) => {
+              if (err) return reject(err);
+               resolve(data);
+               })
+               db.query(kakaUSETIME,[JSON.stringify({"UseTime":[`${day*60}`]}), ab.phon], (err, data) => {
+                if (err) return reject(err);
+                 resolve(data);
+                 })
+      
+                 db.query(kakaloginStart,[JSON.stringify({"loginStart":[""]}), ab.phon], (err, data) => {
+                  if (err) return reject(err);
+                   resolve(data); })
      
        }
           resolve();
@@ -865,7 +880,7 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
       });}
       
 
-  
+   
 
   
 
@@ -892,10 +907,67 @@ static async days(add) { // kiosk 버튼을 누르면 day data 등록
     }
 
     });}
-    
+
+    function userpayments() {
    
+      return new Promise((resolve, reject) => {
+     
+      if(resolve) {
+      
+        const  kend = userGoodsKinds.filter(function (addSave) { return addSave.phon === `${ab.phon}` });
+        const U_P = UserPayment.filter(function (addSave) { return addSave.phon === `${ab.phon}` });
+       
+          if(U_P[0] === undefined) {  
+
+                UserPayment.push({"id": ab.id ,"name":ab.name,"phon":ab.phon, "nowsDATE":ab.nowDATE,
+                "approvalNumber":[add.approvalNumber] , "approvalDay":[add.approvalDay],"fee":[add.fee],"hangle":[add.hangle],
+                "goodsName":[add.setGoods], "cancal": ["N"] 
+                 } 
+                )
+                         
+                fs.writeFile("./src/database/userGoodsKindspayment.json", JSON.stringify(UserPayment), (err) => {
+                 
+                })
+
+            
+              } else if(U_P[0] !== undefined) {
+             
+               U_P[0].approvalNumber.push(add.approvalNumber)
+               U_P[0].approvalDay.push(add.approvalDay)
+               U_P[0].fee.push(add.fee)
+               U_P[0].hangle.push(add.hangle)
+               U_P[0].goodsName.push(add.setGoods)
+               U_P[0].cancal.push("N")
+               fs.writeFile("./src/database/userGoodsKindspayment.json", JSON.stringify(UserPayment), (err) => {
+                   
+                })
+
+              }else  {
+             
+                UserPayment.push({"id": ab.id ,"name":ab.name,"phon":ab.phon, "nowsDATE":ab.nowDATE,
+                "approvalNumber":[add.approvalNumber] , "approvalDay":[add.approvalDay],"fee":[add.fee],"hangle":[add.hangle],
+                "goodsName":[add.setGoods], "cancal": ["N"] 
+                 } 
+                )
+                         
+                fs.writeFile("./src/database/userGoodsKindspayment.json", JSON.stringify(UserPayment), (err) => {
+                 
+                })
+
+          
+
+              }
+          
+          
+      }else{
+        reject(`${error}`);
+      }
+  
+      });}
+    
+      
     delivery().then(()  => { return deliveryAPI()  })  
-           
+              .then(()  => { return userpayments()  })  
  return {success : true}
 
 } 
@@ -974,24 +1046,16 @@ static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
         adminNe[0].loginStart[client.index] = ""
        fs.writeFile("./src/adminSetKinds/adminNext.json", JSON.stringify(adminNe), (err) => {
         })  
-        kend[0].logoutEnd[client.index] = nowTime
-        kend[0].UseTime[client.index] = Usetime
-        kend[0].wonset[client.index] = ""
-        kend[0].loginStart[client.index] = ""
-        
-           fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(modiFY))
+ 
      
           }
           const goodsExpire = `UPDATE kakaoAlarm SET loginStart = JSON_SET(loginStart, '$.loginStart[${client.index}]', "") WHERE phon = ?`;
-           
+          const DBUseTimeData = `SELECT json_extract(UseTime, '$.UseTime[${[client.index]}]') AS value FROM kakaoAlarm WHERE phon = ?`;  
           console.log(goodsExpire,"expe")
-      // console.log(item.indexOF[index])
-      // console.log(index,"index 숫자")
-      // console.log(item.UseTimeSubtract[index])
-      // console.log(item.phon)
-      // console.log(goodsExpire )
 
-      console.log(kend[0].phon)
+      console.log(goodsExpire )
+
+      
                    db.query(goodsExpire, [kend[0].phon], (err, data) => {
                          if (err) {
                            // 쿼리 실행 중 오류 발생 시 reject 호출
@@ -1000,27 +1064,85 @@ static async locaUser(client) { //logout 버튼 시 초기감 만들어줌
                          // 쿼리 성공 시 resolve 호출
                         
                        });
+
+                       db.query(DBUseTimeData, [kend[0].phon],  (err, UseDatas) => {  //db 저장되여 잇는 UseTime 정보를 가져온다
+                        
+                       
+                        
+                          
+                          const dbrt=  JSON.parse( UseDatas[0].value)
+                           console.log(dbrt,"userstorage.js 1010")
+                         
+                           
+                           kend[0].logoutEnd[client.index] = nowTime
+                           kend[0].UseTime[client.index] = dbrt
+                           kend[0].wonset[client.index] = ""
+                           kend[0].loginStart[client.index] = ""
+                           
+                              fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(modiFY))
+               
+                       
+                     
+   
+                  });  
+              
+          
+                
+                   
+                   console.log([kend[0].phon])
+                   
          
        } else {
         if(resolve) {
-          
+          const goodsExpire = `UPDATE kakaoAlarm SET loginStart = JSON_SET(loginStart, '$.loginStart[${client.index}]', "") WHERE phon = ?`;
+          const DBUseTimeData = `SELECT json_extract(UseTime, '$.UseTime[${[client.index]}]') AS value FROM kakaoAlarm WHERE phon = ?`;  
+         
+
+   
           adminNe[0].logoutEnd[client.index] = nowTime
           adminNe[0].UseTime[client.index] = Usetime
           adminNe[0].wonset[client.index] = ""
           adminNe[0].loginStart[client.index] = ""
          fs.writeFile("./src/adminSetKinds/adminNext.json", JSON.stringify(adminNe), (err) => {
           })  
-          kend[0].logoutEnd[client.index] = nowTime
-          kend[0].UseTime[client.index] = Usetime
-          kend[0].wonset[client.index] = ""
-          kend[0].loginStart[client.index] = ""
-          
-             fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(modiFY))
-       
+          db.query(goodsExpire, [kend[0].phon], (err, data) => {
+            if (err) {
+              // 쿼리 실행 중 오류 발생 시 reject 호출
+              return reject(err);
             }
+            // 쿼리 성공 시 resolve 호출
+           
+          });
+
+          db.query(DBUseTimeData, [kend[0].phon],  (err, UseDatas) => {  //db 저장되여 잇는 UseTime 정보를 가져온다
+           
+          
+           
+             
+             const dbrt=  JSON.parse( UseDatas[0].value)
+              console.log(dbrt,"userstorage.js 1010")
+            
+              
+              kend[0].logoutEnd[client.index] = nowTime
+              kend[0].UseTime[client.index] = dbrt
+              kend[0].wonset[client.index] = ""
+              kend[0].loginStart[client.index] = ""
+              
+                 fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(modiFY))
+  
+          
+            })
+
+        
+          
+          }
 
 
-
+       
+  
+         
+           
+           
        }
    
      
@@ -1210,8 +1332,8 @@ static async adminnext(userIds) {
   const userGoodsKinds = await this.objectsave()
  
   // const  toTall= this.#set 
-  var menz = userGoodsKinds.filter(function (setAdd) { return setAdd.id === userIds.id });
-
+  var menz = userGoodsKinds.filter(function (setAdd) { return setAdd.phon === userIds.phone });
+     console.log(menz[0],"1257")
   // file 초기화 함
   fs.writeFile('./src/adminSetKinds/adminNext.json', JSON.stringify([menz[0]]), (err) => {
     fs.readFile('./src/adminSetKinds/adminNext.json', "[]", 'utf8', (err, data) => {
@@ -1250,6 +1372,7 @@ static async modify(userIds) { // admin 에서 자리 이동 adminViews 에서 �
        
      
       function  deliveryAPI() {
+        console.log("lllkk")
         return new Promise((resolve, reject) => {
         setTimeout(() => {
         if(resolve) {
@@ -1293,40 +1416,36 @@ static async timesubadd(userIds) { //admin 에서 시간 조정 함수
   const restart = await this.adminNe()
   const nowTime=  moment().format('yyyy-MM-DD hh:mm') 
 
-       const kindinfo = modiFY.filter(function (modiFY) { return modiFY.id === userIds.id });
+       const kindinfo = modiFY.filter(function (modiFY) { return modiFY.phon === userIds.phon });
         
        const useTime = kindinfo[0].UseTime/1 
    
      
-       
-        const regex = /[^0-9]/g;
-        const result = userIds.resaveTime.replace(regex, "");
-        const number = parseInt(result);
+        
+        // const regex = /[^0-9]/g;
+        // const result = userIds.resaveTime.replace(regex, "");
+        // const number = parseInt(result);
      
-        const result2 = userIds.resaveExpiryAdd.replace(regex, "");
-        const number2 = parseInt(result2);
-        console.log(number2)
-      
-      
+        // const result2 = userIds.resaveExpiryAdd.replace(regex, "");
+        // const number2 = parseInt(result2);
+
+     
+        const DAY = userIds.resaveDay*1440
+        const Time = userIds.resaveTime*60
+        const Mintue = userIds.resavMinute*1
+       const TotallTime=DAY + Time + Mintue
+       
         if(userIds.add === "add") {
           const nowTime =  moment().format('yyyy-MM-DD hh:mm')
        
           
-          const kindinfo = modiFY.filter(function (modiFY) { return modiFY.id === userIds.id });
-          const addTimes = Number(kindinfo[0].UseTime[userIds.index]) + Number(number*60)
+          const kindinfo = modiFY.filter(function (modiFY) { return modiFY.phon === userIds.phon });
+          console.log(Number(kindinfo[0].UseTime[userIds.index]))
+           const addTimes = Number(kindinfo[0].UseTime[userIds.index]) + Number(TotallTime)
           
-           
-          const dateB = moment(`${kindinfo[0].expiryName[userIds.index]}`);
+                console.log(addTimes)
+           kindinfo[0].UseTime[userIds.index] = addTimes 
           
-          const dateA = moment(`${nowTime}`);
-         
-          const nexetTime= dateB.diff(dateA, 'day')
-           const Add = nexetTime + number2
-          
-          
-           const expiryN =  moment ().add(Add, 'day').format('yyyy-MM-DD hh:mm')
-          kindinfo[0].UseTime[userIds.index] = addTimes 
-          kindinfo[0].expiryName[userIds.index] =expiryN
           
           fs.writeFile("./src/database/userGoodsKinds.json", JSON.stringify(modiFY), (err) => {
       })   
@@ -1334,25 +1453,17 @@ static async timesubadd(userIds) { //admin 에서 시간 조정 함수
            
                           fs.writeFile("./src/adminSetKinds/adminNext.json", JSON.stringify([kindinfo[0]]), (err) => {
                     })
-              }else if(userIds.sub === "sub") {
+              return {success : true}
+              }else if(userIds.add === "sub") {
                
-             
-               const kindinfo = modiFY.filter(function (modiFY) { return modiFY.id === userIds.id });
-               const addTimes = Number(kindinfo[0].UseTime[userIds.index]) - Number(number*60)
             
-               const dateB = moment(`${kindinfo[0].expiryName[userIds.index]}`);
-               const dateA = moment(`${nowTime}`);
-         
-          const nexetTime= dateB.diff(dateA, 'day')
-           const Add = nexetTime - number2
-      
-           const expiryN =  moment ().add(Add, 'day').format ('yyyy-MM-DD hh:mm')
-          
-           
-   
-               
+                const kindinfo = modiFY.filter(function (modiFY) { return modiFY.phon === userIds.phon });
+                const addTimes = Number(kindinfo[0].UseTime[userIds.index]) - Number(TotallTime)
+            
+                  
+                  
               kindinfo[0].UseTime[userIds.index] = addTimes
-              kindinfo[0].expiryName[userIds.index] = expiryN
+           
               
           
               
@@ -1361,10 +1472,78 @@ static async timesubadd(userIds) { //admin 에서 시간 조정 함수
              
               fs.writeFile("./src/adminSetKinds/adminNext.json", JSON.stringify([kindinfo[0]]), (err) => {
               })
-                 
-               }
+              return {success : true} 
+               }else if(userIds.add === "expirDataAdd") {
+               
+              
+                 const kindinfo = modiFY.filter(function (modiFY) { return modiFY.phon === userIds.phon });
+                
+                //  const expiryN =  moment ().add(userIds.expirDataresave, 'day').format(kindinfo[0].expiryName[userIds.index])
+
+                 const dateB = moment(`${kindinfo[0].expiryName[userIds.index]}`);
+                 const dateA = moment(`${nowTime}`);
+           
+            const expirDataNewTime= dateB.diff(dateA, 'day')
+              const expirDataHAP = Number(expirDataNewTime) + Number(userIds.expirDataresave)
+
+              console.log(expirDataHAP , Number(userIds.expirDataresave) ,Number(expirDataNewTime) )
+        
+              const expiryN =  moment ().add(expirDataHAP, 'day').format ('yyyy-MM-DD hh:mm')
+
+              console.log(expiryN,"add")
+                  
+          
+              kindinfo[0].expiryName[userIds.index] = expiryN
+            
+               
+           
+               
+               fs.writeFile("./src/database/userGoodsKinds.json", JSON.stringify(modiFY), (err) => {
+               })   
+              
+               fs.writeFile("./src/adminSetKinds/adminNext.json", JSON.stringify([kindinfo[0]]), (err) => {
+               })
+               return {success : true}
+                }
      
+                else if(userIds.add === "expirDataSub") {
+               
+              
+                  const kindinfo = modiFY.filter(function (modiFY) { return modiFY.phon === userIds.phon });
+                 
+                 //  const expiryN =  moment ().add(userIds.expirDataresave, 'day').format(kindinfo[0].expiryName[userIds.index])
  
+                
+                
+                 //  const expiryN =  moment ().add(userIds.expirDataresave, 'day').format(kindinfo[0].expiryName[userIds.index])
+ 
+                  const dateB = moment(`${kindinfo[0].expiryName[userIds.index]}`);
+                  const dateA = moment(`${nowTime}`);
+            
+               const expirDataNewTime= dateB.diff(dateA, 'day')
+               const expirDataHAP = Number(expirDataNewTime) - Number(userIds.expirDataresave)
+ 
+               console.log(expirDataHAP , Number(userIds.expirDataresave) ,Number(expirDataNewTime) )
+         
+               const expiryN =  moment ().add(expirDataHAP, 'day').format ('yyyy-MM-DD hh:mm')
+ 
+               console.log(expiryN,"add")
+                   
+           
+               kindinfo[0].expiryName[userIds.index] = expiryN
+             
+                
+            
+                
+                fs.writeFile("./src/database/userGoodsKinds.json", JSON.stringify(modiFY), (err) => {
+                })   
+               
+                fs.writeFile("./src/adminSetKinds/adminNext.json", JSON.stringify([kindinfo[0]]), (err) => {
+                })
+                return {success : true}
+                 }
+      
+                 return {success : true}
  
 }
 static async adminGoods(userIds) { //admin 에서 상품권 지급
@@ -1373,6 +1552,14 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
  
   const kindinfo = await modiFY.filter(function (modiFY) { return modiFY.phon === userIds.phone });
    console.log(kindinfo[0],"1242")
+  
+   const Nice =  await this.nice()
+
+
+
+
+    const  Niceinformation = Nice.filter(function (addSave) { return addSave.phon === userIds.phone });
+   
   const expiryN =  moment ().add(userIds.expiryName, 'day').format ('yyyy-MM-DD hh:mm') 
   
   const indexs = []
@@ -1410,9 +1597,11 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
            kindinfo[0].wonset.push("") 
            kindinfo[0].koko.push("N")
              
+           Niceinformation[0].cancal.push(userIds.cardCancel)
            fs.writeFile("./src/database/userGoodsKinds.json", JSON.stringify(modiFY), (err) => {
            
         })  
+        fs.writeFile("./src/database/paymentHistory.json",JSON.stringify(Nice))
             return {success: true}     
          } else if(userIds.feeName === "feeType") {
           kindinfo[0].benchName.push(userIds.goodsName)
@@ -1423,8 +1612,10 @@ static async adminGoods(userIds) { //admin 에서 상품권 지급
           kindinfo[0].logoutEnd.push("") 
           kindinfo[0].wonset.push("") 
           kindinfo[0].koko.push("N")
+          Niceinformation[0].cancal.push(userIds.cardCancel)
             fs.writeFile("./src/database/userGoodsKinds.json", JSON.stringify(modiFY), (err) => {
         })
+        fs.writeFile("./src/database/paymentHistory.json",JSON.stringify(Nice))
         return {success: true}
         
          }  
@@ -1648,17 +1839,17 @@ return {success: true}
  const userGoodsKinds = await this.objectsave()
   const Nice =  await this.nice()
   const index = Niceinfor.indexOf
-console.log(Niceinfor.id)
+console.log(Niceinfor)
 
  function UserRemove(){
   console.log("1")
   return new Promise((resolve, reject) => {
-   const  newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.id ===Niceinfor.id });
-   const  Niceinformation = Nice.filter(function (addSave) { return addSave.id === Niceinfor.id });
+   const  newUserGoodsKinds = userGoodsKinds.filter(function (addSave) { return addSave.phon ===Niceinfor.phon });
+   const  Niceinformation = Nice.filter(function (addSave) { return addSave.phon === Niceinfor.phon });
   
  
   if(resolve) {
-   
+    
    
 
     newUserGoodsKinds[0].wonset.splice(index, 1);
@@ -1668,15 +1859,16 @@ console.log(Niceinfor.id)
     newUserGoodsKinds[0].expiryName.splice(index, 1);
     newUserGoodsKinds[0].loginStart.splice(index, 1);
     newUserGoodsKinds[0].logoutEnd.splice(index, 1);
+    newUserGoodsKinds[0].koko.splice(index, 1);
 
     Niceinformation[0].approvalNumber.splice(index, 1);
     Niceinformation[0].approvalDay.splice(index, 1);
     Niceinformation[0].fee.splice(index, 1);
     Niceinformation[0].hangle.splice(index, 1);
     Niceinformation[0].cancal.splice(index, 1);
-    
+    Niceinformation[0].goodsName.splice(index, 1);
     fs.writeFile("./src/database/userGoodsKinds.json",JSON.stringify(userGoodsKinds))
-    fs.writeFile("./src/database/nice.json",JSON.stringify(Nice))
+    fs.writeFile("./src/database/paymentHistory.json",JSON.stringify(Nice))
       resolve();
   } else{
     reject("err");
@@ -1707,7 +1899,20 @@ console.log(Niceinfor.id)
     UserRemove().then(() =>{return niceCancal()}) 
     return {success : true}
   }
+  static async cardcanel(cardInfor) { 
 
+    const Nice =  await this.nice()
+    const userGoodsKinds = await this.objectsave()
+    const Userpayment = await this.userpayment()
+    const  UserNiceinformation = Userpayment.filter(function (niceCard) { return niceCard.phon === cardInfor.phone });
+    console.log(UserNiceinformation[0])
+     const approvalDayindexOf  = UserNiceinformation[0].approvalDay.indexOf(cardInfor.approvalDay) 
+     UserNiceinformation[0].cancal[approvalDayindexOf] = "Y"
+    
+     fs.writeFile("./src/database/userGoodsKindspayment.json", JSON.stringify(Userpayment), (err) => {
+                 
+     })
+}
 static async SEarch(search){
   
   const Users=  this.#uses

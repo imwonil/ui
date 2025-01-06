@@ -1,4 +1,4 @@
-<!-- https://www.flaticon.com/kr/free-icon/lock-variant_7794294?term=lock&page=1&position=3&origin=search&related_id=7794294 -->
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,8 +20,7 @@
   <link rel="stylesheet" href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
   />
 
-  <!-- Ripple Effect from cdn -->
-  <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" ></script>
     <!--Remix icon cdn -->
   <link href="
@@ -76,7 +75,7 @@
       
     </style>
   
-<body class="h-screen">
+<body class="h-screen flex-1 max-h-full overflow-y-auto overflow-hidden">
 
     <!-- 아이디/비밀번호 찾기 -->
     <!-- 모달 -->
@@ -145,6 +144,7 @@
 
             </div>
           </div>
+       
 
          </div>
     
@@ -179,7 +179,7 @@
 
 
     <!-- 입실 기능  -->
-    <div class="z-10 h-screen flex items-center justify-center checkin-modal hidden">
+    <div class="z-10 h-screen fixed flex items-center justify-center checkin-modal  w-full hidden">
     <div class="fixed absolute inset-0 bg-gray-300 bg-opacity-75"></div>
     
           <div class=" bg-white rounded-lg p-6 shadow-lg transform transition-all duration-300">
@@ -266,7 +266,7 @@
 
     
     
-  <div x-data="{ openTab: 1 }" class="p-4 flex justify-center items-center h-auto md:h-h-auto login-section">
+  <div x-data="{ openTab: 1 }" class="p-4 flex justify-center items-center h-auto ">
     <div class="w-full md:w-1/2 mx-auto ">
        
         <div class="mb-4 flex space-x-4 p-2 bg-white rounded-lg shadow-md flex-1">
@@ -510,7 +510,7 @@
      <!-- 가상 키보드 시작-->
 
       <!--keyboard-container 클래스명 수정. *240706에 z-index 제거함-->
-      <div class="justify-center items-center hidden md:flex px-3 rounded-lg py-2 mt-10 z-50 ">
+      <div class="justify-center items-center hidden md:flex px-3 rounded-lg py-2  z-50 ">
         <div class="hidden">
           <textarea></textarea>
         </div>
@@ -633,9 +633,61 @@
 
 
       </div>
-
+      
      <!-- 가상 키보드 종료-->
 
+     <form name="form" method="post">
+
+      <div class="a">
+      
+      <table>	
+        <tr align="center">
+        
+        </tr>
+      </table> 
+    
+      
+       <li><a id="cads"> </a></li> 
+    
+    
+    <h2 id="cad"> <h2>
+    
+    <from>  
+    <table align="center" cellspacing="0" cellpadding="0" >
+    <tr bgcolor="blue" align ="center">	</tr>
+    <td style="display:none" ><input type="radio" name="myRadios" onclick="handleClick();" value="credit_cancel"/>신용ddd취소</td>
+    <td style="display:none" ><input type="radio" id ="cancel"name="myRadios" />신용취소</td>
+    
+    <tr align="left" style="display:none" >
+      <td >할부 : <input type="text" name="halbu" value="00"></td>
+        <!-- 아래부분 결재 금액  -->
+      <td type="text" id = "Money"name="money" > 상품 구매 </td>  
+    </tr>
+    
+    <br>
+    <!-- SendDdata : 결제해 해당  데이타 보냄 RecvData 보낸 데이타정보를 받아옴 -->
+    <input style="display:none" type="text" name="SendData" size="100"><br><br>
+    <textarea style="display:none" name="RecvData" cols="100" rows="5"></textarea>
+    <br><br>
+    
+    <div class="modal hidden">
+        
+      <div class="bg"></div>  
+         <div class="modalBox">
+          <h2 id="feeCancal" style="text-align: center;" ></h2> </h2>
+              <div class = "menuCategory"> 
+              <li><a href="javascript:reqVCAT_HTTP()"> 결제 취소</a></li> 
+              <li><a class="closeBtn " href="/login">닫기</a></li> 
+             </div>
+        
+      </div>
+    </div>
+    
+    </div>
+    
+      
+    
+    </form>
     <footer class="footer bg-[#EFEFEF] flex items-center justify-between flex-shrink-0 p-4 border-t max-h-14">
       <div>BEANSTALK &copy; 2024</div>
     </footer>
@@ -643,6 +695,8 @@
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
 
 
+
+
         <script src="js/home/login.js" defer></script>
 </body>
-</html>  
+</html> 

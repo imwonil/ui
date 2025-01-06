@@ -1,36 +1,25 @@
 "use strict"
 
-
-
 //240711 업데이트 입실 로직
-
 //checkin이 로그인 버튼 눌렀을 때 나타나는 입실 관련 모달창
-
 // fetch('http://3.38.152.166:3000/adminGoodsKiosk')
 // .then(res => res.json())
 // .then(data => { 
 // console.log(data,"data")
-
 // })
 
-
-
 const warningModal = document.querySelector(".warning-modal")
-
 const warningModalText = document.querySelector(".warning-modal-text")
 
   const sucModal = document.querySelector(".suc-modal")
-
   const sucModalText = document.querySelector(".suc-modal-text")
 
- 
   const  changeModal = document.querySelector(".change-modal")
-
 
 const checkin = document.querySelector(".checkin-modal")
 const checkinExit = document.querySelector(".checkin-exit")
 const keyboardContainer = document.querySelector(".keyboard-container")
-
+const userDetailsModal = document.querySelector(".user-details-modal")
 
 //240711 업데이트 퇴실 로직
 
@@ -38,17 +27,14 @@ const keyboardContainer = document.querySelector(".keyboard-container")
 const checkout = document.querySelector(".checkout-modal")
 const checkoutExit = document.querySelector(".checkout-exit")
 
-
 const loginSection = document.querySelector(".login-section")
 const findAnchor = document.querySelectorAll(".find-anchor")
 // const regiModal = document.querySelector(".regi-modal")
 const findModal = document.querySelector(".find-modal")
-
 const feather = document.querySelector(".feather")
 const findExit = document.querySelector(".find-exit")
 
 /**아이디/비번 찾기랑 회원가입 모달 각각 끄는 방법 */
-
 
 changeModal.classList.toggle("hidden")
 /**X 눌렀을 때 아이디/비밀번호 찾기 및 퇴실 창 제거 */
@@ -57,8 +43,6 @@ findExit.addEventListener("click", ()=>{
    findModal.classList.toggle("hidden")
 
 })
-
-
 
 
 const id = document.querySelectorAll(".id")
@@ -79,10 +63,6 @@ const footer = document.querySelector(".footer")
  const PHONE = document.querySelector("#PHONE"),  // 로그인 value id 값 html. 123 line
        PSWORD = document.querySelector("#PSWORD"), // 로그인 value id 값 html 126 line 
        BUTTON = document.querySelector("#BUTTON")
-
-
-
-
 
 
 // 아이디/비번찾기 모달 생성
@@ -207,9 +187,9 @@ findAnchor.forEach((ele)=>{
             const C_PS = document.querySelector("#changPsword")
             const C_C_P = document.querySelector("#changConfirm-psword")
             const C_B = document.querySelector("#changButton")
-                   changeModal.classList.toggle("hidden")
-                   findModal.classList.toggle("hidden")
-
+                       changeModal.classList.toggle("hidden")
+                       findModal.classList.toggle("hidden")
+                         
 
          fetch('/users')
          .then(res => res.json())
@@ -457,12 +437,18 @@ function LOGINBUTTON () {
 
       // }, 2000);
 
+
       if(res.goodsName.length === 0 ) {
         console.log("po")
       }
 
 
+      fetch('/userGoodsKindspayment')
+      .then(res => res.json())
+      .then( data => { 
 
+        const  Niceinformation = data.filter(function (niceCard) { return niceCard.phon === res.phon });
+        console.log()
       for(var i = 0; res.goodsName.length>i; i++) {
         var time =  (res.UseTime[i]%1440) //나머지 분
         var hour =  Math.floor(time/60) // 시간
@@ -522,30 +508,49 @@ function LOGINBUTTON () {
          span3.innerHTML="미사용"
          span4.innerHTML= "자리선택"
          span4.id= `index${i}`
-
+         
+         span5.value ="cad"
+        
                  }
+               if( Niceinformation[0].cancal[i] === "Y" ) {
+                console.log("1")
+                span5.innerHTML="상품 취소(관리자 승인)"
+                span5.id= `index${i}cancel`
+               } else if( Niceinformation[0].cancal[i] === "N"  ) {
+                console.log("2")
+                span5.innerHTML="상품 취소(관리자 문의)"
+                span5.id= `index${i}cancel`
+               } else {
+
+                span5.innerHTML="상품 취소 불가"
+                span5.id= `index${i}cancel`
+              
+              }
          if (res.wonset[i] !== ''){
           span3.innerHTML='사용중'
           span4.innerHTML='자리이동'
           span4.id=`index${i}`
+          span5.id= `index${i}cancel`
+          span5.value ="cad"
         }                // 현자 사용하고 있는 여부
 
 
 
 
-        span5.innerHTML="상품 취소(환불)"
 
 
        //  td.innerText =`현재 사용중인 자리 : ${data[0].wonset[i]}  상품:${data[0].goodsName[i]} - ${data[0].benchName[i]} `
        const text=  document.getElementById(`index${i}`).innerText
        const indexID =  document.getElementById(`index${i}`).id
+       const cardText=  document.getElementById(`index${i}cancel`).innerText
+       const cardCancelindexID =  document.getElementById(`index${i}cancel`).id
        document.getElementById(`index${i}`).onclick = () => {indexFunction(indexID,text )};
-
+       document.querySelector(`#index${i}cancel`).onclick =() =>{cardCancel(cardCancelindexID ,cardText, res.phon)}
       }
 
 
 
-
+    })
 
 
 
@@ -758,7 +763,7 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
        
     if(TAB === "로그아웃") {
 
-        console.log("jjj")
+        
       logoutButton.addEventListener("click", logOUT) 
 
   function logOUT() {
@@ -863,6 +868,7 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
                span4.innerHTML= "자리선택"
                span4.id= `index${i}`
 
+
                        }
                if (res.wonset[i] !== ''){
                 span3.innerHTML='사용중'
@@ -871,28 +877,36 @@ tab.forEach((ele)=>{  //tab 클릭시 반응하는 함수
                 const text=  document.getElementById(`indexOut${i}`).innerText
                 const indexID =  document.getElementById(`indexOut${i}`).id
                 document.querySelector(`#indexOut${i}`).onclick =() =>{logoutTime(indexID,text)}
+             
               }                // 현자 사용하고 있는 여부
 
 
 
 
               span5.innerHTML="상품 취소(환불)"
-
-
+             
              //  td.innerText =`현재 사용중인 자리 : ${data[0].wonset[i]}  상품:${data[0].goodsName[i]} - ${data[0].benchName[i]} `
 
             }    
             if(conter === 0) {
 
 
-              warningModal.classList.toggle("hidden")
-                warningModalText.innerHTML = "퇴실할 상품이 없습니다."
+             warningModal.classList.toggle("hidden")
+             warningModalText.innerHTML = "퇴실할 상품이 없습니다."
               
                location.href = "/login"
           }
 
-                      }   else if (res.success === false) {    warningModalText.innerHTML = `${res.msg}`
-                                                            warningModal.classList.toggle("hidden")
+                      }   else if (res.success === false) {  
+                        warningModalText.innerHTML = `${res.msg}`
+                        warningModal.classList.toggle("hidden")
+                        setTimeout(() => {
+                          
+                          warningModal.classList.toggle("hidden")
+                          console.log(res.msg)
+                          return
+                      }, 2000);
+                       
  } 
 
                       function logoutTime(indexID,text) {
@@ -984,7 +998,7 @@ function next() {
     console.log(res)
    if(res.success === true) {
 
-    location = "/login"
+    location.href  = "/login"
 
    }else if(res.success === false){
       sucModalText.innerHTML = `${res.mag}`
@@ -997,7 +1011,7 @@ function next() {
       warningModal.classList.toggle("hidden")
        warningModalText.innerHTML = "상품이 존재 하지 않습니다."
      
-location = "/login"
+       location.href  = "/login"
    }
 
 
@@ -1008,3 +1022,244 @@ location = "/login"
 
   })
 })
+
+
+function cardCancel(a,b,phon) {
+  console.log(a,b,phon)
+  const regex = /[^0-9]/g;
+  const result = a.replace(regex, "");
+  const  index= parseInt(result);
+  checkin.classList.toggle("hidden");
+  if(b === "상품 취소(관리자 승인)") {
+    
+    document.querySelector(".modal").classList.remove("hidden")
+
+
+
+  
+   } else if(b === "상품 취소(관리자 문의)") {
+
+
+    setTimeout(() => {
+    
+      alert("관리자에게 문의후 환불 진행주세요")
+      location.href = "/login"
+   }, 1500);
+return
+   } else if(b==="상품 취소 불가") {
+    setTimeout(() => {
+    
+      alert("상품 취소 불가 관리자에게 문의 해주세요")
+      location.href = "/login"
+   }, 1500);
+   
+return
+   }
+
+
+  fetch('/paymentHistory')
+.then(res => res.json())
+.then(datas => { 
+  var Nicename = datas.filter(function (addSave) { return addSave.phon === phon });
+
+                   
+         
+         console.log(Nicename[0].approvalDay[index],"승인날짜",  Nicename[0].hangle[index],"할부", Nicename[0].fee[index],"금액" , Nicename[0].approvalNumber[index],"승인번호")
+        
+          const approvalDAY =Nicename[0].approvalDay[index].substr(0,6)
+          console.log(approvalDAY)
+    
+           
+           var TYPE = "VCAT";
+           var TYPE2 = "NICEVCAT";
+           var FS = '\x1C';
+           var H7 = '\x07';
+           var sendbuf;
+           var iFlag = '0';
+          //  document.getElementById("feeName").innerText = `취소 금액 :  ${fee}`
+          
+           const seet = document.getElementById('seet');
+          
+           
+             
+           
+           
+           console.log(document.getElementById("cancel"),"230")
+           const  Button = document.getElementById("cancel").addEventListener("click", handleClick('credit_cancel'))
+          
+          
+          function handleClick(myRadio) //카드 결제 information 
+          {        
+            console.log(myRadio,"myRadiom")
+          
+            if(myRadio == 'credit_cancel') //신용취소
+            {
+              // sendbuf = "NICEVCAT" + H7 + "0420" + FS + "10" + FS + "C" + FS +"1000" + FS + "0" + FS + "0" + FS + "00" + FS + "28700883" + FS + "240321" + FS + "" + FS + FS + FS + FS + "0" + FS + FS + FS + FS + "" + FS + H7;
+              sendbuf = "NICEVCAT" + H7 + "0420" + FS + "10" + FS + "C" + FS + Nicename[0].fee[index] + FS + "0" + FS + "0" + FS + Nicename[0].hangle[index] + FS + Nicename[0].approvalNumber[index] + FS + approvalDAY + FS + "" + FS + FS + FS + FS + "0" + FS + FS + FS + FS + "" + FS + H7;
+              // sendbuf = "NICEVCAT" + H7 + "0420" + FS + "10" + FS + "C" + FS + data[0].fee[index] + FS +"0" + FS + data[0].hangle[index] + FS + data[0].approvalNumber[index] + FS + data[0].approvalNumber[index] + FS + approvalDAY + FS + "" + FS + FS + FS + FS + "0" + FS + FS + FS + FS + "" + FS + H7;
+            }
+            console.log(sendbuf,"kiiie")
+            
+            // 		else if(myRadio.value == 'credit_cancel') //신용취소
+            // {
+            // 	sendbuf = "NICEVCAT" + H7 + "0420" + FS + "10" + FS + "C" + FS + form.money.value + FS + form.tax.value + FS + form.bongsa.value + FS + form.halbu.value + FS + form.agreenum.value + FS + form.agreedate.value + FS + form.catid.value + FS + FS + FS + FS + form.myunse.value + FS + FS + FS + FS + "" + FS + H7;
+            // }
+      
+        
+          
+            form.SendData.value = sendbuf +""+`${Nicename[0].phon}`+""+`${index}`  ;	 // 이정보를 가지고 post 
+            console.log(form.SendData.value, "39")		
+               
+          }	
+           
+               
+        })
+    
+}
+
+var TYPE = "VCAT";
+var TYPE2 = "NICEVCAT";
+var FS = '\x1C';
+var H7 = '\x07';
+var sendbuf;
+var iFlag = '0';
+  function reqVCAT_HTTP(myRadio) //VCAT 클릭 이벤트 함수  함수 
+  { 	
+    var sendMsg;	
+    var RecvData;
+    
+    form.RecvData.value = "";
+    sendMsg = form.SendData.value;	
+      
+
+    			
+      if(sendMsg == "REQ_STOP")
+      {	
+
+        sendbuf = make_send_data(sendMsg);	
+            
+        
+   console.log("333")
+        $.ajax
+          ({ url         : "http://127.0.0.1:9189"    
+           , type        : "POST"
+           , dataType    : "text"
+           //, timeout     : $("#vanpReqTimeOut").val()
+           , data        : encodeURI(sendbuf)
+           , success     : function(data) {							
+               form.RecvData.value = data;	
+           
+           }
+        });			 
+          
+      }
+      else 
+      {		
+        //요청 시 중복방지로직을 필수로 처리해주세요. 
+        if(iFlag == '0')
+        {
+
+          console.log("2")
+   
+          sendbuf = make_send_data(sendMsg);
+         
+          iFlag = '1';
+          
+          $.ajax
+            ({ url         : "http://127.0.0.1:9188"    
+             , type        : "POST"
+             , dataType    : "text"				 
+             , data        : encodeURI(sendbuf)
+             , success     : function(data) {							
+              form.RecvData.value = data;							
+              iFlag = '0';
+       
+              //  if(data.length <= 506) { return alert("결제가 정상적으로 이루워지 않았습니다.")}
+              
+                
+              const arr1 = form.RecvData.value.split("",60);
+              const arr2 = sendbuf.split("",30)
+         
+              console.log(arr1)
+              
+         if(arr1[16].length >=10) { alert(arr1[16])}
+            
+             const req = {
+            phon: arr2[19],
+            index:arr2[20]
+
+
+             }  
+             
+              fetch("/paymentHistory", {
+                method: "POST",
+                headers : {
+                  "Content-Type" :"application/json"
+                },
+                
+                 body: JSON.stringify(req),
+                })
+                .then((res => res.json()))
+                .then((res) => { 
+
+                  alert("결제 취소 되였습니다.")
+
+                  // location = "/login"
+                })
+         
+             }
+             , error       : function(request, status, error) {
+              console.log(error )
+              if(sendMsg == "RESTART" || sendMsg == "NVCATSHUTDOWN")
+
+              {
+                
+                //응답 받지 않아서 예외 처리
+              }
+              else
+                alert('AJAX 통신 실패! NVCAT 실행 여부 확인!');
+                console.log("dkkfk")
+              iFlag = '0';
+             }
+          });		
+        }
+        else	
+          alert('버튼 중복 클릭');				
+      }
+    		
+             
+  }			
+  
+  
+  function make_send_data(senddata) {
+    var m_sendmsg;
+    var m_totlen;
+    var m_bodylen;
+
+    m_bodylen = senddata.NCbyteLength();
+    m_totlen = 12 + m_bodylen;
+
+    return NCpad(m_totlen,4) + "VCAT    " + NCpad(m_bodylen,4) + senddata;
+    
+  }
+
+  String.prototype.NCbyteLength = function(){
+    var l=0;
+    
+    for(var idx = 0; idx < this.length; idx++){
+      var c = escape(this.charAt(idx));
+
+      if(c.length == 1) l++;
+      else if(c.indexOf("%u") != -1) l += 3;
+      else if(c.indexOf("%") != -1) l += c.length/3; //JDK20210427 : UTF-8기준. EUC-KR은 /2로 수정 필요.
+    }
+    
+    return l;
+  };
+
+  
+  function NCpad(n,width)
+  {
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+  }

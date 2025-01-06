@@ -7,11 +7,10 @@ const prevButton = document.querySelector(".go-prev")
 const nextButton = document.querySelector(".go-next")
 const selectButton = document.querySelector(".select-button")
 
-const cardCencl = document.getElementById('card-cancel')
-      // 카드취소 버튼시 작동
 
 let currentYear = moment().year()// 현재 년도
 let currentMonth =  moment().month()+1 // 현재 월 (0부터 시작하므로 +1 해줌)
+let currentDay = moment().date() // 현재 일
 
 
 let activedDate = ""
@@ -49,7 +48,7 @@ selectButton.addEventListener("click", ()=>{
   let selectedYear = document.querySelector("select[name=year] option:checked").text;
   let selectedMonth = document.querySelector("select[name=month] option:checked").text;
 
-
+console.log(selectedYear, "선택연")
   
   if(selectedYear !== "연도" && selectedMonth !== "월"){
 
@@ -64,6 +63,8 @@ selectButton.addEventListener("click", ()=>{
     currentYear = selectedYear;
     currentMonth = selectedMonth ;
 
+    console.log(currentYear, "11112d")
+
      renderCalender();
 
 
@@ -71,7 +72,7 @@ selectButton.addEventListener("click", ()=>{
     
     activedDate = "01";
 
-   currentYear= currentYear.substr(2,4)
+   // currentYear= currentYear.substr(2,4)
   // modifyBannerDate(currentYear, currentMonth, activedDate)
   }
 })
@@ -86,8 +87,9 @@ const renderCalender = ()=>{
   currentDate(currentYear, currentMonth)
 
   // modifyBannerDate(currentYear, currentMonth, activedDate)
-
+  clickDate();
   fetchPage();
+  console.log(activedText, "d1d1d2")
 
 }
 renderCalender();
@@ -104,6 +106,7 @@ focusedMonth.innerHTML = currentMonth
 
 
 const prevMonth = ()=>{
+  console.log(currentYear)
   currentYear = moment(currentYear+"-"+currentMonth).subtract(1, "M").format('YYYY')
   currentMonth = moment(currentYear+"-"+currentMonth).subtract(1, "M").format('M')
 
@@ -216,33 +219,39 @@ function currentArr (prevDate, prevEndday, endDay) {
 
 }
 
+
 //클릭한 날짜에 대해 day-actived 클래스 적용 
+function clickDate(){
+  rows.forEach((row) => {
+    row.addEventListener("click", (e) => {
+      // 모든 row에서 'day-actived' 클래스를 제거
+      rows.forEach((r) => r.classList.remove("day-actived"));
 
-rows.forEach((row) => {
-  row.addEventListener("click", (e) => {
-    // 모든 row에서 'day-actived' 클래스를 제거
-    rows.forEach((r) => r.classList.remove("day-actived"));
-
-    // 클릭된 row에 'day-actived' 클래스를 추가
-    e.currentTarget.classList.add("day-actived");
-
-
-    activedText = document.querySelector(".day-actived").textContent
-
-    fetchPage();
+      // 클릭된 row에 'day-actived' 클래스를 추가
+      e.currentTarget.classList.add("day-actived");
 
 
-    //날짜들을 클릭할 때마다 우선 테이블의 thead를 제외하고 모두 제거
-    while(tableRows.length > 1){
-      chargedTable.deleteRow(-1);
-    }
+      activedText = document.querySelector(".day-actived").textContent
+
+      fetchPage();
 
 
+      //날짜들을 클릭할 때마다 우선 테이블의 thead를 제외하고 모두 제거
+      while(tableRows.length > 1){
+        chargedTable.deleteRow(-1);
+      }
+
+
+    });
   });
-});
 
 
-//
+  
+
+}
+
+
+
 function currentDate(currentYear, currentMonth){
   //currentYear과 currentMonth는 달력에 표기된 연도와 날짜를 일컫는 것임
 
@@ -253,19 +262,20 @@ function currentDate(currentYear, currentMonth){
 
   if(currentYear == moment().year() && currentMonth == moment().month()+1){
     let idx = rows.findIndex((row)=>row.innerHTML == todayDate && !row.classList.contains("day-gray")) 
+
+    //다른 달 클릭했다가 이번달로 넘어오면 현재 날짜에 해당하는 부분에 원판이 찍히도록 한다.
+    activedText = currentDay;
     rows[idx].classList.add("day-actived")
     
 }
 
+
+  //회색으로 처리된 이전/다음 달의 날짜가 아닌 경우에 한해서 이전, 다음버튼 눌러도 기존 activedDate를 유지하도록 한다. 
   rows.forEach((row, idx)=> {
-  if(row.innerText == activedText){
+  if(row.innerText == activedText && !row.classList.contains("day-gray")){
     rows[idx].classList.add("day-actived")
-
   }
-
   }
-
-               
   )
 
   
@@ -288,6 +298,7 @@ const firstButton =  document.querySelector(".first")
 const lastButton = document.querySelector(".last")
 const pagination = document.querySelector(".pagination")
 const pageGroup = document.querySelector(".page-group")
+
 
 
 let maxPageIdx = 6
@@ -335,6 +346,7 @@ function sliceArray(){
         if(num.classList){
           if(num.classList.contains("focused-page-btn") ){
             num.classList.remove("focused-page-btn");
+            num.classList.add("page-btn")
           };
 
         }
@@ -377,8 +389,10 @@ function clickEvent(){
 
         if(num.classList.contains("focused-page-btn")){
         num.classList.remove("focused-page-btn");
+          num.classList.add("page-btn");
       };
       e.target.classList.add("focused-page-btn");
+         e.target.classList.remove("page-btn");
 
 
          fetchPage();
@@ -391,6 +405,7 @@ function clickEvent(){
 
 
 pageGroup.childNodes[0].classList.add("focused-page-btn")
+pageGroup.childNodes[0].classList.remove("page-btn")
 
 clickEvent();
 
@@ -418,16 +433,17 @@ prevPageButton.addEventListener("click", ()=>{
   
   //이전 페이지로 이동시 맨 앞에 있는 페이지를 활성화
   pageGroup.childNodes[0].classList.add("focused-page-btn")
+  pageGroup.childNodes[0].classList.remove("page-btn");
 
-
-  
   //pageNumbers 중 어떤 하나의 노드를 클릭시 focused-page-btn를 활성화한다. 
   pageGroup.childNodes.forEach((pageBtn) => {
     pageBtn.addEventListener("click", (e) => {
       pageGroup.childNodes.forEach((num) => {
         num.classList.remove("focused-page-btn");
+         num.classList.add("page-btn");
       });
       e.target.classList.add("focused-page-btn");
+      e.target.classList.remove("page-btn");
     });
   });
 
@@ -451,6 +467,7 @@ nextPageButton.addEventListener("click", ()=>{
   pageBtns.forEach((pageBtn)=>{
     if(pageBtn.classList.contains("focused-page-btn")){
        pageBtn.classList.remove("focused-page-btn")
+      pageBtn.classList.add("page-btn")
     }
   })
 
@@ -472,19 +489,24 @@ nextPageButton.addEventListener("click", ()=>{
   pageCheck();
 
   pageGroup.childNodes[0].classList.add("focused-page-btn")
+  pageGroup.childNodes[0].classList.remove("page-btn")
 
+  
   //pageNumbers 중 어떤 하나의 노드를 클릭시 focused-page-btn를 활성화한다. 
-  pageGroup.childNodes.forEach((pageBtn) => {
-    pageBtn.addEventListener("click", (e) => {
-      pageGroup.childNodes.forEach((num) => {
-        num.classList.remove("focused-page-btn");
-      });
-      e.target.classList.add("focused-page-btn");
+
+
+pageGroup.childNodes.forEach((pageBtn) => {
+  pageBtn.addEventListener("click", (e) => {
+    pageGroup.childNodes.forEach((num) => {
+      num.classList.remove("focused-page-btn");
+       num.classList.add("page-btn");
     });
+    e.target.classList.add("focused-page-btn");
+    e.target.classList.remove("page-btn");
   });
+});
+
 })
-
-
 
 lastButton.addEventListener("click", ()=>{
   
@@ -502,6 +524,7 @@ lastButton.addEventListener("click", ()=>{
   pageBtns.forEach((pageBtn)=>{
     if(pageBtn.classList.contains("focused-page-btn")){
        pageBtn.classList.remove("focused-page-btn")
+      pageBtn.classList.add("page-btn");
     }
   })
   pageGroupIdx = maxPageGroup -1
@@ -515,19 +538,21 @@ lastButton.addEventListener("click", ()=>{
 
   //이게 안되는 이유가 pageNumbers는 첫번쨰 pageGroup에서만 인식이 되는 것인가??
   pageGroup.childNodes[0].classList.add("focused-page-btn")
+    pageGroup.childNodes[0].classList.remove("page-btn");
 
   //pageNumbers 중 어떤 하나의 노드를 클릭시 focused-page-btn를 활성화한다. 
   pageGroup.childNodes.forEach((pageBtn) => {
     pageBtn.addEventListener("click", (e) => {
       pageGroup.childNodes.forEach((num) => {
         num.classList.remove("focused-page-btn");
+         num.classList.add("page-btn");
       });
       e.target.classList.add("focused-page-btn");
+      e.target.classList.remove("page-btn");
     });
   });
 
 })
-
 
 firstButton.addEventListener("click", ()=>{
 
@@ -547,6 +572,7 @@ firstButton.addEventListener("click", ()=>{
   pageBtns.forEach((pageBtn)=>{
     if(pageBtn.classList.contains("focused-page-btn")){
        pageBtn.classList.remove("focused-page-btn")
+         pageBtn.classList.add("page-btn");
     }
   })
   pageGroupIdx = 0
@@ -560,18 +586,21 @@ firstButton.addEventListener("click", ()=>{
   pageCheck();
 
   pageGroup.childNodes[0].classList.add("focused-page-btn")
+  pageGroup.childNodes[0].classList.remove("page-btn")
 
   //pageNumbers 중 어떤 하나의 노드를 클릭시 focused-page-btn를 활성화한다. 
   pageGroup.childNodes.forEach((pageBtn) => {
     pageBtn.addEventListener("click", (e) => {
       pageGroup.childNodes.forEach((num) => {
         num.classList.remove("focused-page-btn");
+         num.classList.add("page-btn");
       });
       e.target.classList.add("focused-page-btn");
+      e.target.classList.remove("page-btn");
     });
   });
-})
 
+})
 
 //pageGroupIdx에 따라서 처음/이전/다음/마지막 버튼을 toggle 하게 하였음. 
 function pageCheck(){
@@ -781,38 +810,24 @@ function findMonthlyData(json, activedDay, salesData){
     const findMontlyArr = json[i].approvalDay
 
       .map((item, index) => {
-
-       
         if(item.substr(0,4) == activedDay.substr(0,4)) 
           return {
             name : json[i].name,
-            phoneNumber : json[i].phon,
+            phoneNumber : json[i].phoneNumber,
             goodsName : json[i].goodsName[index],
             fee :  json[i].fee[index],
-            approvalDay : json[i].approvalDay[index],
+            approvalDay : json[i].approvalDay[index].substr(0,6)
           }
         else return -1;
   
       })
       .filter((item) => item !== -1)
-    
- 
     for (let value of findMontlyArr){
       salesArr.push(value)
-    
     }
-
-
-
   }
-
-
     sumOfSales(salesArr, activedDay, salesData)
      sliceData(salesArr, activedDay)
-
-
-
-
 }
 
 
@@ -868,23 +883,12 @@ function sumOfSales(json, activedDay, salesData){
 
       if(item.approvalDay.substr(0, 4) == activedDay.substr(0, 4)) 
         {
-
           monthSum += parseInt(json[index].fee, 10)
-
-          monthSales.innerHTML = monthSum
-          
-      
-
-          
+          monthSales.innerHTML = monthSum      
         }
 
-      
     })
-
-    
   }
-
-
 }
 
 
@@ -938,6 +942,7 @@ function sliceData(arr, activedDay){
      td5.classList.add("styled-td")
 
     const tr = document.createElement('tr')
+    tr.classList.add("styled-tr")
 
     tr.appendChild(td1)
     tr.appendChild(td2)
@@ -945,12 +950,7 @@ function sliceData(arr, activedDay){
     tr.appendChild(td4)
     tr.appendChild(td5)
     tbody.appendChild(tr)
-
-    
   }
-
-
-
 
   
   //salesArr 초기화
@@ -959,7 +959,6 @@ function sliceData(arr, activedDay){
   const userName = document.querySelector("#user-name")
   const userPhoneNumber = document.querySelector("#user-phoneNumber")
   const userPayment = document.querySelector("#user-payment");  
-  const paymentDeta = document.querySelector("#payment-deta"); 
 
   //테이블이 만들어지고 테이블의 row를 클릭하면 이벤트가 발생된다. 
   const chargedTr = document.querySelectorAll(".charged-table tbody tr")
@@ -969,14 +968,8 @@ function sliceData(arr, activedDay){
       userName.innerHTML = chargedTr[index].childNodes[0].innerHTML
       userPhoneNumber.innerHTML = chargedTr[index].childNodes[1].innerHTML
       userPayment.innerHTML =  chargedTr[index].childNodes[3].innerHTML
-      paymentDeta.innerHTML =  chargedTr[index].childNodes[4].innerHTML
        paymentDetails.classList.toggle("hidden");
-
-       cardCencl.onclick = () => {CardCencl( chargedTr[index].childNodes[4].innerHTML,chargedTr[index].childNodes[1].innerHTML)} 
-  })}
-  
-  
-  )
+  })})
 
   
 }
@@ -1046,8 +1039,6 @@ document.addEventListener("DOMContentLoaded", () => {
   makeYearlyTable(new Date().getFullYear()); // 현재 연도로 초기화
   makeMonthlyTable(new Date().getMonth() + 1); // 현재 연도로 초기화
 
-
-
   currentDate(currentYear, currentMonth)
   
   //처음 로드되었을 때도 fetchPage()를 호출해야 한다. 
@@ -1056,9 +1047,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log(activedText, activedMonth, activedYear, "dw")
   fetchPage();
-
-  
-
 });
 
 
@@ -1069,7 +1057,7 @@ function makeYearlyTable(selectedYear) {
   for (let i = 1; i <= 12; i++) {
     const tbody = document.querySelector(".yearly-sales-table tbody");
     const tr = document.createElement('tr');
-    tr.className = "styled-tr";
+    tr.className = "styled-table-row";
 
     const td0 = document.createElement('td');
     const td1 = document.createElement('td');
@@ -1111,7 +1099,7 @@ const lastNumber =
   for (let i = 1; i <= lastNumber; i++) {
     const tbody = document.querySelector(".monthly-sales-table tbody");
     const tr = document.createElement('tr');
-    tr.className = "styled-tr";
+    tr.className = "styled-table-row";
 
     const td0 = document.createElement('td');
     const td1 = document.createElement('td');
@@ -1121,11 +1109,10 @@ const lastNumber =
     td1.className = "styled-table-data";
     td2.className = "styled-table-data";
 
-
-    // 연도
-    td0.innerText = selectedMonth 
-    td1.innerText = i < 10 ? `0${i}` : i;
-    td2.innerText = 0; 
+    td0.innerHTML = `${selectedMonth}월`
+    td1.innerHTML = `${i < 10 ? `0${i}` : i}`
+    td2.innerHTML = "0"
+  
 
 
     tr.appendChild(td0);
@@ -1136,36 +1123,3 @@ const lastNumber =
   }
 }
 
-
-
-function handleOnInput(el, maxlength) {
-  if(el.value.length > maxlength)  {
-    el.value 
-      = el.value.substr(0, maxlength);
-  }
-}
-
-function CardCencl(approvalDay,phone) { //fech 롤 paymenHistory 에 카드취소 를 Y 로 변경 해주는 역할
-
-  const req = {
-
-    approvalDay,
-    phone,
-    card:"cancel"
-    }
-    console.log(req)
-
-    fetch("/cardcanel", {
-    method: "POST",
-    headers : {
-      "Content-Type" :"application/json"
-    },
-
-     body: JSON.stringify(req),
-    })
-    .then((res => res.json()))
-    .then((res) => {
-   
-    })
-
-}

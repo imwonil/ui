@@ -27,21 +27,13 @@ class seatInfor {
     }
 
     const nowTime =  moment().format('yyyy-MM-DD hh:mm') 
-    const adminOccupyModal = document.querySelector(".admin-occupy-modal")
-
-    const occupyConfirmBtn = document.querySelector(".occupy-confirm-btn")
-  
-    const occupyCancelBtn = document.querySelector(".occupy-cancel-btn")
-
-    const forcedStartModal = document.querySelector(".forced-start-modal")
-
-    const dropModal = document.querySelector(".drop-modal")
-
-    const forcedCance = document.querySelector(".forced-cancel-btn")
-    const changeSeat = document.querySelector("#change-seat")
- const dropBtn = document.querySelector(".drop-btn")
- const dropCancelBtn = document.querySelector(".drop-cancel-btn")
-      dropCancelBtn.addEventListener("click", ()=>{
+    const adminOccupyModal = document.querySelector(".admin-occupy-modal"), occupyConfirmBtn = document.querySelector(".occupy-confirm-btn")
+   ,occupyCancelBtn = document.querySelector(".occupy-cancel-btn") ,forcedStartModal = document.querySelector(".forced-start-modal")
+   ,dropModal = document.querySelector(".drop-modal") ,forcedCance = document.querySelector(".forced-cancel-btn")
+   ,changeSeat = document.querySelector("#change-seat") ,dropBtn = document.querySelector(".drop-btn")
+   ,dropCancelBtn = document.querySelector(".drop-cancel-btn")
+   ,detaileTiemChange = document.querySelector("#detaile-tiemChange")
+dropCancelBtn.addEventListener("click", ()=>{
       dropModal.classList.toggle("hidden")
       
  })
@@ -183,18 +175,18 @@ const setup = () => {
       const a= document.getElementById(seatnumber).setAttribute("seatUse",JSON.stringify(users.body))
      
       const setU = document.getElementById(seatnumber).getAttribute("seatUse")  
-          
+
       document.getElementById(seatnumber).innerText ="사용"
-        
+   
+
     
     }
+    
       
    })
   
   })
   })
-
-
 
 
 
@@ -404,7 +396,7 @@ console.log(req)
         dropModal.classList.toggle("hidden")
 
         const userName = document.getElementById(number).getAttribute("seatUse")
-         console.log(number)
+        
      const UserInfor =  JSON.parse(userName)
      
             // const indexOf =  UserInfor.wonset.indexOf(`${number}set`)
@@ -574,6 +566,37 @@ console.log(req)
 
   })
           }
+
+          detaileTiemChange.addEventListener("click", phon)
+
+          function phon () {
+             alert("상세정보 페이지를 선택 하셨습니다.")
+            const setU = document.getElementById(number).getAttribute("seatUse")  
+            const seee =  JSON.parse(setU)
+           
+   
+             fetch("/detailedUserInfo", { //위에 정보를 adminUinfo에다가 dsta를 전달함 
+              method: "POST", 
+              headers: {
+                "Content-Type" : "application/json",
+              } ,
+              body: setU,
+                
+              }).then((res => res.json()))
+                .then((res) => { 
+
+                 
+               setTimeout(() => { 
+                  alert("상제정보 페이지로 이동합니다.")
+        
+                     console.log(seee.phone)
+                   location.href = `/adminUinfo=${seee.phone}` 
+        
+               }, 800)//먼제 adminUinfo 정보를 보낸다 즉 모달창이 클릭되는 순간 res.phon를 보낸다
+                  
+                  })
+
+              } 
         }
       
 //좌석 종류 선택, 상품, 시간 같이 옵션의 대가리 부분
@@ -732,4 +755,3 @@ function C_SEAT(ChoiceName, ChoicePhone, ChoiceSeat) {
   return U_J_P
 }
 
-y

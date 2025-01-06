@@ -16,17 +16,9 @@
 
 
 const warningModal = document.querySelector(".warning-modal")
-
 const warningModalText = document.querySelector(".waring-modal-text")
-
-  const sucModal = document.querySelector(".warning-modal")
-
-  const sucModalText = document.querySelector(".suc-modal-text")
-
-
-
-
-
+const sucModal = document.querySelector(".warning-modal")
+const sucModalText = document.querySelector(".suc-modal-text")
 const checkin = document.querySelector(".checkin-modal")
 const checkinExit = document.querySelector(".checkin-exit")
 const keyboardContainer = document.querySelector(".keyboard-container")

@@ -71,7 +71,7 @@ function send_BUTTON() { //인증번호 발송 버튼 클릭시 작동하는 함
   fetch("/users") 
   .then(res => res.json())
   .then(data => { 
-
+console.log(data)
   
    const  PHONE = data.phon.indexOf(PHON.value)
    console.log(PHONE)

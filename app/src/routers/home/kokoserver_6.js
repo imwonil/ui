@@ -102,7 +102,7 @@ static async next20() { //db 모든 loginStart 조회
        
 static async next18() {
 
-       const DBUseTimeAllData = "SELECT json_extract(UseTime, '$[0]') AS value FROM kakaoAlarm WHERE phon = ?";    
+   
  const   DBUseTimeChange = await this.DBUseTimeChange()
   
       const DBLoginStart = "SELECT json_extract(loginStart, '$[0]') AS value FROM kakaoAlarm WHERE phon = ?";
@@ -244,7 +244,7 @@ static async next18() {
 
 }
 
-setInterval(nexetTime, 20000);
+// setInterval(nexetTime, 20000);
 function nexetTime() { 
   
   kkk.next18().then(( )  => {return  kkk.next20() })  }
